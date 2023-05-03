@@ -9,10 +9,10 @@ export default function Header() {
       <HeaderWrapper>
         <LogoBox>
           <LogoImg src={LOGO} />
-          TwoGather
         </LogoBox>
         <NavContainer>
           <MenuList>
+            <MenuTwoGatherTitle>TwoGather</MenuTwoGatherTitle>
             <MenuItem>
               <NavLink to="/">home</NavLink>
             </MenuItem>
@@ -34,36 +34,39 @@ export default function Header() {
 
 const HeaderContainer = styled.header`
   display: flex;
-  justify-content: center;
   height: 7vh;
-  font-size: ${({ theme }) => theme.fontSizes.xxl};
+  font-size: ${({ theme }) => theme.fontSizes.xl};
+  padding: 1% 10% 0 10%;
 `;
 const HeaderWrapper = styled.div`
   display: flex;
-  justify-content: center;
-  width: 1440px;
+  /* justify-content: center; */
+  width: 100%;
 `;
 const LogoBox = styled.div`
   display: flex;
   align-items: center;
-  width: 185px;
   color: ${({ theme }) => theme.colors.balck};
   font-weight: bold;
+  margin-right: 20px;
 `;
 const LogoImg = styled.img``;
 
 const NavContainer = styled.nav`
   display: flex;
   width: calc(100% - 185px);
+  align-items: flex-start;
 `;
 const MenuList = styled.ul`
   list-style: none;
   display: flex;
-  align-items: center;
-  margin: 0;
-  padding: 0;
+  align-items: flex-start;
   width: 100%;
   height: 100%;
+`;
+const MenuTwoGatherTitle = styled.span`
+  margin-right: 55px;
+  font-weight: bold;
 `;
 const MenuItem = styled.li`
   margin-right: 35px;
