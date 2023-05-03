@@ -13,7 +13,7 @@ const MainContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 95vh;
+  height: 93vh;
   background-color: red;
 `;
 const GBox = styled.div`
