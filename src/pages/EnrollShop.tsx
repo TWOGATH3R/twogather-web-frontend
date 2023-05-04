@@ -14,6 +14,7 @@ export default function EnrollShop() {
   const onClickMenuFile = () => {
     inputMeunFile.current?.click();
   };
+  //테스트
   return (
     <EnrollShopContainer>
       <EnrollShopWrapper>
@@ -184,7 +185,6 @@ export default function EnrollShop() {
     </EnrollShopContainer>
   );
 }
-
 const EnrollShopContainer = styled.div`
   padding: 2% 20%;
   display: flex;
