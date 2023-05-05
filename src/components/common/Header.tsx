@@ -36,11 +36,11 @@ const HeaderContainer = styled.header`
   display: flex;
   height: 7vh;
   font-size: ${({ theme }) => theme.fontSizes.xl};
-  padding: 1% 10% 0 10%;
 `;
 const HeaderWrapper = styled.div`
   display: flex;
-  /* justify-content: center; */
+  justify-content: center;
+  padding: 1% 10% 0 10%;
   width: 100%;
 `;
 const LogoBox = styled.div`
