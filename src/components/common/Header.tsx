@@ -24,7 +24,7 @@ export default function Header() {
             </MenuItem>
           </MenuList>
           <LoginBox>
-            <Link to="/">Login</Link>
+            <Link to="/login">Login</Link>
           </LoginBox>
         </NavContainer>
       </HeaderWrapper>
