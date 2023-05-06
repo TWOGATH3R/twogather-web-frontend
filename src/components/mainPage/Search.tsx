@@ -25,33 +25,67 @@ const Search = () => {
   ];
   const days = date.getDate();
 
+  const CategoriesMenuList = [
+    "양식",
+    "한식",
+    "일식",
+    "패스트푸드",
+    "중식",
+    "치킨",
+    "아시아퓨전",
+    "피자",
+    "레스토랑",
+    "분식",
+    "카페",
+    "기타",
+  ];
+
+  const categoriesOnClick = (value: string) => {
+    setCategories(value);
+  };
+
   return (
-    <SearchContainer>
-      <DateAndSearchBox>
-        <DateBox>
-          <DaysBox>{days}</DaysBox>
-          <DayWeekYearMonthBox>
-            <DayWeekBox>{dayWeek}day</DayWeekBox>
-            <MonthAndYearBox>
-              {month}, {year}
-            </MonthAndYearBox>
-          </DayWeekYearMonthBox>
-        </DateBox>
-        <SearchBox>
-          <CategoriesBtn>{categories}</CategoriesBtn>
-          <SearchInput placeholder="지역을 선택해주세요." />
-          <SearchBtn>Search</SearchBtn>
-        </SearchBox>
-      </DateAndSearchBox>
-      <KeyWordBox>
-        <KeyWordList>
-          <KeyWordItem># 분위기있는</KeyWordItem>
-          <KeyWordItem># 럭셔리한</KeyWordItem>
-          <KeyWordItem># 친절한</KeyWordItem>
-          <KeyWordItem># 아기자기한</KeyWordItem>
-        </KeyWordList>
-      </KeyWordBox>
-    </SearchContainer>
+    <>
+      <SearchContainer>
+        <CategoriesInput id="categories" type="checkbox" />
+        <BackgroundBox htmlFor="categories">
+          <CategoriesList>
+            {CategoriesMenuList.map((value) => (
+              <CategoriesItem
+                key={value}
+                onClick={() => categoriesOnClick(value)}
+              >
+                <span>{value}</span> <span>&gt;</span>
+              </CategoriesItem>
+            ))}
+          </CategoriesList>
+        </BackgroundBox>
+        <DateAndSearchBox>
+          <DateBox>
+            <DaysBox>{days}</DaysBox>
+            <DayWeekYearMonthBox>
+              <DayWeekBox>{dayWeek}day</DayWeekBox>
+              <MonthAndYearBox>
+                {month}, {year}
+              </MonthAndYearBox>
+            </DayWeekYearMonthBox>
+          </DateBox>
+          <SearchBox>
+            <CategoriesBtn htmlFor="categories">{categories}</CategoriesBtn>
+            <SearchInput placeholder="지역을 선택해주세요." />
+            <SearchBtn>Search</SearchBtn>
+          </SearchBox>
+        </DateAndSearchBox>
+        <KeyWordBox>
+          <KeyWordList>
+            <KeyWordItem># 분위기있는</KeyWordItem>
+            <KeyWordItem># 럭셔리한</KeyWordItem>
+            <KeyWordItem># 친절한</KeyWordItem>
+            <KeyWordItem># 아기자기한</KeyWordItem>
+          </KeyWordList>
+        </KeyWordBox>
+      </SearchContainer>
+    </>
   );
 };
 
@@ -91,10 +125,69 @@ const SearchBox = styled.div`
   width: calc(100% - 180px);
   height: 48px;
 `;
-const CategoriesBtn = styled.button`
-  padding: 15px 10px;
-  width: 130px;
+const CategoriesInput = styled.input`
+  display: none;
+  &:checked {
+    & + label {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+`;
+const BackgroundBox = styled.label`
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s;
+  width: 100vw;
   height: 100%;
+  background-color: rgb(216 216 216 / 48%);
+`;
+const CategoriesList = styled.ul`
+  list-style: none;
+  position: absolute;
+  top: calc(50% - 7vh);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  padding: 15px 20px;
+  width: 250px;
+  height: 350px;
+  background-color: ${({ theme }) => theme.colors.white};
+  border: 1px solid rgba(0, 0, 0, 0.11);
+  border-radius: 2px;
+  color: #535353;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1px;
+    height: 90%;
+    background-color: #dedede;
+  }
+`;
+const CategoriesItem = styled.li`
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 10px;
+  width: calc(50% - 20px);
+  height: fit-content;
+  border-bottom: 1px solid #dedede;
+  cursor: pointer;
+`;
+const CategoriesBtn = styled.label`
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 120px;
+  height: 100%;
+  background-color: #f8f8f8;
   border: none;
   border-radius: 2px;
   font-size: 1rem;
@@ -110,6 +203,7 @@ const SearchInput = styled.input`
   border-right: none;
   border-radius: 2px;
   box-sizing: border-box;
+  font-size: ${({theme})=>theme.fontSizes.base};
 `;
 const SearchBtn = styled.button`
   width: 100px;
