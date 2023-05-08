@@ -20,7 +20,7 @@ const Login = () => {
         </PwInputBox>
         <LoginBtn>로그인</LoginBtn>
         <RegisterBtnBox>
-          <Link to={"/register"}>회원가입</Link>
+          <Link to={"/register/selectType"}>회원가입</Link>
         </RegisterBtnBox>
       </LoginWrraper>
     </LoginContainer>
