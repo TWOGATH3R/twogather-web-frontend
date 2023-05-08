@@ -9,6 +9,7 @@ import EmailConfirm from "./components/RegisterPage/EmailConfirm";
 import Register from "./pages/Register";
 import InfoInput from "./components/RegisterPage/InfoInput";
 import StoreInfo from "./components/RegisterPage/StoreInfo";
+import FindId from "./pages/FindId";
 
 const Router = () => {
   return (
@@ -18,6 +19,7 @@ const Router = () => {
         <Route path="/" element={<Main />} />
         <Route path="/enrollshop" element={<EnrollShop />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/findid" element={<FindId />} />
         <Route path="/register" element={<Register />}>
           <Route path="selectType" element={<RegisterType />} />
           <Route path="/register/:RegisterType" element={<EmailConfirm />} />
