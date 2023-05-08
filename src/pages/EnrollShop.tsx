@@ -1,12 +1,35 @@
-import React, { useRef } from "react";
-import styled from "styled-components";
+import React, { useRef, useState } from "react";
+import styled, { css } from "styled-components";
 import { ReactComponent as PhotoIcon } from "../assets/photo-icon.svg";
 import { ReactComponent as PlusIcon } from "../assets/plus-icon.svg";
+import AddressModal from "../components/address/AddressModal";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { address, visibleAddress } from "../store/addressAtom";
 
+interface IShopAddressVisible {
+  visible: Boolean;
+}
+interface IEvent {
+  e: React.ChangeEvent<HTMLInputElement>;
+}
 export default function EnrollShop() {
+  const [shopName, setShopName] = useState<String>("");
+  const ShopAddress = useRecoilValue(address);
+  const [shopNumber, setShopNumber] = useState<String>("");
+  const [visibleShopAddress, setVisibleShopAddress] =
+    useRecoilState(visibleAddress);
   const inputPhotoFile = useRef<HTMLInputElement | null>(null);
   const inputMeunFile = useRef<HTMLInputElement | null>(null);
 
+  const [startTimeValue, setStartTimeValue] = useState("00:00:00");
+  const [endTimeValue, setEndTimeValue] = useState("00:00:00");
+
+  const [startBreakTimeValue, setStartBreakTimeValue] = useState("00:00:00");
+  const [endBreakTimeValue, setEndBreakTimeValue] = useState("00:00:00");
+
+  const [shopNameMessage, setShopNameMessage] = useState("");
+  const [shopNumberMessage, setShopNumberMessage] = useState("");
+  // onClick
   const onClickPhotoFile = () => {
     inputPhotoFile.current?.click();
   };
@@ -14,9 +37,57 @@ export default function EnrollShop() {
   const onClickMenuFile = () => {
     inputMeunFile.current?.click();
   };
-  //테스트
+
+  const onClickShopAddress = () => {
+    setVisibleShopAddress(true);
+  };
+
+  // onChange
+  const onChangeShopName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const regShopName = /^[가-힣a-zA-Z0-9]+$/;
+    const shopNameCurrent = e.target.value;
+    setShopName(e.target.value);
+
+    if (!regShopName.test(shopNameCurrent)) {
+      setShopNameMessage("이름이 옳바르지 않습니다.");
+    } else {
+      setShopName("");
+    }
+  };
+
+  const onChangeShopNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const regShopNumber = /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}/;
+    const shopNumberCurrent = e.target.value;
+    setShopNumber(e.target.value);
+
+    if (!regShopNumber.test(shopNumberCurrent)) {
+      setShopNumberMessage("번호가 옳바르지 않습니다.");
+    } else {
+      setShopNumberMessage("");
+    }
+  };
+
+  const onChangeStartTimeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setStartTimeValue(e.target.value);
+  };
+  const onChangeEndTimeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEndTimeValue(e.target.value);
+  };
+
+  const onChangeStartBreakTimeValue = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setStartBreakTimeValue(e.target.value);
+  };
+  const onChangeEndBreakTimeValue = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setEndBreakTimeValue(e.target.value);
+  };
+
   return (
     <EnrollShopContainer>
+      <Overlay visible={visibleShopAddress} />
       <EnrollShopWrapper>
         <EnrollShopTitleWrapper>
           <EnrollShopTitle>가게 등록하기</EnrollShopTitle>
@@ -31,22 +102,68 @@ export default function EnrollShop() {
             </ShopInnerOutlineTitleWrapper>
 
             {/* 가게명 */}
-            <ShopInnerWrapper>
-              <ShopTitle>가게명</ShopTitle>
-              <ShopInput placeholder="입력해주세요" />
-            </ShopInnerWrapper>
+            {shopName.length > 0 ? (
+              <ShopInnerWrapper>
+                <ShopTitle>가게명</ShopTitle>
+                <InputMessageWrapper>
+                  <ShopInput
+                    placeholder="입력해주세요"
+                    onChange={onChangeShopName}
+                  />
+                  <InputMessage>{shopNameMessage}</InputMessage>
+                </InputMessageWrapper>
+              </ShopInnerWrapper>
+            ) : (
+              <ShopInnerWrapper>
+                <ShopTitle>가게명</ShopTitle>
+                <InputMessageWrapper>
+                  <ShopInput
+                    placeholder="입력해주세요"
+                    onChange={onChangeShopName}
+                  />
+                  <InputMessage />
+                </InputMessageWrapper>
+              </ShopInnerWrapper>
+            )}
 
             {/* 가게 주소 */}
             <ShopInnerWrapper>
               <ShopTitle>가게 주소</ShopTitle>
-              <ShopInput placeholder="기본주소" />
+              <InputMessageWrapper>
+                <ShopInput
+                  placeholder="기본주소"
+                  defaultValue={ShopAddress}
+                  onClick={onClickShopAddress}
+                />
+                <InputMessage />
+              </InputMessageWrapper>
+              {visibleShopAddress ? <AddressModal /> : null}
             </ShopInnerWrapper>
 
             {/* 가게 전화번호 */}
-            <ShopInnerWrapper>
-              <ShopTitle>가게 전화번호</ShopTitle>
-              <ShopInput placeholder="입력해주세요" />
-            </ShopInnerWrapper>
+            {shopNumber.length ? (
+              <ShopInnerWrapper>
+                <ShopTitle>가게 전화번호</ShopTitle>
+                <InputMessageWrapper>
+                  <ShopInput
+                    placeholder="입력해주세요"
+                    onChange={onChangeShopNumber}
+                  />
+                  <InputMessage>{shopNumberMessage}</InputMessage>
+                </InputMessageWrapper>
+              </ShopInnerWrapper>
+            ) : (
+              <ShopInnerWrapper>
+                <ShopTitle>가게 전화번호</ShopTitle>
+                <InputMessageWrapper>
+                  <ShopInput
+                    placeholder="입력해주세요"
+                    onChange={onChangeShopNumber}
+                  />
+                  <InputMessage />
+                </InputMessageWrapper>
+              </ShopInnerWrapper>
+            )}
           </ShopInnerOutlineWrapper>
         </ShopWrapper>
 
@@ -107,9 +224,17 @@ export default function EnrollShop() {
               <ShopTitle style={{ flex: 0.3, fontWeight: "500" }}>
                 영업중
               </ShopTitle>
-              <ShopTimeInput type="time" value={"00:00:00"} />
+              <ShopTimeInput
+                type="time"
+                defaultValue={startTimeValue}
+                onChange={onChangeStartTimeValue}
+              />
               <span className="time-wave">~</span>
-              <ShopTimeInput value={"00:00:00"} type="time" />
+              <ShopTimeInput
+                type="time"
+                defaultValue={endTimeValue}
+                onChange={onChangeEndTimeValue}
+              />
               <ShopCheckBoxWrapper>
                 <ShopInput id="checkbox1" type="checkbox" />
                 <label htmlFor="checkbox1"></label>
@@ -120,9 +245,17 @@ export default function EnrollShop() {
               <ShopTitle style={{ flex: 0.3, fontWeight: "500" }}>
                 has break time
               </ShopTitle>
-              <ShopTimeInput type="time" value={"00:00:00"} />
+              <ShopTimeInput
+                type="time"
+                defaultValue={startBreakTimeValue}
+                onChange={onChangeStartBreakTimeValue}
+              />
               <span className="time-wave">~</span>
-              <ShopTimeInput value={"00:00:00"} type="time" />
+              <ShopTimeInput
+                defaultValue={endBreakTimeValue}
+                onChange={onChangeEndBreakTimeValue}
+                type="time"
+              />
               <ShopCheckBoxWrapper>
                 <ShopInput id="checkbox2" type="checkbox" />
                 <label htmlFor="checkbox2"></label>
@@ -191,6 +324,21 @@ const EnrollShopContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
+`;
+const Overlay = styled.div<IShopAddressVisible>`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  ${(props) =>
+    props.visible === true
+      ? css`
+          background-color: rgba(0, 0, 0, 0.9);
+          z-index: 4;
+        `
+      : css`
+          z-index: -1;
+        `};
 `;
 const EnrollShopWrapper = styled.div`
   width: 100%;
@@ -224,7 +372,7 @@ const ShopInnerOutlineBigTitle = styled.span`
 const ShopInnerWrapper = styled.div`
   width: 100%;
   display: flex;
-  padding: 2% 0;
+  padding: 1% 0;
   .time-wave {
     font-size: 23px;
   }
@@ -250,6 +398,19 @@ const ShopInnerWrapper = styled.div`
     left: 0;
     top: 0;
   }
+`;
+const InputMessageWrapper = styled.div`
+  flex: 5;
+  height: 65px;
+  display: flex;
+  flex-direction: column;
+`;
+const InputMessage = styled.span`
+  margin-left: 15px;
+  margin-top: 5px;
+  height: 20px;
+  color: ${({ theme }) => theme.colors.subColor3};
+  font-size: ${({ theme }) => theme.fontSizes.small};
 `;
 const ShopTitle = styled.span`
   flex: 1;

@@ -50,7 +50,9 @@ const LogoBox = styled.div`
   font-weight: bold;
   margin-right: 20px;
 `;
-const LogoImg = styled.img``;
+const LogoImg = styled.img`
+  margin-bottom: 3px;
+`;
 
 const NavContainer = styled.nav`
   display: flex;
