@@ -9,16 +9,18 @@ const Login = () => {
   return (
     <LoginContainer>
       <LoginWrraper>
-        <Title>Login</Title>
+        <Title>로그인</Title>
         <IdInputBox>
-          <Link to={"/findId"}>아이디 찾기</Link>
-          <IdInput placeholder="email" />
+          <IdInput placeholder="이메일" />
         </IdInputBox>
         <PwInputBox>
-          <Link to={"/findPw"}>비밀번호 찾기</Link>
-          <PwInput placeholder="password" />
+          <PwInput placeholder="비밀번호" />
         </PwInputBox>
         <LoginBtn>로그인</LoginBtn>
+        <FindMeunBtnBox>
+          <Link to={"/findId"}>아이디 찾기</Link>
+          <Link to={"/findPw"}>비밀번호 찾기</Link>
+        </FindMeunBtnBox>
         <RegisterBtnBox>
           <Link to={"/register/selectType"}>회원가입</Link>
         </RegisterBtnBox>
@@ -56,15 +58,6 @@ const IdInputBox = styled.div`
   padding-bottom: 20px;
   width: 85%;
   color: #868686;
-  a {
-    margin-bottom: 5px;
-    font-family: "Inter";
-    font-style: normal;
-    font-weight: 400;
-    font-size: ${({ theme }) => theme.fontSizes.small};
-    text-decoration-line: underline;
-    color: #868686;
-  }
 `;
 const IdInput = styled.input`
   padding: 15px 18px;
@@ -75,6 +68,19 @@ const IdInput = styled.input`
 `;
 const PwInputBox = styled(IdInputBox)``;
 const PwInput = styled(IdInput)``;
+
+const FindMeunBtnBox = styled.div`
+  margin-top: 35%;
+  a {
+    margin: 5px 10px;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400;
+    font-size: ${({ theme }) => theme.fontSizes.small};
+    text-decoration-line: underline;
+    color: #868686;
+  }
+`;
 
 const LoginBtn = styled.button`
   margin-top: 30px;
@@ -89,7 +95,7 @@ const LoginBtn = styled.button`
   cursor: pointer;
 `;
 const RegisterBtnBox = styled.div`
-  margin-top: 35%;
+  padding-top: 20px;
   a {
     text-decoration-line: underline;
     color: #ff4242;
