@@ -9,9 +9,6 @@ import { address, visibleAddress } from "../store/addressAtom";
 interface IShopAddressVisible {
   visible: Boolean;
 }
-interface IEvent {
-  e: React.ChangeEvent<HTMLInputElement>;
-}
 export default function EnrollShop() {
   const [shopName, setShopName] = useState<String>("");
   const ShopAddress = useRecoilValue(address);
@@ -20,6 +17,8 @@ export default function EnrollShop() {
     useRecoilState(visibleAddress);
   const inputPhotoFile = useRef<HTMLInputElement | null>(null);
   const inputMeunFile = useRef<HTMLInputElement | null>(null);
+  const [inputCheckBox1, setInputCheckBox1] = useState(false);
+  const [inputCheckBox2, setInputCheckBox2] = useState(false);
 
   const [startTimeValue, setStartTimeValue] = useState("00:00:00");
   const [endTimeValue, setEndTimeValue] = useState("00:00:00");
@@ -40,6 +39,13 @@ export default function EnrollShop() {
 
   const onClickShopAddress = () => {
     setVisibleShopAddress(true);
+  };
+
+  const onClickCheckBox1 = () => {
+    setInputCheckBox1((prev) => !prev);
+  };
+  const onClickCheckBox2 = () => {
+    setInputCheckBox2((prev) => !prev);
   };
 
   // onChange
@@ -66,6 +72,8 @@ export default function EnrollShop() {
       setShopNumberMessage("");
     }
   };
+
+  console.log(inputCheckBox1, startTimeValue);
 
   const onChangeStartTimeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStartTimeValue(e.target.value);
@@ -224,19 +232,41 @@ export default function EnrollShop() {
               <ShopTitle style={{ flex: 0.3, fontWeight: "500" }}>
                 영업중
               </ShopTitle>
-              <ShopTimeInput
-                type="time"
-                defaultValue={startTimeValue}
-                onChange={onChangeStartTimeValue}
-              />
-              <span className="time-wave">~</span>
-              <ShopTimeInput
-                type="time"
-                defaultValue={endTimeValue}
-                onChange={onChangeEndTimeValue}
-              />
+              {inputCheckBox1 ? (
+                <>
+                  <ShopTimeInput
+                    type="time"
+                    defaultValue={startTimeValue}
+                    onChange={onChangeStartTimeValue}
+                  />
+                  <span className="time-wave">~</span>
+                  <ShopTimeInput
+                    type="time"
+                    defaultValue={endTimeValue}
+                    onChange={onChangeEndTimeValue}
+                  />
+                </>
+              ) : (
+                <>
+                  <ShopTimeInput
+                    disabled
+                    type="time"
+                    defaultValue={startTimeValue}
+                  />
+                  <span className="time-wave">~</span>
+                  <ShopTimeInput
+                    disabled
+                    type="time"
+                    defaultValue={endTimeValue}
+                  />
+                </>
+              )}
               <ShopCheckBoxWrapper>
-                <ShopInput id="checkbox1" type="checkbox" />
+                <ShopInput
+                  id="checkbox1"
+                  type="checkbox"
+                  onClick={onClickCheckBox1}
+                />
                 <label htmlFor="checkbox1"></label>
               </ShopCheckBoxWrapper>
             </ShopInnerWrapper>
@@ -245,19 +275,42 @@ export default function EnrollShop() {
               <ShopTitle style={{ flex: 0.3, fontWeight: "500" }}>
                 has break time
               </ShopTitle>
-              <ShopTimeInput
-                type="time"
-                defaultValue={startBreakTimeValue}
-                onChange={onChangeStartBreakTimeValue}
-              />
-              <span className="time-wave">~</span>
-              <ShopTimeInput
-                defaultValue={endBreakTimeValue}
-                onChange={onChangeEndBreakTimeValue}
-                type="time"
-              />
+              {inputCheckBox2 ? (
+                <>
+                  <ShopTimeInput
+                    type="time"
+                    defaultValue={startBreakTimeValue}
+                    onChange={onChangeStartBreakTimeValue}
+                  />
+                  <span className="time-wave">~</span>
+                  <ShopTimeInput
+                    defaultValue={endBreakTimeValue}
+                    onChange={onChangeEndBreakTimeValue}
+                    type="time"
+                  />
+                </>
+              ) : (
+                <>
+                  <ShopTimeInput
+                    disabled
+                    type="time"
+                    defaultValue={startBreakTimeValue}
+                  />
+                  <span className="time-wave">~</span>
+                  <ShopTimeInput
+                    disabled
+                    type="time"
+                    defaultValue={endBreakTimeValue}
+                  />
+                </>
+              )}
+
               <ShopCheckBoxWrapper>
-                <ShopInput id="checkbox2" type="checkbox" />
+                <ShopInput
+                  id="checkbox2"
+                  type="checkbox"
+                  onClick={onClickCheckBox2}
+                />
                 <label htmlFor="checkbox2"></label>
               </ShopCheckBoxWrapper>
             </ShopInnerWrapper>
