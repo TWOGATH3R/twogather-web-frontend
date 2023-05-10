@@ -14,13 +14,13 @@ export default function Header() {
           <MenuList>
             <MenuTwoGatherTitle>TwoGather</MenuTwoGatherTitle>
             <MenuItem>
-              <NavLink to="/">home</NavLink>
+              <NavLink to="/">Home</NavLink>
             </MenuItem>
             <MenuItem>
               <NavLink to="/">Resgistration</NavLink>
             </MenuItem>
             <MenuItem>
-              <NavLink to="/">stores</NavLink>
+              <NavLink to="/">Stores</NavLink>
             </MenuItem>
           </MenuList>
           <LoginBox>
@@ -74,6 +74,9 @@ const MenuItem = styled.li`
   margin-right: 35px;
   a {
     color: #707070;
+    &:hover {
+      color: #ff6262;
+    }
   }
 `;
 
