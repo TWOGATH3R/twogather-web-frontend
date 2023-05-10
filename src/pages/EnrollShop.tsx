@@ -11,7 +11,6 @@ interface IShopAddressVisible {
 }
 interface IInputItem {
   id: number;
-  inputId: string;
   startTime: string;
   endTime: string;
 }
@@ -28,7 +27,7 @@ export default function EnrollShop() {
 
   const nextID = useRef<number>(1);
   const [inputItems, setInputItems] = useState<IInputItem[]>([
-    { id: 0, inputId: "", startTime: "00:00", endTime: "00:00" },
+    { id: 0, startTime: "00:00", endTime: "00:00" },
   ]);
   const [startTimeValue, setStartTimeValue] = useState("00:00:00");
   const [endTimeValue, setEndTimeValue] = useState("00:00:00");
@@ -129,7 +128,6 @@ export default function EnrollShop() {
   function addInputItem() {
     const input = {
       id: nextID.current,
-      inputId: "",
       startTime: "00:00",
       endTime: "00:00",
     };
@@ -282,6 +280,7 @@ export default function EnrollShop() {
               <ShopInputItemsWrapper>
                 {inputItems.map((item, index) => (
                   <div
+                    key={item.id}
                     style={{
                       display: "flex",
                       marginBottom: "10px",
@@ -325,11 +324,11 @@ export default function EnrollShop() {
                     {item.id === 0 && (
                       <ShopCheckBoxWrapper>
                         <ShopInput
-                          id="checkbox2"
+                          id="checkbox1"
                           type="checkbox"
                           onClick={onClickCheckBox1}
                         />
-                        <label htmlFor="checkbox2" />
+                        <label htmlFor="checkbox1" />
                       </ShopCheckBoxWrapper>
                     )}
                     <ShopTimeButtonWrapper>
