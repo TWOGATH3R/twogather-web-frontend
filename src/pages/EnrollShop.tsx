@@ -9,6 +9,12 @@ import { address, visibleAddress } from "../store/addressAtom";
 interface IShopAddressVisible {
   visible: Boolean;
 }
+interface IInputItem {
+  id: number;
+  inputId: string;
+  startTime: string;
+  endTime: string;
+}
 export default function EnrollShop() {
   const [shopName, setShopName] = useState<String>("");
   const ShopAddress = useRecoilValue(address);
@@ -20,11 +26,15 @@ export default function EnrollShop() {
   const [inputCheckBox1, setInputCheckBox1] = useState(false);
   const [inputCheckBox2, setInputCheckBox2] = useState(false);
 
+  const nextID = useRef<number>(1);
+  const [inputItems, setInputItems] = useState<IInputItem[]>([
+    { id: 0, inputId: "", startTime: "00:00", endTime: "00:00" },
+  ]);
   const [startTimeValue, setStartTimeValue] = useState("00:00:00");
   const [endTimeValue, setEndTimeValue] = useState("00:00:00");
 
-  const [startBreakTimeValue, setStartBreakTimeValue] = useState("00:00:00");
-  const [endBreakTimeValue, setEndBreakTimeValue] = useState("00:00:00");
+  const [startBreakTimeValue, setStartBreakTimeValue] = useState("00:00");
+  const [endBreakTimeValue, setEndBreakTimeValue] = useState("00:00");
 
   const [shopNameMessage, setShopNameMessage] = useState("");
   const [shopNumberMessage, setShopNumberMessage] = useState("");
@@ -73,8 +83,6 @@ export default function EnrollShop() {
     }
   };
 
-  console.log(inputCheckBox1, startTimeValue);
-
   const onChangeStartTimeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStartTimeValue(e.target.value);
   };
@@ -92,7 +100,46 @@ export default function EnrollShop() {
   ) => {
     setEndBreakTimeValue(e.target.value);
   };
+  console.log(inputItems);
 
+  function onChangeStoreStartTimeInput(
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) {
+    if (index > inputItems.length) return;
+
+    const inputItemsCopy: IInputItem[] = JSON.parse(JSON.stringify(inputItems));
+    inputItemsCopy[index].startTime = e.target.value;
+    setInputItems(inputItemsCopy);
+    // setStartTimeValue(e.target.value);
+  }
+
+  function onChangeStoreEndTimeInput(
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) {
+    if (index > inputItems.length) return;
+
+    const inputItemsCopy: IInputItem[] = JSON.parse(JSON.stringify(inputItems));
+    inputItemsCopy[index].endTime = e.target.value;
+    setInputItems(inputItemsCopy);
+    // setEndTimeValue(e.target.value);
+  }
+
+  function addInputItem() {
+    const input = {
+      id: nextID.current,
+      inputId: "",
+      startTime: "00:00",
+      endTime: "00:00",
+    };
+    setInputItems([...inputItems, input]);
+
+    nextID.current += 1;
+  }
+  function deleteInputItem(index: number) {
+    setInputItems(inputItems.filter((item) => item.id !== index));
+  }
   return (
     <EnrollShopContainer>
       <Overlay visible={visibleShopAddress} />
@@ -232,91 +279,128 @@ export default function EnrollShop() {
               <ShopTitle style={{ flex: 0.3, fontWeight: "500" }}>
                 영업중
               </ShopTitle>
-              {inputCheckBox1 ? (
-                <>
-                  <ShopTimeInput
-                    type="time"
-                    defaultValue={startTimeValue}
-                    onChange={onChangeStartTimeValue}
-                  />
-                  <span className="time-wave">~</span>
-                  <ShopTimeInput
-                    type="time"
-                    defaultValue={endTimeValue}
-                    onChange={onChangeEndTimeValue}
-                  />
-                </>
-              ) : (
-                <>
-                  <ShopTimeInput
-                    disabled
-                    type="time"
-                    defaultValue={startTimeValue}
-                  />
-                  <span className="time-wave">~</span>
-                  <ShopTimeInput
-                    disabled
-                    type="time"
-                    defaultValue={endTimeValue}
-                  />
-                </>
-              )}
-              <ShopCheckBoxWrapper>
-                <ShopInput
-                  id="checkbox1"
-                  type="checkbox"
-                  onClick={onClickCheckBox1}
-                />
-                <label htmlFor="checkbox1"></label>
-              </ShopCheckBoxWrapper>
+              <ShopInputItemsWrapper>
+                {inputItems.map((item, index) => (
+                  <div
+                    style={{
+                      display: "flex",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    {inputCheckBox1 ? (
+                      <ShopInputItmsBox key={index}>
+                        <ShopTimeInput
+                          style={{ width: "100%" }}
+                          type="time"
+                          value={item.startTime || ""}
+                          onChange={(e) =>
+                            onChangeStoreStartTimeInput(e, index)
+                          }
+                        />
+                        <span className="time-wave">~</span>
+                        <ShopTimeInput
+                          style={{ width: "100%" }}
+                          type="time"
+                          value={item.endTime || ""}
+                          onChange={(e) => onChangeStoreEndTimeInput(e, index)}
+                        />
+                      </ShopInputItmsBox>
+                    ) : (
+                      <ShopInputItmsBox>
+                        <ShopTimeInput
+                          style={{ width: "100%" }}
+                          disabled
+                          type="time"
+                          defaultValue={"00:00"}
+                        />
+                        <span className="time-wave">~</span>
+                        <ShopTimeInput
+                          style={{ width: "100%" }}
+                          disabled
+                          type="time"
+                          defaultValue={"00:00"}
+                        />
+                      </ShopInputItmsBox>
+                    )}
+                    {item.id === 0 && (
+                      <ShopCheckBoxWrapper>
+                        <ShopInput
+                          id="checkbox2"
+                          type="checkbox"
+                          onClick={onClickCheckBox1}
+                        />
+                        <label htmlFor="checkbox2" />
+                      </ShopCheckBoxWrapper>
+                    )}
+                    <ShopTimeButtonWrapper>
+                      <ShopTimeDeleteButton
+                        onClick={() => deleteInputItem(item.id)}
+                      >
+                        삭제
+                      </ShopTimeDeleteButton>
+                    </ShopTimeButtonWrapper>
+                  </div>
+                ))}
+              </ShopInputItemsWrapper>
             </ShopInnerWrapper>
 
             <ShopInnerWrapper>
               <ShopTitle style={{ flex: 0.3, fontWeight: "500" }}>
                 has break time
               </ShopTitle>
-              {inputCheckBox2 ? (
-                <>
-                  <ShopTimeInput
-                    type="time"
-                    defaultValue={startBreakTimeValue}
-                    onChange={onChangeStartBreakTimeValue}
-                  />
-                  <span className="time-wave">~</span>
-                  <ShopTimeInput
-                    defaultValue={endBreakTimeValue}
-                    onChange={onChangeEndBreakTimeValue}
-                    type="time"
-                  />
-                </>
-              ) : (
-                <>
-                  <ShopTimeInput
-                    disabled
-                    type="time"
-                    defaultValue={startBreakTimeValue}
-                  />
-                  <span className="time-wave">~</span>
-                  <ShopTimeInput
-                    disabled
-                    type="time"
-                    defaultValue={endBreakTimeValue}
-                  />
-                </>
-              )}
-
-              <ShopCheckBoxWrapper>
-                <ShopInput
-                  id="checkbox2"
-                  type="checkbox"
-                  onClick={onClickCheckBox2}
-                />
-                <label htmlFor="checkbox2"></label>
-              </ShopCheckBoxWrapper>
+              <ShopInputItemsWrapper>
+                <div style={{ display: "flex" }}>
+                  {inputCheckBox2 ? (
+                    <ShopInputItmsBox>
+                      <ShopTimeInput
+                        style={{ width: "100%" }}
+                        type="time"
+                        defaultValue={startBreakTimeValue}
+                        onChange={onChangeStartBreakTimeValue}
+                      />
+                      <span className="time-wave">~</span>
+                      <ShopTimeInput
+                        style={{ width: "100%" }}
+                        defaultValue={endBreakTimeValue}
+                        onChange={onChangeEndBreakTimeValue}
+                        type="time"
+                      />
+                    </ShopInputItmsBox>
+                  ) : (
+                    <ShopInputItmsBox>
+                      <ShopTimeInput
+                        style={{ width: "100%" }}
+                        disabled
+                        type="time"
+                        defaultValue={startBreakTimeValue}
+                      />
+                      <span className="time-wave">~</span>
+                      <ShopTimeInput
+                        style={{ width: "100%" }}
+                        disabled
+                        type="time"
+                        defaultValue={endBreakTimeValue}
+                      />
+                    </ShopInputItmsBox>
+                  )}
+                  <ShopCheckBoxWrapper>
+                    <ShopInput
+                      id="checkbox2"
+                      type="checkbox"
+                      onClick={onClickCheckBox2}
+                    />
+                    <label htmlFor="checkbox2"></label>
+                  </ShopCheckBoxWrapper>
+                </div>
+              </ShopInputItemsWrapper>
             </ShopInnerWrapper>
 
             <ShopTimeButtonWrapper>
-              <ShopTimeButton>영업시간 추가</ShopTimeButton>
+              {inputItems.length < 6 && (
+                <ShopTimeButton onClick={addInputItem}>
+                  영업시간 추가
+                </ShopTimeButton>
+              )}
             </ShopTimeButtonWrapper>
           </ShopInnerOutlineWrapper>
         </ShopWrapper>
@@ -530,7 +614,17 @@ const ShopDayList = styled.li`
   font-weight: bold;
   margin-right: 4%;
 `;
-
+const ShopInputItemsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  flex: 1;
+`;
+const ShopInputItmsBox = styled.div`
+  display: flex;
+  align-items: center;
+`;
 const ShopTimeInput = styled.input`
   border: 1px solid ${({ theme }) => theme.colors.subColor1};
   outline: none;
@@ -552,15 +646,21 @@ const ShopTimeButton = styled.button`
   border-radius: 9999px;
   background-color: transparent;
   border: 1px solid ${({ theme }) => theme.colors.subColor1};
-  margin-right: 10px;
+  cursor: pointer;
+`;
+const ShopTimeDeleteButton = styled.button`
+  padding: 2% 5%;
+  background-color: transparent;
+  border: 1px solid ${({ theme }) => theme.colors.subColor1};
+  border-radius: 9999px;
+  width: 80px;
   cursor: pointer;
 `;
 
 const ShopCheckBoxWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex: 0.2;
+  margin-left: 8%;
 `;
 
 const ShopMenuContainer = styled.div`
