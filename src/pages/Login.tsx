@@ -1,24 +1,50 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const Login = () => {
-  const [id, setId] = useState<String>("");
-  const [pw, setPw] = useState<String>("");
+  const [id, setId] = useState<string>("");
+  const [pw, setPw] = useState<string>("");
+
+  const emailPattern =
+    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+  const idOnChange = (idText: string) => {
+    setId(idText);
+  };
+
+  const pwPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/;
+  const pwOnChange = (pwText: string) => {
+    setPw(pwText);
+  };
+
+  const loginBtnOnClick = () => {
+    if (id.length === 0) alert("이메일을 입력해주세요");
+    else if (pw.length === 0) alert("비밀번호를 입력해주세요");
+    else if (!emailPattern.test(id)) alert("이메일이 형식에 맞지 않습니다");
+    else if (!pwPattern.test(pw)) alert("비밀번호가 형식에 맞지 않습니다");
+  };
 
   return (
     <LoginContainer>
       <LoginWrraper>
-        <Title>Login</Title>
-        <IdInputBox>
-          <Link to={"/findId"}>아이디 찾기</Link>
-          <IdInput placeholder="email" />
+        <Title>로그인</Title>
+        <IdInputBox valid={id.length > 0 ? emailPattern.test(id) : true}>
+          <IdInput
+            placeholder="이메일"
+            onChange={(e) => idOnChange(e.target.value)}
+          />
         </IdInputBox>
-        <PwInputBox>
-          <Link to={"/findPw"}>비밀번호 찾기</Link>
-          <PwInput placeholder="password" />
+        <PwInputBox valid={pw.length > 0 ? pwPattern.test(pw) : true}>
+          <PwInput
+            placeholder="비밀번호"
+            onChange={(e) => pwOnChange(e.target.value)}
+          />
         </PwInputBox>
-        <LoginBtn>로그인</LoginBtn>
+        <LoginBtn onClick={() => loginBtnOnClick()}>로그인</LoginBtn>
+        <FindMeunBtnBox>
+          <Link to={"/findId"}>아이디 찾기</Link>
+          <Link to={"/findPw"}>비밀번호 찾기</Link>
+        </FindMeunBtnBox>
         <RegisterBtnBox>
           <Link to={"/register/selectType"}>회원가입</Link>
         </RegisterBtnBox>
@@ -50,14 +76,56 @@ const Title = styled.h1`
   font-size: ${({ theme }) => theme.fontSizes.xxxl};
 `;
 
-const IdInputBox = styled.div`
+const IdInputBox = styled.div<{ valid: any }>`
+  position: relative;
   display: flex;
   flex-direction: column;
-  padding-bottom: 20px;
+  margin-bottom: 30px;
   width: 85%;
   color: #868686;
+  ${(props) => {
+    if (!props.valid) {
+      return css`
+        input {
+          border-color: #ff3a3a;
+        }
+        &::after {
+          content: "이메일 형식에 맞게 입력해주세요.";
+          position: absolute;
+          top: calc(100% + 2px);
+          left: 0;
+          font-size: ${({ theme }) => theme.fontSizes.small};
+          color: #ff0000;
+        }
+      `;
+    }
+  }}
+`;
+const IdInput = styled.input`
+  position: relative;
+  padding: 15px 18px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  outline: none;
+  font-size: ${({ theme }) => theme.fontSizes.base};
+`;
+const PwInputBox = styled(IdInputBox)`
+  ${(props) => {
+    if (!props.valid) {
+      return css`
+        &::after {
+          content: "영어,숫자를 포함 8~20자 이내로 입력해주세요.";
+        }
+      `;
+    }
+  }}
+`;
+const PwInput = styled(IdInput)``;
+
+const FindMeunBtnBox = styled.div`
+  margin-top: 35%;
   a {
-    margin-bottom: 5px;
+    margin: 5px 10px;
     font-family: "Inter";
     font-style: normal;
     font-weight: 400;
@@ -66,15 +134,6 @@ const IdInputBox = styled.div`
     color: #868686;
   }
 `;
-const IdInput = styled.input`
-  padding: 15px 18px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 2px;
-  outline: none;
-  font-size: ${({ theme }) => theme.fontSizes.base};
-`;
-const PwInputBox = styled(IdInputBox)``;
-const PwInput = styled(IdInput)``;
 
 const LoginBtn = styled.button`
   margin-top: 30px;
@@ -89,7 +148,7 @@ const LoginBtn = styled.button`
   cursor: pointer;
 `;
 const RegisterBtnBox = styled.div`
-  margin-top: 35%;
+  padding-top: 20px;
   a {
     text-decoration-line: underline;
     color: #ff4242;

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { ReactText, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import { ReactComponent as PhotoIcon } from "../assets/photo-icon.svg";
 import { ReactComponent as PlusIcon } from "../assets/plus-icon.svg";
@@ -15,12 +15,17 @@ interface IInputItem {
   endTime: string;
 }
 export default function EnrollShop() {
-  const [shopName, setShopName] = useState<String>("");
+  const [shopName, setShopName] = useState<string>("");
   const ShopAddress = useRecoilValue(address);
-  const [shopNumber, setShopNumber] = useState<String>("");
+  const [shopNumber, setShopNumber] = useState<string>("");
   const [visibleShopAddress, setVisibleShopAddress] =
     useRecoilState(visibleAddress);
+
+  // 가게 이미지 업로드
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [shopImages, setShopImages] = useState<string[]>([]);
   const inputPhotoFile = useRef<HTMLInputElement | null>(null);
+
   const inputMeunFile = useRef<HTMLInputElement | null>(null);
   const [inputCheckBox1, setInputCheckBox1] = useState(false);
   const [inputCheckBox2, setInputCheckBox2] = useState(false);
@@ -29,8 +34,6 @@ export default function EnrollShop() {
   const [inputItems, setInputItems] = useState<IInputItem[]>([
     { id: 0, startTime: "00:00", endTime: "00:00" },
   ]);
-  const [startTimeValue, setStartTimeValue] = useState("00:00:00");
-  const [endTimeValue, setEndTimeValue] = useState("00:00:00");
 
   const [startBreakTimeValue, setStartBreakTimeValue] = useState("00:00");
   const [endBreakTimeValue, setEndBreakTimeValue] = useState("00:00");
@@ -70,6 +73,10 @@ export default function EnrollShop() {
     }
   };
 
+  const uploadShopImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    fileRef?.current?.click();
+  };
+
   const onChangeShopNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     const regShopNumber = /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}/;
     const shopNumberCurrent = e.target.value;
@@ -82,11 +89,15 @@ export default function EnrollShop() {
     }
   };
 
-  const onChangeStartTimeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setStartTimeValue(e.target.value);
-  };
-  const onChangeEndTimeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEndTimeValue(e.target.value);
+  const onChangeShopImage = (e: React.ChangeEvent) => {
+    const targetFiles = (e.target as HTMLInputElement).files as FileList;
+    const targetFilesList = Array.from(targetFiles);
+    const selectedFiles: string[] = targetFilesList.map((file) => {
+      console.log("업로드");
+      return URL.createObjectURL(file);
+    });
+    setShopImages((prev) => prev.concat(selectedFiles));
+    inputPhotoFile.current?.click();
   };
 
   const onChangeStartBreakTimeValue = (
@@ -99,7 +110,6 @@ export default function EnrollShop() {
   ) => {
     setEndBreakTimeValue(e.target.value);
   };
-  console.log(inputItems);
 
   function onChangeStoreStartTimeInput(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -110,7 +120,6 @@ export default function EnrollShop() {
     const inputItemsCopy: IInputItem[] = JSON.parse(JSON.stringify(inputItems));
     inputItemsCopy[index].startTime = e.target.value;
     setInputItems(inputItemsCopy);
-    // setStartTimeValue(e.target.value);
   }
 
   function onChangeStoreEndTimeInput(
@@ -230,12 +239,21 @@ export default function EnrollShop() {
             </ShopInnerOutlineTitleWrapper>
 
             <ShopPhotoInputWrapper>
+              {shopImages.map((url, i) => (
+                <React.Fragment key={url}>
+                  <PreViewImage src={url} alt={`image${i}`} />
+                </React.Fragment>
+              ))}
               <ShopPhotoForm>
                 <ShopInput
+                  style={{ width: "204px", height: "100%" }}
                   ref={inputPhotoFile}
+                  multiple
                   className="input-file"
                   type="file"
                   id="file"
+                  accept="image/*"
+                  onChange={onChangeShopImage}
                 />
                 <PhotoIcon
                   onClick={onClickPhotoFile}
@@ -331,13 +349,15 @@ export default function EnrollShop() {
                         <label htmlFor="checkbox1" />
                       </ShopCheckBoxWrapper>
                     )}
-                    <ShopTimeButtonWrapper>
-                      <ShopTimeDeleteButton
-                        onClick={() => deleteInputItem(item.id)}
-                      >
-                        삭제
-                      </ShopTimeDeleteButton>
-                    </ShopTimeButtonWrapper>
+                    {inputItems.length >= 2 && (
+                      <ShopTimeButtonWrapper>
+                        <ShopTimeDeleteButton
+                          onClick={() => deleteInputItem(item.id)}
+                        >
+                          삭제
+                        </ShopTimeDeleteButton>
+                      </ShopTimeButtonWrapper>
+                    )}
                   </div>
                 ))}
               </ShopInputItemsWrapper>
@@ -565,17 +585,35 @@ const ShopInput = styled.input`
 `;
 
 const ShopPhotoInputWrapper = styled.div`
-  padding: 2%;
+  padding: 2% 1%;
+  display: flex;
+  gap: 5px;
+  overflow: hidden;
+  overflow-x: scroll;
+  &::-webkit-scrollbar {
+    height: 8px;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) =>
+      theme.colors.subColor1}; /*스크롤바의 색상*/
+  }
+  &::-webkit-scrollbar-track {
+    background-color: black; /*스크롤바 트랙 색상*/
+  }
+`;
+const PreViewImage = styled.img`
+  width: 228px;
+  height: 204px;
 `;
 const ShopPhotoForm = styled.div`
   width: 228px;
   height: 204px;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   .input-file {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     width: 100%;
     height: 100%;
     background-color: #fcfcfc;
