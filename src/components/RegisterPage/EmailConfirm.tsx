@@ -1,35 +1,76 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const EmailConfirm = () => {
   const navigate = useNavigate();
   const Param = useParams();
-  console.log(Param);
+
+  const [email, setEmail] = useState<string>("");
+  const [code, setCode] = useState<string>("");
+
+  const emailPattern =
+    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+  const emailOnChange = (emailText: string) => {
+    setEmail(emailText);
+  };
+
+  //onClick
+  const emailBtnOnClick = () => {
+    if (email === "") alert("이메일을 입력해주세요");
+    else if (!emailPattern.test(email)) alert("이메일이 형식에 맞지 않습니다");
+  };
+  const codeBtnOnClick = () => {
+    if (code === "") alert("인증번호를 입력해주세요");
+    else if (!code === null) alert("인증번호가 알맞지 않습니다");
+  };
+  const nextBtnOnClick = () => {
+    navigate(`/register/${Param.RegisterType}/Privacy`);
+  };
+
   return (
     <>
-      <EmailBox>
-        <EmailInput placeholder="이메일" />
-        <EmailSendBtn>인증 메일 전송</EmailSendBtn>
+      <EmailBox valid={email.length > 0 ? emailPattern.test(email) : true}>
+        <EmailInput
+          placeholder="이메일"
+          onChange={(e) => emailOnChange(e.target.value)}
+        />
+        <EmailSendBtn onClick={() => emailBtnOnClick()}>
+          인증 메일 전송
+        </EmailSendBtn>
       </EmailBox>
-      <ConfirmBox>
+      <ConfirmBox valid={true}>
         <ConfirmInput placeholder="인증코드" />
-        <ConfirmBtn>인증</ConfirmBtn>
+        <ConfirmBtn onClick={() => codeBtnOnClick()}>인증</ConfirmBtn>
       </ConfirmBox>
-      <NextBtn
-        onClick={() => navigate(`/register/${Param.RegisterType}/Privacy`)}
-      >
-        다음
-      </NextBtn>
+      <NextBtn onClick={() => nextBtnOnClick()}>다음</NextBtn>
     </>
   );
 };
 
-const EmailBox = styled.div`
+const EmailBox = styled.div<{ valid: any }>`
+  position: relative;
   display: flex;
   justify-content: center;
-  padding-bottom: 45px;
+  margin-bottom: 45px;
   width: 100%;
+  ${(props) => {
+    if (!props.valid) {
+      return css`
+        input {
+          border-color: #ff3a3a;
+        }
+        &::after {
+          content: "이메일 형식에 맞게 입력해주세요.";
+          position: absolute;
+          top: calc(100% + 2px);
+          left: 10%;
+          font-size: ${({ theme }) => theme.fontSizes.small};
+          color: #ff0000;
+        }
+      `;
+    }
+  }}
 `;
 const EmailInput = styled.input`
   margin-right: 15px;
