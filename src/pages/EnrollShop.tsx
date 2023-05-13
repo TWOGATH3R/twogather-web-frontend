@@ -1,7 +1,8 @@
-import React, { ReactText, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import { ReactComponent as PhotoIcon } from "../assets/photo-icon.svg";
 import { ReactComponent as PlusIcon } from "../assets/plus-icon.svg";
+import { ReactComponent as DeleteIcon } from "../assets/delete-icon.svg";
 import AddressModal from "../components/address/AddressModal";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { address, visibleAddress } from "../store/addressAtom";
@@ -14,19 +15,25 @@ interface IInputItem {
   startTime: string;
   endTime: string;
 }
+
+interface IShopMenuList {
+  id: number;
+  shopMenuName: string;
+  shopMenuPrice: string;
+}
 export default function EnrollShop() {
   const [shopName, setShopName] = useState<string>("");
   const ShopAddress = useRecoilValue(address);
   const [shopNumber, setShopNumber] = useState<string>("");
   const [visibleShopAddress, setVisibleShopAddress] =
     useRecoilState(visibleAddress);
+  const [shopNameMessage, setShopNameMessage] = useState("");
+  const [shopNumberMessage, setShopNumberMessage] = useState("");
 
   // 가게 이미지 업로드
-  const fileRef = useRef<HTMLInputElement>(null);
   const [shopImages, setShopImages] = useState<string[]>([]);
   const inputPhotoFile = useRef<HTMLInputElement | null>(null);
 
-  const inputMeunFile = useRef<HTMLInputElement | null>(null);
   const [inputCheckBox1, setInputCheckBox1] = useState(false);
   const [inputCheckBox2, setInputCheckBox2] = useState(false);
 
@@ -35,18 +42,18 @@ export default function EnrollShop() {
     { id: 0, startTime: "00:00", endTime: "00:00" },
   ]);
 
+  // 영업 시간
   const [startBreakTimeValue, setStartBreakTimeValue] = useState("00:00");
   const [endBreakTimeValue, setEndBreakTimeValue] = useState("00:00");
 
-  const [shopNameMessage, setShopNameMessage] = useState("");
-  const [shopNumberMessage, setShopNumberMessage] = useState("");
+  const shopMenuID = useRef<number>(1);
+  const [shopMenuList, setShopMenuList] = useState<IShopMenuList[]>([
+    { id: 0, shopMenuName: "", shopMenuPrice: "" },
+  ]);
+
   // onClick
   const onClickPhotoFile = () => {
     inputPhotoFile.current?.click();
-  };
-
-  const onClickMenuFile = () => {
-    inputMeunFile.current?.click();
   };
 
   const onClickShopAddress = () => {
@@ -71,10 +78,6 @@ export default function EnrollShop() {
     } else {
       setShopName("");
     }
-  };
-
-  const uploadShopImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    fileRef?.current?.click();
   };
 
   const onChangeShopNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -121,7 +124,6 @@ export default function EnrollShop() {
     inputItemsCopy[index].startTime = e.target.value;
     setInputItems(inputItemsCopy);
   }
-
   function onChangeStoreEndTimeInput(
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
@@ -131,7 +133,32 @@ export default function EnrollShop() {
     const inputItemsCopy: IInputItem[] = JSON.parse(JSON.stringify(inputItems));
     inputItemsCopy[index].endTime = e.target.value;
     setInputItems(inputItemsCopy);
-    // setEndTimeValue(e.target.value);
+  }
+
+  function onChangeShopMenuName(
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) {
+    if (index > shopMenuList.length) return;
+    const menuListCopy: IShopMenuList[] = JSON.parse(
+      JSON.stringify(shopMenuList)
+    );
+    menuListCopy[index].shopMenuName = e.target.value;
+    setShopMenuList(menuListCopy);
+    console.log(shopMenuList);
+  }
+
+  function onChangeShopMenuPrice(
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) {
+    if (index > shopMenuList.length) return;
+    const menuListCopy: IShopMenuList[] = JSON.parse(
+      JSON.stringify(shopMenuList)
+    );
+    menuListCopy[index].shopMenuPrice = e.target.value;
+    setShopMenuList(menuListCopy);
+    console.log(shopMenuList);
   }
 
   function addInputItem() {
@@ -141,11 +168,23 @@ export default function EnrollShop() {
       endTime: "00:00",
     };
     setInputItems([...inputItems, input]);
-
     nextID.current += 1;
   }
   function deleteInputItem(index: number) {
     setInputItems(inputItems.filter((item) => item.id !== index));
+  }
+
+  function addMenuItem() {
+    const menu = {
+      id: shopMenuID.current,
+      shopMenuName: "",
+      shopMenuPrice: "",
+    };
+    setShopMenuList([...shopMenuList, menu]);
+    shopMenuID.current += 1;
+  }
+  function deleteMenuList(index: number) {
+    setShopMenuList(shopMenuList.filter((item) => item.id !== index));
   }
   return (
     <EnrollShopContainer>
@@ -432,38 +471,49 @@ export default function EnrollShop() {
             </ShopInnerOutlineTitleWrapper>
 
             <ShopMenuContainer>
-              <ShopMenuInnerWrapper>
-                <ShopMenuWrapper style={{ marginBottom: "5%" }}>
-                  <ShopMenuSubTitle>메뉴명</ShopMenuSubTitle>
-                  <ShopMenuInput placeholder="입력해주세요" />
-                </ShopMenuWrapper>
-                <ShopMenuWrapper>
-                  <ShopMenuSubTitle>가격</ShopMenuSubTitle>
-                  <ShopMenuInput placeholder="입력해주세요" />
-                </ShopMenuWrapper>
-              </ShopMenuInnerWrapper>
+              {shopMenuList.map((item, index) => (
+                <ShopMenuInnerWrapper key={index}>
+                  {shopMenuList.length >= 2 && (
+                    <ShopDeleteButtonWrapper
+                      onClick={() => deleteMenuList(item.id)}
+                    >
+                      <DeleteIcon />
+                    </ShopDeleteButtonWrapper>
+                  )}
 
-              <ShopAddMenuContainer>
-                <ShopAddMenuWrapper>
-                  <ShopInput
-                    ref={inputMeunFile}
-                    className="input-file"
-                    type="file"
-                    id="menu-file"
-                  />
-                  <PlusIcon
-                    onClick={onClickMenuFile}
-                    style={{
-                      position: "absolute",
-                      top: "40%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      cursor: "pointer",
-                    }}
-                  />
-                  <label onClick={onClickMenuFile}>메뉴 추가하기</label>
-                </ShopAddMenuWrapper>
-              </ShopAddMenuContainer>
+                  <ShopMenuWrapper style={{ marginBottom: "5%" }}>
+                    <ShopMenuSubTitleWrapper>
+                      <ShopMenuSubTitle>메뉴명</ShopMenuSubTitle>
+                    </ShopMenuSubTitleWrapper>
+                    <ShopMenuInput
+                      value={item.shopMenuName || ""}
+                      onChange={(e) => onChangeShopMenuName(e, index)}
+                      placeholder="입력해주세요"
+                    />
+                  </ShopMenuWrapper>
+                  <ShopMenuWrapper>
+                    <ShopMenuSubTitleWrapper>
+                      <ShopMenuSubTitle>가격</ShopMenuSubTitle>
+                    </ShopMenuSubTitleWrapper>
+                    <ShopMenuInput
+                      value={item.shopMenuPrice || ""}
+                      onChange={(e) => onChangeShopMenuPrice(e, index)}
+                      placeholder="입력해주세요"
+                    />
+                  </ShopMenuWrapper>
+                </ShopMenuInnerWrapper>
+              ))}
+
+              <div>
+                <ShopAddMenuContainer>
+                  <ShopAddMenuWrapper>
+                    <ShopAssMenuBox onClick={addMenuItem}>
+                      <PlusIcon />
+                      <span>메뉴 추가하기</span>
+                    </ShopAssMenuBox>
+                  </ShopAddMenuWrapper>
+                </ShopAddMenuContainer>
+              </div>
             </ShopMenuContainer>
           </ShopInnerOutlineWrapper>
         </ShopWrapper>
@@ -599,7 +649,7 @@ const ShopPhotoInputWrapper = styled.div`
       theme.colors.subColor1}; /*스크롤바의 색상*/
   }
   &::-webkit-scrollbar-track {
-    background-color: black; /*스크롤바 트랙 색상*/
+    background-color: transparent; /*스크롤바 트랙 색상*/
   }
 `;
 const PreViewImage = styled.img`
@@ -703,18 +753,22 @@ const ShopCheckBoxWrapper = styled.div`
 const ShopMenuContainer = styled.div`
   padding: 10px;
   display: flex;
+  gap: 5px;
+  overflow-x: scroll;
 `;
 const ShopMenuInnerWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.subColor1};
-  flex: 2;
-  padding: 3% 2%;
+  padding: 3% 7% 3% 2%;
   border-radius: 20px;
+  position: relative;
 `;
 const ShopMenuWrapper = styled.div`
-  width: 100%;
+  width: 260px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+`;
+const ShopMenuSubTitleWrapper = styled.div`
+  width: 100%;
 `;
 const ShopMenuSubTitle = styled.span``;
 const ShopMenuInput = styled.input`
@@ -727,36 +781,37 @@ const ShopMenuInput = styled.input`
   }
 `;
 
+const ShopDeleteButtonWrapper = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  cursor: pointer;
+`;
+
 const ShopAddMenuContainer = styled.div`
-  flex: 3;
-  padding: 0 6%;
+  width: 260px;
+  height: 100%;
 `;
 const ShopAddMenuWrapper = styled.div`
-  width: 50%;
+  width: 100%;
   height: 100%;
   position: relative;
-  .input-file {
-    position: absolute;
-    border-radius: 20px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-    font-size: 0;
-    padding: 0;
-    cursor: pointer;
-  }
-  input[type="file"]::file-selector-button {
-    display: none;
-  }
-  label {
-    width: 100%;
-    position: absolute;
-    top: 65%;
-    left: 75%;
-    transform: translate(-50%, -50%);
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const ShopAssMenuBox = styled.div`
+  width: 100%;
+  height: 100%;
+  border: 1px solid ${({ theme }) => theme.colors.subColor1};
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  span {
+    margin-top: 20px;
     font-weight: bold;
   }
 `;
