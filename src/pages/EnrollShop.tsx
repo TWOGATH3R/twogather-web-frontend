@@ -10,10 +10,20 @@ import { address, visibleAddress } from "../store/addressAtom";
 interface IShopAddressVisible {
   visible: Boolean;
 }
-interface IInputItem {
+interface IShopInputItem {
   id: number;
   startTime: string;
   endTime: string;
+}
+
+interface IShopDayList {
+  monday: boolean;
+  tuesday: boolean;
+  wednesday: boolean;
+  thursday: boolean;
+  friday: boolean;
+  saturday: boolean;
+  sunday: boolean;
 }
 
 interface IShopMenuList {
@@ -38,11 +48,22 @@ export default function EnrollShop() {
   const [inputCheckBox2, setInputCheckBox2] = useState(false);
 
   const nextID = useRef<number>(1);
-  const [inputItems, setInputItems] = useState<IInputItem[]>([
+  const [inputItems, setInputItems] = useState<IShopInputItem[]>([
     { id: 0, startTime: "00:00", endTime: "00:00" },
   ]);
 
   // 영업 시간
+  const dayArr = [
+    { day: "월", boolean: false },
+    { day: "화", boolean: false },
+    { day: "수", boolean: false },
+    { day: "목", boolean: false },
+    { day: "금", boolean: false },
+    { day: "토", boolean: false },
+    { day: "일", boolean: false },
+  ];
+  const [dayList, setDayList] = useState(dayArr);
+  const [tab, setTab] = useState<string>("curr");
   const [startBreakTimeValue, setStartBreakTimeValue] = useState("00:00");
   const [endBreakTimeValue, setEndBreakTimeValue] = useState("00:00");
 
@@ -66,6 +87,58 @@ export default function EnrollShop() {
   const onClickCheckBox2 = () => {
     setInputCheckBox2((prev) => !prev);
   };
+  const onClickDay = (day: string) => {
+    console.log(dayList);
+    if (day === "월") {
+      if (dayList[0].boolean === false) {
+        dayList[0].boolean = true;
+      } else {
+        dayList[0].boolean = false;
+      }
+    }
+    if (day === "화") {
+      if (dayList[1].boolean === false) {
+        dayList[1].boolean = true;
+      } else {
+        dayList[1].boolean = false;
+      }
+    }
+    if (day === "수") {
+      if (dayList[2].boolean === false) {
+        dayList[2].boolean = true;
+      } else {
+        dayList[2].boolean = false;
+      }
+    }
+    if (day === "목") {
+      if (dayList[3].boolean === false) {
+        dayList[3].boolean = true;
+      } else {
+        dayList[3].boolean = false;
+      }
+    }
+    if (day === "금") {
+      if (dayList[4].boolean === false) {
+        dayList[4].boolean = true;
+      } else {
+        dayList[4].boolean = false;
+      }
+    }
+    if (day === "토") {
+      if (dayList[5].boolean === false) {
+        dayList[5].boolean = true;
+      } else {
+        dayList[5].boolean = false;
+      }
+    }
+    if (day === "일") {
+      if (dayList[6].boolean === false) {
+        dayList[6].boolean = true;
+      } else {
+        dayList[6].boolean = false;
+      }
+    }
+  };
 
   // onChange
   const onChangeShopName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,6 +148,7 @@ export default function EnrollShop() {
 
     if (!regShopName.test(shopNameCurrent)) {
       setShopNameMessage("이름이 옳바르지 않습니다.");
+      return;
     } else {
       setShopName("");
     }
@@ -86,7 +160,8 @@ export default function EnrollShop() {
     setShopNumber(e.target.value);
 
     if (!regShopNumber.test(shopNumberCurrent)) {
-      setShopNumberMessage("번호가 옳바르지 않습니다.");
+      setShopNumberMessage("번호가 옳바르지 않습니다. (- 포함시켜 주세요.)");
+      return;
     } else {
       setShopNumberMessage("");
     }
@@ -120,7 +195,9 @@ export default function EnrollShop() {
   ) {
     if (index > inputItems.length) return;
 
-    const inputItemsCopy: IInputItem[] = JSON.parse(JSON.stringify(inputItems));
+    const inputItemsCopy: IShopInputItem[] = JSON.parse(
+      JSON.stringify(inputItems)
+    );
     inputItemsCopy[index].startTime = e.target.value;
     setInputItems(inputItemsCopy);
   }
@@ -130,7 +207,9 @@ export default function EnrollShop() {
   ) {
     if (index > inputItems.length) return;
 
-    const inputItemsCopy: IInputItem[] = JSON.parse(JSON.stringify(inputItems));
+    const inputItemsCopy: IShopInputItem[] = JSON.parse(
+      JSON.stringify(inputItems)
+    );
     inputItemsCopy[index].endTime = e.target.value;
     setInputItems(inputItemsCopy);
   }
@@ -145,7 +224,6 @@ export default function EnrollShop() {
     );
     menuListCopy[index].shopMenuName = e.target.value;
     setShopMenuList(menuListCopy);
-    console.log(shopMenuList);
   }
 
   function onChangeShopMenuPrice(
@@ -158,7 +236,6 @@ export default function EnrollShop() {
     );
     menuListCopy[index].shopMenuPrice = e.target.value;
     setShopMenuList(menuListCopy);
-    console.log(shopMenuList);
   }
 
   function addInputItem() {
@@ -321,13 +398,31 @@ export default function EnrollShop() {
 
             <ShopDayWrapper>
               <ShopDayUl>
-                <ShopDayList>월</ShopDayList>
-                <ShopDayList>화</ShopDayList>
-                <ShopDayList>수</ShopDayList>
-                <ShopDayList>목</ShopDayList>
-                <ShopDayList>금</ShopDayList>
-                <ShopDayList>토</ShopDayList>
-                <ShopDayList>일</ShopDayList>
+                {dayList.map((item, idx) => (
+                  <>
+                    {item.boolean ? (
+                      <ShopDayList
+                        value={idx}
+                        className={`btn ${
+                          item.boolean === true ? "active" : ""
+                        }`}
+                        onClick={() => onClickDay(item.day)}
+                      >
+                        {item.day}
+                      </ShopDayList>
+                    ) : (
+                      <ShopDayList
+                        value={idx}
+                        className={`-btn ${
+                          item.boolean === false ? "active" : ""
+                        }`}
+                        onClick={() => onClickDay(item.day)}
+                      >
+                        {item.day}
+                      </ShopDayList>
+                    )}
+                  </>
+                ))}
               </ShopDayUl>
             </ShopDayWrapper>
             <ShopInnerWrapper>
@@ -343,59 +438,33 @@ export default function EnrollShop() {
                       marginBottom: "10px",
                     }}
                   >
-                    {inputCheckBox1 ? (
-                      <ShopInputItmsBox key={index}>
-                        <ShopTimeInput
-                          style={{ width: "100%" }}
-                          type="time"
-                          value={item.startTime || ""}
-                          onChange={(e) =>
-                            onChangeStoreStartTimeInput(e, index)
-                          }
-                        />
-                        <span className="time-wave">~</span>
-                        <ShopTimeInput
-                          style={{ width: "100%" }}
-                          type="time"
-                          value={item.endTime || ""}
-                          onChange={(e) => onChangeStoreEndTimeInput(e, index)}
-                        />
-                      </ShopInputItmsBox>
-                    ) : (
-                      <ShopInputItmsBox>
-                        <ShopTimeInput
-                          style={{ width: "100%" }}
-                          disabled
-                          type="time"
-                          defaultValue={"00:00"}
-                        />
-                        <span className="time-wave">~</span>
-                        <ShopTimeInput
-                          style={{ width: "100%" }}
-                          disabled
-                          type="time"
-                          defaultValue={"00:00"}
-                        />
-                      </ShopInputItmsBox>
-                    )}
-                    {item.id === 0 && (
-                      <ShopCheckBoxWrapper>
-                        <ShopInput
-                          id="checkbox1"
-                          type="checkbox"
-                          onClick={onClickCheckBox1}
-                        />
-                        <label htmlFor="checkbox1" />
-                      </ShopCheckBoxWrapper>
-                    )}
-                    {inputItems.length >= 2 && (
-                      <ShopTimeButtonWrapper>
-                        <ShopTimeDeleteButton
-                          onClick={() => deleteInputItem(item.id)}
-                        >
-                          삭제
-                        </ShopTimeDeleteButton>
-                      </ShopTimeButtonWrapper>
+                    <ShopInputItmsBox key={index}>
+                      <ShopTimeInput
+                        style={{ width: "100%" }}
+                        type="time"
+                        value={item.startTime || ""}
+                        onChange={(e) => onChangeStoreStartTimeInput(e, index)}
+                      />
+                      <span className="time-wave">~</span>
+                      <ShopTimeInput
+                        style={{ width: "100%" }}
+                        type="time"
+                        value={item.endTime || ""}
+                        onChange={(e) => onChangeStoreEndTimeInput(e, index)}
+                      />
+                    </ShopInputItmsBox>
+                    {inputItems.length >= 1 && (
+                      <>
+                        {item.id !== 0 && (
+                          <ShopTimeButtonWrapper>
+                            <ShopTimeDeleteButton
+                              onClick={() => deleteInputItem(item.id)}
+                            >
+                              <span>삭제</span>
+                            </ShopTimeDeleteButton>
+                          </ShopTimeButtonWrapper>
+                        )}
+                      </>
                     )}
                   </div>
                 ))}
@@ -691,6 +760,15 @@ const ShopDayUl = styled.ul`
   width: 40%;
   display: flex;
   align-items: center;
+  .btn {
+    background-color: #fff;
+    border: 1px solid #dbdee2;
+    color: #404a5c;
+  }
+  .btn.active {
+    background-color: #505bf0;
+    color: #fff;
+  }
 `;
 const ShopDayList = styled.li`
   list-style: none;
@@ -700,6 +778,7 @@ const ShopDayList = styled.li`
   padding: 10px 12px;
   font-weight: bold;
   margin-right: 4%;
+  cursor: pointer;
 `;
 const ShopInputItemsWrapper = styled.div`
   display: flex;
@@ -736,11 +815,15 @@ const ShopTimeButton = styled.button`
   cursor: pointer;
 `;
 const ShopTimeDeleteButton = styled.button`
-  padding: 2% 5%;
+  padding: 2%;
   background-color: transparent;
   border: 1px solid ${({ theme }) => theme.colors.subColor1};
   border-radius: 9999px;
   width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid black;
   cursor: pointer;
 `;
 
@@ -755,6 +838,17 @@ const ShopMenuContainer = styled.div`
   display: flex;
   gap: 5px;
   overflow-x: scroll;
+  &::-webkit-scrollbar {
+    height: 8px;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) =>
+      theme.colors.subColor1}; /*스크롤바의 색상*/
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent; /*스크롤바 트랙 색상*/
+  }
 `;
 const ShopMenuInnerWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.subColor1};
