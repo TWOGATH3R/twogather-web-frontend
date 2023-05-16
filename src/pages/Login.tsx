@@ -30,12 +30,14 @@ const Login = () => {
         <Title>로그인</Title>
         <IdInputBox valid={id.length > 0 ? emailPattern.test(id) : true}>
           <IdInput
+            value={id}
             placeholder="이메일"
             onChange={(e) => idOnChange(e.target.value)}
           />
         </IdInputBox>
         <PwInputBox valid={pw.length > 0 ? pwPattern.test(pw) : true}>
           <PwInput
+            value={pw}
             placeholder="비밀번호"
             onChange={(e) => pwOnChange(e.target.value)}
           />
@@ -76,7 +78,7 @@ const Title = styled.h1`
   font-size: ${({ theme }) => theme.fontSizes.xxxl};
 `;
 
-const IdInputBox = styled.div<{ valid: any }>`
+const IdInputBox = styled.div<{ valid: boolean }>`
   position: relative;
   display: flex;
   flex-direction: column;
