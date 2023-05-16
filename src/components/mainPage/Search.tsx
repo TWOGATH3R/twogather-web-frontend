@@ -61,7 +61,7 @@ const Search = () => {
           </CategoriesList>
         </BackgroundBox>
         <DateAndSearchBox>
-          <DateBox>
+          <DateBox id="dateBox">
             <DaysBox>{days}</DaysBox>
             <DayWeekYearMonthBox>
               <DayWeekBox>{dayWeek}day</DayWeekBox>
@@ -103,8 +103,9 @@ const DateAndSearchBox = styled.div`
 
 const DateBox = styled.div`
   display: flex;
+  justify-content: center;
   align-items: center;
-  width: 180px;
+  flex: 1;
 `;
 const DaysBox = styled.div`
   padding-right: 15px;
@@ -122,7 +123,7 @@ const MonthAndYearBox = styled.div`
 `;
 
 const SearchBox = styled.div`
-  width: calc(100% - 180px);
+  flex: 2.8;
   height: 48px;
 `;
 const CategoriesInput = styled.input`
@@ -203,7 +204,7 @@ const SearchInput = styled.input`
   border-right: none;
   border-radius: 2px;
   box-sizing: border-box;
-  font-size: ${({theme})=>theme.fontSizes.base};
+  font-size: ${({ theme }) => theme.fontSizes.base};
 `;
 const SearchBtn = styled.button`
   width: 100px;
