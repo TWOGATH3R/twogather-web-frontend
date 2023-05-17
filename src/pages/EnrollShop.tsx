@@ -24,37 +24,14 @@ interface IShopDay {
   day: string;
   status: boolean;
 }
-interface IDayList {
-  week: [
-    {
-      day: string;
-      status: boolean;
-    },
-    {
-      day: string;
-      status: boolean;
-    },
-    {
-      day: string;
-      status: boolean;
-    },
-    {
-      day: string;
-      status: boolean;
-    },
-    {
-      day: string;
-      status: boolean;
-    },
-    {
-      day: string;
-      status: boolean;
-    },
-    {
-      day: string;
-      status: boolean;
-    }
-  ];
+interface IText {
+  text1: string;
+  text2: string;
+  text3: string;
+  text4: string;
+  text5: string;
+  text6: string;
+  text7: string;
 }
 
 interface IShopMenuList {
@@ -75,31 +52,18 @@ export default function EnrollShop() {
   const [shopImages, setShopImages] = useState<string[]>([]);
   const inputPhotoFile = useRef<HTMLInputElement | null>(null);
 
-  const [breakTimeInputCheckBox, setBreakTimeInputCheckBox] = useState(false);
   // 영업 시간
-  // const dayArr = [
-  //   { monday: "월", status: false },
-  //   { tuesday: "화", status: false },
-  //   { wednesday: "수", status: false },
-  //   { thursday: "목", status: false },
-  //   { friday: "금", status: false },
-  //   { saturday: "토", status: false },
-  //   { sunday: "일", status: false },
-  // ];
   const nextID = useRef<number>(1);
-  const [dayList, setDayList] = useState<IDayList[]>([
-    {
-      week: [
-        { day: "월", status: false },
-        { day: "화", status: false },
-        { day: "수", status: false },
-        { day: "목", status: false },
-        { day: "금", status: false },
-        { day: "토", status: false },
-        { day: "일", status: false },
-      ],
-    },
-  ]);
+  const [breakTimeInputCheckBox, setBreakTimeInputCheckBox] = useState(false);
+  const [tab, setTab] = useState<IText>({
+    text1: "",
+    text2: "",
+    text3: "",
+    text4: "",
+    text5: "",
+    text6: "",
+    text7: "",
+  });
   const [inputItems, setInputItems] = useState<IShopInputItem[]>([
     {
       id: 0,
@@ -119,8 +83,6 @@ export default function EnrollShop() {
       ],
     },
   ]);
-  console.log(dayList);
-  const [tab, setTab] = useState<string>("curr");
   const shopMenuID = useRef<number>(1);
   const [shopMenuList, setShopMenuList] = useState<IShopMenuList[]>([
     { id: 0, shopMenuName: "", shopMenuPrice: "" },
@@ -138,7 +100,14 @@ export default function EnrollShop() {
   const onClickBreakTimeCheckBox = () => {
     setBreakTimeInputCheckBox((prev) => !prev);
   };
-  const onClickDay = (day: any) => {
+  const onClickDay = (day: any, idx: number) => {
+    console.log(inputItems[0].week);
+    console.log(day);
+    if (day.day === "월" && idx === 0) {
+      // setTab.text1("curr");
+    } else {
+      // setTab.text1("prev");
+    }
     if (day.day === "월") {
       if (day.status === false) {
         day.status = true;
@@ -216,7 +185,6 @@ export default function EnrollShop() {
       setShopNumberMessage("");
     }
   };
-  console.log(inputItems);
 
   const onChangeShopImage = (e: React.ChangeEvent) => {
     const targetFiles = (e.target as HTMLInputElement).files as FileList;
@@ -502,9 +470,16 @@ export default function EnrollShop() {
                 <ShopDayWrapper>
                   <ShopDayUl>
                     {item.week.map((day, idx) => (
-                      <ShopDayList onClick={() => onClickDay(day)}>
-                        {day.day}
-                      </ShopDayList>
+                      <>
+                        <ShopDayList
+                          className={`btn ${
+                            day.status === true ? `active${idx}` : ""
+                          }`}
+                          onClick={() => onClickDay(day, idx)}
+                        >
+                          {day.day}
+                        </ShopDayList>
+                      </>
                     ))}
                   </ShopDayUl>
                 </ShopDayWrapper>
@@ -843,12 +818,7 @@ const ShopDayUl = styled.ul`
   width: 40%;
   display: flex;
   align-items: center;
-  .btn {
-    background-color: #fff;
-    border: 1px solid #dbdee2;
-    color: #404a5c;
-  }
-  .btn.active {
+  .active {
     background-color: #505bf0;
     color: #fff;
   }
