@@ -6,7 +6,6 @@ const InfoInput = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const param = useParams();
-  console.log(param);
 
   const [pw, setPw] = useState<string>("");
   const [pwCheck, setPwCheck] = useState<string>("");

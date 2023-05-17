@@ -1,20 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const FindId = () => {
+  const [userName, setUserName] = useState<string>("");
+
+  //onChange
+  const userNameOnChange = (userNameText: string) => {
+    setUserName(userNameText);
+  };
+
+  //onClick
+  const findBtnOnClick = () => {
+    if (!userName) alert("사용자명을 입력해주세요");
+  };
+
   return (
     <FindIdContainer>
       <FindIdWrraper>
         <Title>아이디 찾기</Title>
         <UserNameInputBox>
-          <UserNameInput placeholder="사용자명" />
+          <UserNameInput
+            value={userName}
+            placeholder="사용자명"
+            onChange={(e) => userNameOnChange(e.target.value)}
+          />
         </UserNameInputBox>
         <SearchResultBox>
           <span>조회 결과</span>
           <SearchResult>fir*****@naver.com</SearchResult>
         </SearchResultBox>
-        <LoginBtn>조회</LoginBtn>
+        <LoginBtn onClick={() => findBtnOnClick()}>조회</LoginBtn>
         <FingPwBtnBox>
           <Link to={"/findPw"}>비밀번호 찾기</Link>
         </FingPwBtnBox>
