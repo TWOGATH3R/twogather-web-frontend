@@ -17,8 +17,13 @@ interface IShopInputItem {
   startBreakTime: string;
   endBreakTime: string;
   breakTimeCheckBox: boolean;
+  week: IShopDay[];
 }
 
+interface IShopDay {
+  day: string;
+  status: boolean;
+}
 interface IDayList {
   week: [
     {
@@ -72,15 +77,15 @@ export default function EnrollShop() {
 
   const [breakTimeInputCheckBox, setBreakTimeInputCheckBox] = useState(false);
   // 영업 시간
-  const dayArr = [
-    { monday: "월", status: false },
-    { tuesday: "화", status: false },
-    { wednesday: "수", status: false },
-    { thursday: "목", status: false },
-    { friday: "금", status: false },
-    { saturday: "토", status: false },
-    { sunday: "일", status: false },
-  ];
+  // const dayArr = [
+  //   { monday: "월", status: false },
+  //   { tuesday: "화", status: false },
+  //   { wednesday: "수", status: false },
+  //   { thursday: "목", status: false },
+  //   { friday: "금", status: false },
+  //   { saturday: "토", status: false },
+  //   { sunday: "일", status: false },
+  // ];
   const nextID = useRef<number>(1);
   const [dayList, setDayList] = useState<IDayList[]>([
     {
@@ -95,7 +100,6 @@ export default function EnrollShop() {
       ],
     },
   ]);
-  console.log(dayList[0].week.length);
   const [inputItems, setInputItems] = useState<IShopInputItem[]>([
     {
       id: 0,
@@ -104,9 +108,18 @@ export default function EnrollShop() {
       startBreakTime: "00:00",
       endBreakTime: "00:00",
       breakTimeCheckBox: false,
+      week: [
+        { day: "월", status: false },
+        { day: "화", status: false },
+        { day: "수", status: false },
+        { day: "목", status: false },
+        { day: "금", status: false },
+        { day: "토", status: false },
+        { day: "일", status: false },
+      ],
     },
   ]);
-
+  console.log(dayList);
   const [tab, setTab] = useState<string>("curr");
   const shopMenuID = useRef<number>(1);
   const [shopMenuList, setShopMenuList] = useState<IShopMenuList[]>([
@@ -125,58 +138,57 @@ export default function EnrollShop() {
   const onClickBreakTimeCheckBox = () => {
     setBreakTimeInputCheckBox((prev) => !prev);
   };
-  // const onClickDay = (day: string) => {
-  //   console.log(dayList);
-  //   if (day === "월") {
-  //     if (dayList[0].boolean === false) {
-  //       dayList[0].boolean = true;
-  //     } else {
-  //       dayList[0].boolean = false;
-  //     }
-  //   }
-  //   if (day === "화") {
-  //     if (dayList[1].boolean === false) {
-  //       dayList[1].boolean = true;
-  //     } else {
-  //       dayList[1].boolean = false;
-  //     }
-  //   }
-  //   if (day === "수") {
-  //     if (dayList[2].boolean === false) {
-  //       dayList[2].boolean = true;
-  //     } else {
-  //       dayList[2].boolean = false;
-  //     }
-  //   }
-  //   if (day === "목") {
-  //     if (dayList[3].boolean === false) {
-  //       dayList[3].boolean = true;
-  //     } else {
-  //       dayList[3].boolean = false;
-  //     }
-  //   }
-  //   if (day === "금") {
-  //     if (dayList[4].boolean === false) {
-  //       dayList[4].boolean = true;
-  //     } else {
-  //       dayList[4].boolean = false;
-  //     }
-  //   }
-  //   if (day === "토") {
-  //     if (dayList[5].boolean === false) {
-  //       dayList[5].boolean = true;
-  //     } else {
-  //       dayList[5].boolean = false;
-  //     }
-  //   }
-  //   if (day === "일") {
-  //     if (dayList[6].boolean === false) {
-  //       dayList[6].boolean = true;
-  //     } else {
-  //       dayList[6].boolean = false;
-  //     }
-  //   }
-  // };
+  const onClickDay = (day: any) => {
+    if (day.day === "월") {
+      if (day.status === false) {
+        day.status = true;
+      } else {
+        day.status = false;
+      }
+    }
+    if (day.day === "화") {
+      if (day.status === false) {
+        day.status = true;
+      } else {
+        day.status = false;
+      }
+    }
+    if (day.day === "수") {
+      if (day.status === false) {
+        day.status = true;
+      } else {
+        day.status = false;
+      }
+    }
+    if (day.day === "목") {
+      if (day.status === false) {
+        day.status = true;
+      } else {
+        day.status = false;
+      }
+    }
+    if (day.day === "금") {
+      if (day.status === false) {
+        day.status = true;
+      } else {
+        day.status = false;
+      }
+    }
+    if (day.day === "토") {
+      if (day.status === false) {
+        day.status = true;
+      } else {
+        day.status = false;
+      }
+    }
+    if (day.day === "일") {
+      if (day.status === false) {
+        day.status = true;
+      } else {
+        day.status = false;
+      }
+    }
+  };
 
   // onChange
   const onChangeShopName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -309,6 +321,15 @@ export default function EnrollShop() {
       startBreakTime: "00:00",
       endBreakTime: "00:00",
       breakTimeCheckBox: false,
+      week: [
+        { day: "월", status: false },
+        { day: "화", status: false },
+        { day: "수", status: false },
+        { day: "목", status: false },
+        { day: "금", status: false },
+        { day: "토", status: false },
+        { day: "일", status: false },
+      ],
     };
     setInputItems([...inputItems, input]);
     nextID.current += 1;
@@ -480,12 +501,8 @@ export default function EnrollShop() {
 
                 <ShopDayWrapper>
                   <ShopDayUl>
-                    {dayList[0].week.map((day, idx) => (
-                      <ShopDayList
-                      // value={idx}
-                      // onClick={() => onClickDay(day.friday)}
-                      >
-                        {/* {idx} */}
+                    {item.week.map((day, idx) => (
+                      <ShopDayList onClick={() => onClickDay(day)}>
                         {day.day}
                       </ShopDayList>
                     ))}
