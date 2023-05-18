@@ -54,16 +54,14 @@ export default function EnrollShop() {
 
   // 영업 시간
   const nextID = useRef<number>(1);
+  const nextDayID = useRef<number>(1);
   const [breakTimeInputCheckBox, setBreakTimeInputCheckBox] = useState(false);
-  const [tab, setTab] = useState<IText>({
-    text1: "",
-    text2: "",
-    text3: "",
-    text4: "",
-    text5: "",
-    text6: "",
-    text7: "",
-  });
+  const [tab, setTab] = useState([
+    {
+      id: 0,
+      clickDay: "",
+    },
+  ]);
   const [inputItems, setInputItems] = useState<IShopInputItem[]>([
     {
       id: 0,
@@ -100,60 +98,71 @@ export default function EnrollShop() {
   const onClickBreakTimeCheckBox = () => {
     setBreakTimeInputCheckBox((prev) => !prev);
   };
-  const onClickDay = (day: any, idx: number) => {
-    console.log(inputItems[0].week);
-    console.log(day);
-    if (day.day === "월" && idx === 0) {
-      // setTab.text1("curr");
-    } else {
-      // setTab.text1("prev");
-    }
+  const onClickDay = (
+    e: React.MouseEvent<HTMLLIElement>,
+    day: any,
+    idx: number
+  ) => {
     if (day.day === "월") {
       if (day.status === false) {
+        setTab([...tab]);
         day.status = true;
       } else {
+        setTab(tab.filter((item) => item.id !== idx));
         day.status = false;
       }
     }
     if (day.day === "화") {
       if (day.status === false) {
+        setTab([...tab]);
         day.status = true;
       } else {
+        setTab(tab.filter((item) => item.id !== idx));
         day.status = false;
       }
     }
     if (day.day === "수") {
       if (day.status === false) {
+        setTab([...tab]);
         day.status = true;
       } else {
+        setTab(tab.filter((item) => item.id !== idx));
         day.status = false;
       }
     }
     if (day.day === "목") {
       if (day.status === false) {
+        setTab([...tab]);
         day.status = true;
       } else {
+        setTab(tab.filter((item) => item.id !== idx));
         day.status = false;
       }
     }
     if (day.day === "금") {
       if (day.status === false) {
+        setTab([...tab]);
         day.status = true;
       } else {
+        setTab(tab.filter((item) => item.id !== idx));
         day.status = false;
       }
     }
     if (day.day === "토") {
       if (day.status === false) {
+        setTab([...tab]);
         day.status = true;
       } else {
+        setTab(tab.filter((item) => item.id !== idx));
         day.status = false;
       }
     }
     if (day.day === "일") {
       if (day.status === false) {
+        setTab([...tab]);
         day.status = true;
       } else {
+        setTab(tab.filter((item) => item.id !== idx));
         day.status = false;
       }
     }
@@ -197,6 +206,40 @@ export default function EnrollShop() {
     inputPhotoFile.current?.click();
   };
 
+  function onChangeStoreDay(status: boolean, index: number) {
+    const inputItemsCopy: IShopInputItem[] = JSON.parse(
+      JSON.stringify(inputItems)
+    );
+    if (index > inputItems.length) return;
+    inputItemsCopy[index].week[index].status = status;
+    setInputItems(inputItemsCopy);
+  }
+
+  function onChangeStoreStartTimeInput(
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) {
+    if (index > inputItems.length) return;
+
+    const inputItemsCopy: IShopInputItem[] = JSON.parse(
+      JSON.stringify(inputItems)
+    );
+    inputItemsCopy[index].startTime = e.target.value;
+    setInputItems(inputItemsCopy);
+  }
+  function onChangeStoreEndTimeInput(
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) {
+    if (index > inputItems.length) return;
+
+    const inputItemsCopy: IShopInputItem[] = JSON.parse(
+      JSON.stringify(inputItems)
+    );
+    inputItemsCopy[index].endTime = e.target.value;
+    setInputItems(inputItemsCopy);
+  }
+
   const onChangeBreakTimeCheckBox = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
@@ -231,31 +274,6 @@ export default function EnrollShop() {
     inputItemsCopy[index].endBreakTime = e.target.value;
     setInputItems(inputItemsCopy);
   };
-
-  function onChangeStoreStartTimeInput(
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) {
-    if (index > inputItems.length) return;
-
-    const inputItemsCopy: IShopInputItem[] = JSON.parse(
-      JSON.stringify(inputItems)
-    );
-    inputItemsCopy[index].startTime = e.target.value;
-    setInputItems(inputItemsCopy);
-  }
-  function onChangeStoreEndTimeInput(
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) {
-    if (index > inputItems.length) return;
-
-    const inputItemsCopy: IShopInputItem[] = JSON.parse(
-      JSON.stringify(inputItems)
-    );
-    inputItemsCopy[index].endTime = e.target.value;
-    setInputItems(inputItemsCopy);
-  }
 
   function onChangeShopMenuName(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -412,7 +430,11 @@ export default function EnrollShop() {
             <ShopPhotoInputWrapper>
               {shopImages.map((url, i) => (
                 <React.Fragment key={url}>
-                  <PreViewImage src={url} alt={`image${i}`} />
+                  <PreViewImage
+                    src={url}
+                    alt={`image${i}`}
+                    onClick={() => {}}
+                  />
                 </React.Fragment>
               ))}
               <ShopPhotoForm>
@@ -471,14 +493,18 @@ export default function EnrollShop() {
                   <ShopDayUl>
                     {item.week.map((day, idx) => (
                       <>
-                        <ShopDayList
-                          className={`btn ${
-                            day.status === true ? `active${idx}` : ""
-                          }`}
-                          onClick={() => onClickDay(day, idx)}
-                        >
-                          {day.day}
-                        </ShopDayList>
+                        {day.status === true ? (
+                          <ShopDayList
+                            style={{ backgroundColor: "#FFB5B5" }}
+                            onClick={(e) => onClickDay(e, day, idx)}
+                          >
+                            {day.day}
+                          </ShopDayList>
+                        ) : (
+                          <ShopDayList onClick={(e) => onClickDay(e, day, idx)}>
+                            {day.day}
+                          </ShopDayList>
+                        )}
                       </>
                     ))}
                   </ShopDayUl>
@@ -578,9 +604,13 @@ export default function EnrollShop() {
 
                 <ShopTimeButtonWrapper>
                   {item.id === 0 && (
-                    <ShopTimeButton onClick={addInputItem}>
-                      영업시간 추가
-                    </ShopTimeButton>
+                    <>
+                      {inputItems.length <= 6 && (
+                        <ShopTimeButton onClick={addInputItem}>
+                          영업시간 추가
+                        </ShopTimeButton>
+                      )}
+                    </>
                   )}
                 </ShopTimeButtonWrapper>
               </ShopInnerOutlineWrapper>
@@ -782,6 +812,7 @@ const ShopPhotoInputWrapper = styled.div`
 const PreViewImage = styled.img`
   width: 228px;
   height: 204px;
+  cursor: pointer;
 `;
 const ShopPhotoForm = styled.div`
   width: 228px;
