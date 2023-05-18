@@ -32,11 +32,47 @@ interface IShopMenuList {
 export default function EnrollShop() {
   const [shopName, setShopName] = useState<string>("");
   const ShopAddress = useRecoilValue(address);
-  const [shopNumber, setShopNumber] = useState<string>("");
   const [visibleShopAddress, setVisibleShopAddress] =
     useRecoilState(visibleAddress);
+  const [shopNumber, setShopNumber] = useState<string>("");
+  const [shopCategory, setShopCategory] = useState<string>("");
+  const CATEGORY = [
+    {
+      categoryId: 1,
+      name: "양식",
+    },
+    {
+      categoryId: 2,
+      name: "일식",
+    },
+    {
+      categoryId: 3,
+      name: "중식",
+    },
+    {
+      categoryId: 4,
+      name: "카페",
+    },
+    {
+      categoryId: 5,
+      name: "한식",
+    },
+    {
+      categoryId: 6,
+      name: "패스트푸드",
+    },
+    {
+      categoryId: 7,
+      name: "분식",
+    },
+    {
+      categoryId: 8,
+      name: "기타",
+    },
+  ];
   const [shopNameMessage, setShopNameMessage] = useState("");
   const [shopNumberMessage, setShopNumberMessage] = useState("");
+  const [shopCategoryMessage, setShopCategoryMessage] = useState("");
 
   // 가게 이미지 업로드
   const [shopImages, setShopImages] = useState<string[]>([]);
@@ -200,6 +236,16 @@ export default function EnrollShop() {
       return;
     } else {
       setShopNumberMessage("");
+    }
+  };
+
+  const onChangeShopCategory = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // const shopCategoryCurrent = e.target.value;
+    setShopCategory(e.target.value);
+    if (shopCategory.length >= 0) {
+      setShopCategoryMessage("카테고리를 선택해주세요.");
+    } else {
+      setShopCategory("");
     }
   };
 
@@ -391,11 +437,12 @@ export default function EnrollShop() {
             </ShopInnerWrapper>
 
             {/* 가게 전화번호 */}
-            {shopNumber.length ? (
+            {shopNumber.length > 0 ? (
               <ShopInnerWrapper>
                 <ShopTitle>가게 전화번호</ShopTitle>
                 <InputMessageWrapper>
                   <ShopInput
+                    type="tel"
                     placeholder="입력해주세요"
                     onChange={onChangeShopNumber}
                   />
@@ -407,6 +454,7 @@ export default function EnrollShop() {
                 <ShopTitle>가게 전화번호</ShopTitle>
                 <InputMessageWrapper>
                   <ShopInput
+                    type="tel"
                     placeholder="입력해주세요"
                     onChange={onChangeShopNumber}
                   />
@@ -414,9 +462,30 @@ export default function EnrollShop() {
                 </InputMessageWrapper>
               </ShopInnerWrapper>
             )}
-            <ShopInnerWrapper>
-              <ShopTitle>카테고리</ShopTitle>
-            </ShopInnerWrapper>
+            {shopCategory.length > 0 ? (
+              <ShopInnerWrapper>
+                <ShopTitle>카테고리</ShopTitle>
+                <InputMessageWrapper>
+                  <ShopInput
+                    type="category"
+                    placeholder="선택해주세요"
+                    onChange={onChangeShopCategory}
+                  />
+                  <InputMessage>{shopCategoryMessage}</InputMessage>
+                </InputMessageWrapper>
+              </ShopInnerWrapper>
+            ) : (
+              <ShopInnerWrapper>
+                <ShopTitle>카테고리</ShopTitle>
+                <InputMessageWrapper>
+                  <ShopInput
+                    placeholder="입력해주세요"
+                    onChange={onChangeShopCategory}
+                  />
+                  <InputMessage />
+                </InputMessageWrapper>
+              </ShopInnerWrapper>
+            )}
           </ShopInnerOutlineWrapper>
         </ShopWrapper>
 
