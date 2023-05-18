@@ -6,7 +6,7 @@ import { ReactComponent as DeleteIcon } from "../assets/delete-icon.svg";
 import AddressModal from "../components/address/AddressModal";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { address, visibleAddress } from "../store/addressAtom";
-
+import Swal from "sweetalert2";
 interface IShopAddressVisible {
   visible: Boolean;
 }
@@ -24,16 +24,6 @@ interface IShopDay {
   day: string;
   status: boolean;
 }
-interface IText {
-  text1: string;
-  text2: string;
-  text3: string;
-  text4: string;
-  text5: string;
-  text6: string;
-  text7: string;
-}
-
 interface IShopMenuList {
   id: number;
   shopMenuName: string;
@@ -54,7 +44,6 @@ export default function EnrollShop() {
 
   // 영업 시간
   const nextID = useRef<number>(1);
-  const nextDayID = useRef<number>(1);
   const [breakTimeInputCheckBox, setBreakTimeInputCheckBox] = useState(false);
   const [tab, setTab] = useState([
     {
@@ -89,6 +78,25 @@ export default function EnrollShop() {
   // onClick
   const onClickPhotoFile = () => {
     inputPhotoFile.current?.click();
+  };
+
+  const onClickDeltePohoto = (idx: number) => {
+    Swal.fire({
+      title: "이미지를 삭제하겠습니까?",
+      showCancelButton: true,
+      confirmButtonColor: "#2663FF",
+      cancelButtonColor: "#FFB5B5",
+      confirmButtonText: "확인",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setShopImages([
+          ...shopImages.slice(0, idx),
+          ...shopImages.slice(idx + 1, shopImages.length),
+        ]);
+        Swal.fire("삭제되었습니다!", "", "success");
+      }
+    });
   };
 
   const onClickShopAddress = () => {
@@ -205,15 +213,6 @@ export default function EnrollShop() {
     setShopImages((prev) => prev.concat(selectedFiles));
     inputPhotoFile.current?.click();
   };
-
-  function onChangeStoreDay(status: boolean, index: number) {
-    const inputItemsCopy: IShopInputItem[] = JSON.parse(
-      JSON.stringify(inputItems)
-    );
-    if (index > inputItems.length) return;
-    inputItemsCopy[index].week[index].status = status;
-    setInputItems(inputItemsCopy);
-  }
 
   function onChangeStoreStartTimeInput(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -415,6 +414,9 @@ export default function EnrollShop() {
                 </InputMessageWrapper>
               </ShopInnerWrapper>
             )}
+            <ShopInnerWrapper>
+              <ShopTitle>카테고리</ShopTitle>
+            </ShopInnerWrapper>
           </ShopInnerOutlineWrapper>
         </ShopWrapper>
 
@@ -428,12 +430,12 @@ export default function EnrollShop() {
             </ShopInnerOutlineTitleWrapper>
 
             <ShopPhotoInputWrapper>
-              {shopImages.map((url, i) => (
+              {shopImages.map((url, idx) => (
                 <React.Fragment key={url}>
                   <PreViewImage
                     src={url}
-                    alt={`image${i}`}
-                    onClick={() => {}}
+                    alt={`image${idx}`}
+                    onClick={() => onClickDeltePohoto(idx)}
                   />
                 </React.Fragment>
               ))}
