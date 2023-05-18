@@ -30,10 +30,10 @@ const InfoInput = () => {
 
   //onClick
   const nextBtnOnClick = () => {
-    if (pw === "") alert("비밀번호를 입력해주세요");
-    else if (pwCheck === "") alert("비밀번호를 확인해주세요");
-    else if (name === "") alert("이름을 입력해주세요");
-    else if (phone === "") alert("전화번호를 입력해주세요");
+    if (!pw) alert("비밀번호를 입력해주세요");
+    else if (!pwCheck) alert("비밀번호를 확인해주세요");
+    else if (!name) alert("이름을 입력해주세요");
+    else if (!phone) alert("전화번호를 입력해주세요");
     else if (!pwPattern.test(pw)) alert("비밀번호가 양식에 맞지 않습니다");
     else if (pw !== pwCheck) alert("비밀번호가 일치하지 않습니다");
     else if (!phonePattern.test(phone))
