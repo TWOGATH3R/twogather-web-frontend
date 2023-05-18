@@ -23,12 +23,12 @@ const EmailConfirm = () => {
 
   //onClick
   const emailBtnOnClick = () => {
-    if (email === "") alert("이메일을 입력해주세요");
+    if (!email) alert("이메일을 입력해주세요");
     else if (!emailPattern.test(email)) alert("이메일이 형식에 맞지 않습니다");
     else timerInterval();
   };
   const codeBtnOnClick = () => {
-    if (code === "") alert("인증번호를 입력해주세요");
+    if (!code) alert("인증번호를 입력해주세요");
     else if (!code === null) alert("인증번호가 알맞지 않습니다");
     else {
       alert("인증완료");
@@ -36,9 +36,9 @@ const EmailConfirm = () => {
     }
   };
   const nextBtnOnClick = () => {
-    if (email === "") alert("이메일을 입력해주세요");
+    if (!email) alert("이메일을 입력해주세요");
     else if (!emailPattern.test(email)) alert("이메일 형식을 맞춰주세요");
-    else if (code === "") alert("인증번호를 입력해주세요");
+    else if (!code) alert("인증번호를 입력해주세요");
     else if (!codeConfirm) alert("인증번호 확인을 완료해주세요");
     else
       navigate(`/register/${Param.RegisterType}/Privacy`, {

@@ -47,10 +47,10 @@ const StoreInfo = () => {
 
   //onClick
   const completeOnClick = () => {
-    if (ownerNumber === "" || ownerNumber.length < 10)
+    if (!ownerNumber || ownerNumber.length < 10)
       alert("사업자등록번호 10자를 입력해주세요");
-    else if (ownerName === "") alert("사업자이름을 입력해주세요");
-    else if (businessDate === "") alert("사업시작일을 입력해주세요");
+    else if (!ownerName) alert("사업자이름을 입력해주세요");
+    else if (!businessDate) alert("사업시작일을 입력해주세요");
     else if (!datePattern.test(businessDate))
       alert("사업시작일이 형식에 맞지 않습니다");
     else buisnessCheck();
