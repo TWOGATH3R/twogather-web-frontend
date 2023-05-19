@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import { useMutation } from "react-query";
-import { buisnessCheckMutaionPostInfo } from "../apis/queries/signUpQuery";
+import { buisnessCheckMutaionPostInfo } from "../../api/queries/signUpQuery";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const StoreInfo = () => {
