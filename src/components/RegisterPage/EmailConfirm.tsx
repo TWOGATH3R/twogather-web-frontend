@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import styled, { css } from "styled-components";
+import { emailCheckMutaionPostEmail } from "../../api/queries/RegisterQuery";
 
 const EmailConfirm = () => {
   const navigate = useNavigate();
@@ -10,6 +12,18 @@ const EmailConfirm = () => {
   const [code, setCode] = useState<string>("");
   const [timer, setTimer] = useState<string>("");
   const [codeConfirm, setCodeConfrim] = useState<boolean>(false);
+
+  const { mutate: emailCheck, isLoading: emailCheckLoading } = useMutation(
+    () => emailCheckMutaionPostEmail(email),
+    {
+      onSuccess: (res) => {
+        console.log(res);
+      },
+      onError: () => {
+        console.log("error");
+      },
+    }
+  );
 
   //onChange
   const emailPattern =
@@ -25,7 +39,10 @@ const EmailConfirm = () => {
   const emailBtnOnClick = () => {
     if (!email) alert("이메일을 입력해주세요");
     else if (!emailPattern.test(email)) alert("이메일이 형식에 맞지 않습니다");
-    else timerInterval();
+    else {
+      emailCheck();
+      timerInterval();
+    }
   };
   const codeBtnOnClick = () => {
     if (!code) alert("인증번호를 입력해주세요");
