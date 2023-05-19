@@ -24,9 +24,12 @@ export const buisnessCheckMutaionPostInfo = async (
 };
 
 export const emailCheckMutaionPostEmail = async (email: string) => {
-  console.log("dd")
-  const res = await api.post(`/api/email`, {
-    email: email,
-  });
+  console.log("이메일 인증 번호 보내기");
+  const res = await axios.post(
+    `ec2-15-165-96-247.ap-northeast-2.compute.amazonaws.com:8080/api/email`,
+    {
+      email: email,
+    }
+  );
   return res.data;
 };
