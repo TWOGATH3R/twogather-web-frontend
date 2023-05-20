@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useMutation } from "react-query";
 import { useNavigate, useParams, useLocation } from "react-router";
 import styled, { css } from "styled-components";
+import { consumersMutaionPostInfo } from "../../api/queries/RegisterQuery";
 
 const InfoInput = () => {
   const location = useLocation();
@@ -10,7 +12,18 @@ const InfoInput = () => {
   const [pw, setPw] = useState<string>("");
   const [pwCheck, setPwCheck] = useState<string>("");
   const [name, setName] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
+
+  const info = {
+    email: location.state.email,
+    password: pw,
+    name: name,
+  };
+  const { mutate: consumersRegister, isLoading: consumersRegisterLoading } =
+    useMutation(() => consumersMutaionPostInfo(info), {
+      onSuccess: (res) => {
+        console.log(res);
+      },
+    });
 
   //onChange
   const pwPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/;
@@ -23,34 +36,26 @@ const InfoInput = () => {
   const nameOnChange = (nameText: string) => {
     setName(nameText);
   };
-  const phonePattern = /^01([0|1|6|7|8|9])([0-9]{3,4})([0-9]{4})$/;
-  const phoneOnChange = (phoneText: string) => {
-    setPhone(phoneText);
-  };
 
   //onClick
   const nextBtnOnClick = () => {
     if (!pw) alert("비밀번호를 입력해주세요");
-    else if (!pwCheck) alert("비밀번호를 확인해주세요");
-    else if (!name) alert("이름을 입력해주세요");
-    else if (!phone) alert("전화번호를 입력해주세요");
     else if (!pwPattern.test(pw)) alert("비밀번호가 양식에 맞지 않습니다");
+    else if (!pwCheck) alert("비밀번호를 확인해주세요");
     else if (pw !== pwCheck) alert("비밀번호가 일치하지 않습니다");
-    else if (!phonePattern.test(phone))
-      alert("전화번호가 양식에 맞지 않습니다");
+    else if (!name) alert("이름을 입력해주세요");
     else if (param.RegisterType === "customer") {
       //고객전용 회원가입 api 실행
+      consumersRegister()
     } else
       navigate(`/register/storeowner/storeInfo`, {
         state: {
           email: location.state.email,
           pw: pw,
           name: name,
-          phone: phone,
         },
       });
   };
-  const completeBtnOnClick = () => {};
 
   return (
     <>
@@ -80,19 +85,10 @@ const InfoInput = () => {
           onChange={(e) => nameOnChange(e.target.value)}
         />
       </NameInputBox>
-      <PhoneInputBox valid={phone.length > 0 ? phonePattern.test(phone) : true}>
-        <PhoneText>phone</PhoneText>
-        <PhoneInput
-          value={phone}
-          placeholder="010xxxxyyyy"
-          onChange={(e) => phoneOnChange(e.target.value)}
-          maxLength={11}
-        />
-      </PhoneInputBox>
       {param.RegisterType === "storeowner" ? (
         <NextBtn onClick={() => nextBtnOnClick()}>다음</NextBtn>
       ) : (
-        <CompleteBtn onClick={() => completeBtnOnClick()}>완료</CompleteBtn>
+        <CompleteBtn onClick={() => nextBtnOnClick()}>완료</CompleteBtn>
       )}
     </>
   );
@@ -150,20 +146,6 @@ const PwCheckInput = styled(PwInput)``;
 const NameInputBox = styled(PwInputBox)``;
 const NameText = styled(PwText)``;
 const NameInput = styled(PwInput)``;
-
-const PhoneInputBox = styled(PwInputBox)`
-  ${(props) => {
-    if (!props.valid) {
-      return css`
-        &::after {
-          content: "전화번호 양식을 확인해주세요.";
-        }
-      `;
-    }
-  }}
-`;
-const PhoneText = styled(PwText)``;
-const PhoneInput = styled(PwInput)``;
 
 const NextBtn = styled.button`
   margin-top: 80px;

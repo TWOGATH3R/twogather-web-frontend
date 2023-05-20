@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import styled, { css } from "styled-components";
+import { emailCheckMutaionPostEmail } from "../../api/queries/RegisterQuery";
 
 const EmailConfirm = () => {
   const navigate = useNavigate();
@@ -10,6 +12,20 @@ const EmailConfirm = () => {
   const [code, setCode] = useState<string>("");
   const [timer, setTimer] = useState<string>("");
   const [codeConfirm, setCodeConfrim] = useState<boolean>(false);
+
+  const [codeAnswer, setCodeAnswer] = useState<string>("");
+  const { mutate: emailCheck, isLoading: emailCheckLoading } = useMutation(
+    () => emailCheckMutaionPostEmail(email),
+    {
+      onSuccess: (res) => {
+        setCodeAnswer(res.data.verificationCode);
+        alert("이메일에 전송된 인증코드를 확인해주세요");
+      },
+      onError: (err) => {
+        console.log(err);
+      },
+    }
+  );
 
   //onChange
   const emailPattern =
@@ -25,11 +41,14 @@ const EmailConfirm = () => {
   const emailBtnOnClick = () => {
     if (!email) alert("이메일을 입력해주세요");
     else if (!emailPattern.test(email)) alert("이메일이 형식에 맞지 않습니다");
-    else timerInterval();
+    else {
+      emailCheck();
+      timerInterval();
+    }
   };
   const codeBtnOnClick = () => {
     if (!code) alert("인증번호를 입력해주세요");
-    else if (!code === null) alert("인증번호가 알맞지 않습니다");
+    else if (code !== codeAnswer) alert("인증번호가 알맞지 않습니다");
     else {
       alert("인증완료");
       setCodeConfrim(true);

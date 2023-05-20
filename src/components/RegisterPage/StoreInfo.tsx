@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import { useMutation } from "react-query";
-import { buisnessCheckMutaionPostInfo } from "../apis/queries/signUpQuery";
+import {
+  buisnessCheckMutaionPostInfo,
+  storeOwnerMutaionPostInfo,
+} from "../../api/queries/RegisterQuery";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const StoreInfo = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  console.log(location);
 
   const [ownerNumber, setOwnerNumber] = useState<string>("");
   const [ownerName, setOwnerName] = useState<string>("");
   const [businessDate, setBusinessDate] = useState<string>("");
 
+  //사업자 조회 query
   const { mutate: buisnessCheck, isLoading: buisnessCheckLoading } =
     useMutation(
       () =>
@@ -26,12 +29,28 @@ const StoreInfo = () => {
           console.log(res.data[0].status);
           if (!res.data[0].status)
             alert("사업자 조회 정보를 다시 확인해주세요");
-        },
-        onError: () => {
-          console.log("error");
+          else storeOwnerRegister();
         },
       }
     );
+  //사업자 회원가입 query
+  const storeOwerInfo = {
+    email: location.state.email,
+    password: location.state.pw,
+    name: location.state.name,
+    businessNumber: ownerNumber,
+    businessName: ownerName,
+    businessStartDate: businessDate,
+  };
+  const { mutate: storeOwnerRegister, isLoading: storeOwnerRegisterLoading } =
+    useMutation(() => storeOwnerMutaionPostInfo(storeOwerInfo), {
+      onSuccess: (res) => {
+        console.log(res);
+      },
+      onError: (err) => {
+        console.log(err);
+      },
+    });
 
   //onChange
   const ownerNumOnChange = (ownerNum: string) => {
@@ -53,7 +72,9 @@ const StoreInfo = () => {
     else if (!businessDate) alert("사업시작일을 입력해주세요");
     else if (!datePattern.test(businessDate))
       alert("사업시작일이 형식에 맞지 않습니다");
-    else buisnessCheck();
+    else {
+      buisnessCheck();
+    }
   };
 
   return (
