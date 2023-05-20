@@ -23,13 +23,46 @@ export const buisnessCheckMutaionPostInfo = async (
   return res.data;
 };
 
+//이메일 인증번호 보내기
 export const emailCheckMutaionPostEmail = async (email: string) => {
-  console.log("이메일 인증 번호 보내기");
-  const res = await axios.post(
-    `ec2-15-165-96-247.ap-northeast-2.compute.amazonaws.com:8080/api/email`,
-    {
-      email: email,
-    }
-  );
+  const res = await api.post(`/api/email`, {
+    email: email,
+  });
+  return res.data;
+};
+
+//고객 회원가입
+type consumersInfo = {
+  email: string;
+  password: string;
+  name: string;
+};
+export const consumersMutaionPostInfo = async (info: consumersInfo) => {
+  const res = await api.post(`/api/consumers`, {
+    email: info.email,
+    password: info.password,
+    name: info.name,
+  });
+  return res.data;
+};
+
+//사업자 회원가입
+type storeOwnerInfo = {
+  email: string;
+  password: string;
+  name: string;
+  businessNumber: string;
+  businessName: string;
+  businessStartDate: string;
+};
+export const storeOwnerMutaionPostInfo = async (info: storeOwnerInfo) => {
+  const res = await api.post(`/api/owners`, {
+    email: info.email,
+    password: info.password,
+    name: info.name,
+    businessNumber: info.businessNumber,
+    businessName: info.businessName,
+    businessStartDate: info.businessStartDate,
+  });
   return res.data;
 };
