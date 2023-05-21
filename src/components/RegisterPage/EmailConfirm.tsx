@@ -18,11 +18,9 @@ const EmailConfirm = () => {
     () => emailCheckMutaionPostEmail(email),
     {
       onSuccess: (res) => {
+        console.log(res);
         setCodeAnswer(res.data.verificationCode);
         alert("이메일에 전송된 인증코드를 확인해주세요");
-      },
-      onError: (err) => {
-        console.log(err);
       },
     }
   );
