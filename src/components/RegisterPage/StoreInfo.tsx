@@ -26,7 +26,6 @@ const StoreInfo = () => {
         ),
       {
         onSuccess: (res) => {
-          console.log(res.data[0].status);
           if (!res.data[0].status)
             alert("사업자 조회 정보를 다시 확인해주세요");
           else storeOwnerRegister();
@@ -46,9 +45,7 @@ const StoreInfo = () => {
     useMutation(() => storeOwnerMutaionPostInfo(storeOwerInfo), {
       onSuccess: (res) => {
         console.log(res);
-      },
-      onError: (err) => {
-        console.log(err);
+        navigate("/login");
       },
     });
 

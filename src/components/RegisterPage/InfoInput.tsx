@@ -22,6 +22,7 @@ const InfoInput = () => {
     useMutation(() => consumersMutaionPostInfo(info), {
       onSuccess: (res) => {
         console.log(res);
+        navigate("/login");
       },
     });
 
@@ -46,7 +47,7 @@ const InfoInput = () => {
     else if (!name) alert("이름을 입력해주세요");
     else if (param.RegisterType === "customer") {
       //고객전용 회원가입 api 실행
-      consumersRegister()
+      consumersRegister();
     } else
       navigate(`/register/storeowner/storeInfo`, {
         state: {
