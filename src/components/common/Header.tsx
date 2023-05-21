@@ -1,9 +1,32 @@
 import React from "react";
 import styled from "styled-components";
 import LOGO from "../../img/LOGO.png";
-import { NavLink, Link } from "react-router-dom";
+import mypageImg from "../../img/mypage.svg";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import { getCookie, removeCookie } from "../cookie/cookie";
+import Swal from "sweetalert2";
 
 export default function Header() {
+  const navigate = useNavigate();
+
+  const logoutOnClick = () => {
+    Swal.fire({
+      title: "로그아웃 하시겠습니까?",
+      confirmButtonColor: "#0075FF",
+      cancelButtonColor: "#738598",
+      showCancelButton: true,
+      confirmButtonText: "로그아웃",
+      cancelButtonText: "돌아가기",
+      padding: "3em",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        removeCookie();
+        localStorage.clear();
+        navigate("/login");
+      }
+    });
+  };
+
   return (
     <HeaderContainer>
       <HeaderWrapper>
@@ -16,15 +39,30 @@ export default function Header() {
             <MenuItem>
               <NavLink to="/">Home</NavLink>
             </MenuItem>
-            <MenuItem>
-              <NavLink to="/">Resgistration</NavLink>
-            </MenuItem>
-            <MenuItem>
-              <NavLink to="/">Stores</NavLink>
-            </MenuItem>
+            {localStorage.getItem("role") === "ROLE_STORE_OWNER" ? (
+              <>
+                <MenuItem>
+                  <NavLink to="/">Resgistration</NavLink>
+                </MenuItem>
+                <MenuItem>
+                  <NavLink to="/">Stores</NavLink>
+                </MenuItem>
+              </>
+            ) : null}
           </MenuList>
           <LoginBox>
-            <Link to="/login">Login</Link>
+            {getCookie("accessToken") === undefined ? (
+              <Link to="/login">Login</Link>
+            ) : (
+              <>
+                <Link to="/" onClick={() => logoutOnClick()}>
+                  logout
+                </Link>
+                <Link to="/mypage">
+                  <img src={mypageImg} alt="mypage" />
+                </Link>
+              </>
+            )}
           </LoginBox>
         </NavContainer>
       </HeaderWrapper>
@@ -82,8 +120,9 @@ const MenuItem = styled.li`
 
 const LoginBox = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   a {
+    margin-right: 10px;
     color: #000000;
   }
 `;
