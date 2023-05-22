@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import LOGO from "../../img/LOGO.png";
-import mypageImg from "../../img/mypage.svg";
+import LOGO from "../../assets/img/LOGO.png";
+import mypageImg from "../../assets/person-icon.svg";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { getCookie, removeCookie } from "../cookie/cookie";
 import Swal from "sweetalert2";
@@ -38,6 +38,9 @@ export default function Header() {
             <MenuTwoGatherTitle>TwoGather</MenuTwoGatherTitle>
             <MenuItem>
               <NavLink to="/">Home</NavLink>
+            </MenuItem>
+            <MenuItem>
+              <NavLink to="/enrollshop">Resgistration</NavLink>
             </MenuItem>
             {localStorage.getItem("role") === "ROLE_STORE_OWNER" ? (
               <>

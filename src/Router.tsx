@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "../src/components/common/Header";
 import Main from "./pages/Main";
 import EnrollShop from "./pages/EnrollShop";
+import EditEnrollShop from "./components/resgistration/EditEnrollShop";
 import Login from "./pages/Login";
 import SignUpType from "./components/SignUpPage/SignUpType";
 import EmailConfirm from "./components/SignUpPage/EmailConfirm";
@@ -18,7 +19,8 @@ const Router = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Main />} />
-        <Route path="/enrollshop" element={<EnrollShop />} />
+        <Route path="/enrollshop" element={<EnrollShop />}></Route>
+        <Route path="/editenrollshop" element={<EditEnrollShop />}></Route>
         <Route path="/login" element={<Login />} />
         <Route path="/findid" element={<FindId />} />
         <Route path="/findPw" element={<FindPw />} />
