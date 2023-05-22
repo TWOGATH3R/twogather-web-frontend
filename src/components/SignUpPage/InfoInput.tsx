@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useMutation } from "react-query";
 import { useNavigate, useParams, useLocation } from "react-router";
 import styled, { css } from "styled-components";
-import { consumersMutaionPostInfo } from "../../api/queries/SignUpQuery";
+
+import { consumersMutaionPostInfo } from "../../apis/queries/SignUpQuery";
 
 const InfoInput = () => {
   const location = useLocation();

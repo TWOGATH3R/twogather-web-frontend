@@ -7,29 +7,11 @@ import { ReactComponent as RightArrow } from "../assets/right-arrow.svg";
 import AddressModal from "../components/address/AddressModal";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { address, visibleAddress } from "../store/addressAtom";
+import { IShopAddressVisible } from "../apis/api";
+import { IShopInputItem } from "../apis/api";
+import { IShopMenuList } from "../apis/api";
 import Swal from "sweetalert2";
-interface IShopAddressVisible {
-  visible: Boolean;
-}
-interface IShopInputItem {
-  id: number;
-  startTime: string;
-  endTime: string;
-  startBreakTime: string;
-  endBreakTime: string;
-  breakTimeCheckBox: boolean;
-  week: IShopDay[];
-}
 
-interface IShopDay {
-  day: string;
-  status: boolean;
-}
-interface IShopMenuList {
-  id: number;
-  shopMenuName: string;
-  shopMenuPrice: string;
-}
 export default function EnrollShop() {
   const [shopName, setShopName] = useState<string>("");
   const ShopAddress = useRecoilValue(address);

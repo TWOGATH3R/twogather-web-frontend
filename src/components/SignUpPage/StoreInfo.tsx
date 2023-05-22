@@ -4,7 +4,7 @@ import { useMutation } from "react-query";
 import {
   buisnessCheckMutaionPostInfo,
   storeOwnerMutaionPostInfo,
-} from "../../api/queries/SignUpQuery";
+} from "../../apis/queries/SignUpQuery";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const StoreInfo = () => {
