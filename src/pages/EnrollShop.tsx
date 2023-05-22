@@ -3,19 +3,28 @@ import styled, { css } from "styled-components";
 import { ReactComponent as PhotoIcon } from "../assets/photo-icon.svg";
 import { ReactComponent as PlusIcon } from "../assets/plus-icon.svg";
 import { ReactComponent as DeleteIcon } from "../assets/delete-icon.svg";
+import { ReactComponent as RightArrow } from "../assets/right-arrow.svg";
 import AddressModal from "../components/address/AddressModal";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { address, visibleAddress } from "../store/addressAtom";
-
+import Swal from "sweetalert2";
 interface IShopAddressVisible {
   visible: Boolean;
 }
-interface IInputItem {
+interface IShopInputItem {
   id: number;
   startTime: string;
   endTime: string;
+  startBreakTime: string;
+  endBreakTime: string;
+  breakTimeCheckBox: boolean;
+  week: IShopDay[];
 }
 
+interface IShopDay {
+  day: string;
+  status: boolean;
+}
 interface IShopMenuList {
   id: number;
   shopMenuName: string;
@@ -24,28 +33,83 @@ interface IShopMenuList {
 export default function EnrollShop() {
   const [shopName, setShopName] = useState<string>("");
   const ShopAddress = useRecoilValue(address);
-  const [shopNumber, setShopNumber] = useState<string>("");
   const [visibleShopAddress, setVisibleShopAddress] =
     useRecoilState(visibleAddress);
+  const [shopNumber, setShopNumber] = useState<string>("");
+  const [shopCategory, setShopCategory] = useState<string>("");
+
+  const [visibleCategory, setVisibleCategory] = useState(false);
+  const [categoryValue, setCategoryValue] = useState("");
+  const CATEGORY = [
+    {
+      categoryId: 1,
+      name: "양식",
+    },
+    {
+      categoryId: 2,
+      name: "일식",
+    },
+    {
+      categoryId: 3,
+      name: "중식",
+    },
+    {
+      categoryId: 4,
+      name: "카페",
+    },
+    {
+      categoryId: 5,
+      name: "한식",
+    },
+    {
+      categoryId: 6,
+      name: "패스트푸드",
+    },
+    {
+      categoryId: 7,
+      name: "분식",
+    },
+    {
+      categoryId: 8,
+      name: "기타",
+    },
+  ];
   const [shopNameMessage, setShopNameMessage] = useState("");
   const [shopNumberMessage, setShopNumberMessage] = useState("");
+  const [shopCategoryMessage, setShopCategoryMessage] = useState("");
 
   // 가게 이미지 업로드
   const [shopImages, setShopImages] = useState<string[]>([]);
   const inputPhotoFile = useRef<HTMLInputElement | null>(null);
 
-  const [inputCheckBox1, setInputCheckBox1] = useState(false);
-  const [inputCheckBox2, setInputCheckBox2] = useState(false);
-
-  const nextID = useRef<number>(1);
-  const [inputItems, setInputItems] = useState<IInputItem[]>([
-    { id: 0, startTime: "00:00", endTime: "00:00" },
-  ]);
-
   // 영업 시간
-  const [startBreakTimeValue, setStartBreakTimeValue] = useState("00:00");
-  const [endBreakTimeValue, setEndBreakTimeValue] = useState("00:00");
-
+  const nextID = useRef<number>(1);
+  const [breakTimeInputCheckBox, setBreakTimeInputCheckBox] = useState(false);
+  const [tab, setTab] = useState([
+    {
+      id: 0,
+      clickDay: "",
+    },
+  ]);
+  const [inputItems, setInputItems] = useState<IShopInputItem[]>([
+    {
+      id: 0,
+      startTime: "00:00",
+      endTime: "00:00",
+      startBreakTime: "00:00",
+      endBreakTime: "00:00",
+      breakTimeCheckBox: false,
+      week: [
+        { day: "월", status: false },
+        { day: "화", status: false },
+        { day: "수", status: false },
+        { day: "목", status: false },
+        { day: "금", status: false },
+        { day: "토", status: false },
+        { day: "일", status: false },
+      ],
+    },
+  ]);
   const shopMenuID = useRef<number>(1);
   const [shopMenuList, setShopMenuList] = useState<IShopMenuList[]>([
     { id: 0, shopMenuName: "", shopMenuPrice: "" },
@@ -56,15 +120,108 @@ export default function EnrollShop() {
     inputPhotoFile.current?.click();
   };
 
+  const onClickDeltePohoto = (idx: number) => {
+    Swal.fire({
+      title: "이미지를 삭제하겠습니까?",
+      showCancelButton: true,
+      confirmButtonColor: "#2663FF",
+      cancelButtonColor: "#FFB5B5",
+      confirmButtonText: "확인",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setShopImages([
+          ...shopImages.slice(0, idx),
+          ...shopImages.slice(idx + 1, shopImages.length),
+        ]);
+        Swal.fire("삭제되었습니다!", "", "success");
+      }
+    });
+  };
+
   const onClickShopAddress = () => {
     setVisibleShopAddress(true);
   };
 
-  const onClickCheckBox1 = () => {
-    setInputCheckBox1((prev) => !prev);
+  const onClickVisibleCategory = () => {
+    setVisibleCategory((prev) => !prev);
   };
-  const onClickCheckBox2 = () => {
-    setInputCheckBox2((prev) => !prev);
+  const onClickCategory = (item: string) => {
+    setCategoryValue(item);
+    setVisibleCategory(false);
+  };
+
+  const onClickBreakTimeCheckBox = () => {
+    setBreakTimeInputCheckBox((prev) => !prev);
+  };
+  const onClickDay = (
+    e: React.MouseEvent<HTMLLIElement>,
+    day: any,
+    idx: number
+  ) => {
+    if (day.day === "월") {
+      if (day.status === false) {
+        setTab([...tab]);
+        day.status = true;
+      } else {
+        setTab(tab.filter((item) => item.id !== idx));
+        day.status = false;
+      }
+    }
+    if (day.day === "화") {
+      if (day.status === false) {
+        setTab([...tab]);
+        day.status = true;
+      } else {
+        setTab(tab.filter((item) => item.id !== idx));
+        day.status = false;
+      }
+    }
+    if (day.day === "수") {
+      if (day.status === false) {
+        setTab([...tab]);
+        day.status = true;
+      } else {
+        setTab(tab.filter((item) => item.id !== idx));
+        day.status = false;
+      }
+    }
+    if (day.day === "목") {
+      if (day.status === false) {
+        setTab([...tab]);
+        day.status = true;
+      } else {
+        setTab(tab.filter((item) => item.id !== idx));
+        day.status = false;
+      }
+    }
+    if (day.day === "금") {
+      if (day.status === false) {
+        setTab([...tab]);
+        day.status = true;
+      } else {
+        setTab(tab.filter((item) => item.id !== idx));
+        day.status = false;
+      }
+    }
+    if (day.day === "토") {
+      if (day.status === false) {
+        setTab([...tab]);
+        day.status = true;
+      } else {
+        setTab(tab.filter((item) => item.id !== idx));
+        day.status = false;
+      }
+    }
+    if (day.day === "일") {
+      if (day.status === false) {
+        setTab([...tab]);
+        day.status = true;
+      } else {
+        setTab(tab.filter((item) => item.id !== idx));
+        day.status = false;
+      }
+    }
   };
 
   // onChange
@@ -75,6 +232,7 @@ export default function EnrollShop() {
 
     if (!regShopName.test(shopNameCurrent)) {
       setShopNameMessage("이름이 옳바르지 않습니다.");
+      return;
     } else {
       setShopName("");
     }
@@ -86,9 +244,20 @@ export default function EnrollShop() {
     setShopNumber(e.target.value);
 
     if (!regShopNumber.test(shopNumberCurrent)) {
-      setShopNumberMessage("번호가 옳바르지 않습니다.");
+      setShopNumberMessage("번호가 옳바르지 않습니다. (- 포함시켜 주세요.)");
+      return;
     } else {
       setShopNumberMessage("");
+    }
+  };
+
+  const onChangeShopCategory = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // const shopCategoryCurrent = e.target.value;
+    setShopCategory(e.target.value);
+    if (shopCategory.length >= 0) {
+      setShopCategoryMessage("카테고리를 선택해주세요.");
+    } else {
+      setShopCategory("");
     }
   };
 
@@ -96,22 +265,10 @@ export default function EnrollShop() {
     const targetFiles = (e.target as HTMLInputElement).files as FileList;
     const targetFilesList = Array.from(targetFiles);
     const selectedFiles: string[] = targetFilesList.map((file) => {
-      console.log("업로드");
       return URL.createObjectURL(file);
     });
     setShopImages((prev) => prev.concat(selectedFiles));
     inputPhotoFile.current?.click();
-  };
-
-  const onChangeStartBreakTimeValue = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setStartBreakTimeValue(e.target.value);
-  };
-  const onChangeEndBreakTimeValue = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setEndBreakTimeValue(e.target.value);
   };
 
   function onChangeStoreStartTimeInput(
@@ -120,7 +277,9 @@ export default function EnrollShop() {
   ) {
     if (index > inputItems.length) return;
 
-    const inputItemsCopy: IInputItem[] = JSON.parse(JSON.stringify(inputItems));
+    const inputItemsCopy: IShopInputItem[] = JSON.parse(
+      JSON.stringify(inputItems)
+    );
     inputItemsCopy[index].startTime = e.target.value;
     setInputItems(inputItemsCopy);
   }
@@ -130,10 +289,47 @@ export default function EnrollShop() {
   ) {
     if (index > inputItems.length) return;
 
-    const inputItemsCopy: IInputItem[] = JSON.parse(JSON.stringify(inputItems));
+    const inputItemsCopy: IShopInputItem[] = JSON.parse(
+      JSON.stringify(inputItems)
+    );
     inputItemsCopy[index].endTime = e.target.value;
     setInputItems(inputItemsCopy);
   }
+
+  const onChangeBreakTimeCheckBox = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (index > inputItems.length) return;
+    const inputItemsCopy: IShopInputItem[] = JSON.parse(
+      JSON.stringify(inputItems)
+    );
+    inputItemsCopy[index].breakTimeCheckBox = e.target.checked;
+    setInputItems(inputItemsCopy);
+  };
+
+  const onChangeStartBreakTimeValue = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (index > inputItems.length) return;
+    const inputItemsCopy: IShopInputItem[] = JSON.parse(
+      JSON.stringify(inputItems)
+    );
+    inputItemsCopy[index].startBreakTime = e.target.value;
+    setInputItems(inputItemsCopy);
+  };
+  const onChangeEndBreakTimeValue = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (index > inputItems.length) return;
+    const inputItemsCopy: IShopInputItem[] = JSON.parse(
+      JSON.stringify(inputItems)
+    );
+    inputItemsCopy[index].endBreakTime = e.target.value;
+    setInputItems(inputItemsCopy);
+  };
 
   function onChangeShopMenuName(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -145,7 +341,6 @@ export default function EnrollShop() {
     );
     menuListCopy[index].shopMenuName = e.target.value;
     setShopMenuList(menuListCopy);
-    console.log(shopMenuList);
   }
 
   function onChangeShopMenuPrice(
@@ -158,7 +353,6 @@ export default function EnrollShop() {
     );
     menuListCopy[index].shopMenuPrice = e.target.value;
     setShopMenuList(menuListCopy);
-    console.log(shopMenuList);
   }
 
   function addInputItem() {
@@ -166,6 +360,18 @@ export default function EnrollShop() {
       id: nextID.current,
       startTime: "00:00",
       endTime: "00:00",
+      startBreakTime: "00:00",
+      endBreakTime: "00:00",
+      breakTimeCheckBox: false,
+      week: [
+        { day: "월", status: false },
+        { day: "화", status: false },
+        { day: "수", status: false },
+        { day: "목", status: false },
+        { day: "금", status: false },
+        { day: "토", status: false },
+        { day: "일", status: false },
+      ],
     };
     setInputItems([...inputItems, input]);
     nextID.current += 1;
@@ -173,7 +379,7 @@ export default function EnrollShop() {
   function deleteInputItem(index: number) {
     setInputItems(inputItems.filter((item) => item.id !== index));
   }
-
+  console.log(visibleCategory);
   function addMenuItem() {
     const menu = {
       id: shopMenuID.current,
@@ -242,11 +448,12 @@ export default function EnrollShop() {
             </ShopInnerWrapper>
 
             {/* 가게 전화번호 */}
-            {shopNumber.length ? (
+            {shopNumber.length > 0 ? (
               <ShopInnerWrapper>
                 <ShopTitle>가게 전화번호</ShopTitle>
                 <InputMessageWrapper>
                   <ShopInput
+                    type="tel"
                     placeholder="입력해주세요"
                     onChange={onChangeShopNumber}
                   />
@@ -258,12 +465,60 @@ export default function EnrollShop() {
                 <ShopTitle>가게 전화번호</ShopTitle>
                 <InputMessageWrapper>
                   <ShopInput
+                    type="tel"
                     placeholder="입력해주세요"
                     onChange={onChangeShopNumber}
                   />
                   <InputMessage />
                 </InputMessageWrapper>
               </ShopInnerWrapper>
+            )}
+            {shopCategory.length > 0 ? (
+              <ShopInnerWrapper>
+                <ShopTitle>카테고리</ShopTitle>
+                <InputMessageWrapper>
+                  <ShopInput
+                    type="category"
+                    placeholder="선택해주세요"
+                    onChange={onChangeShopCategory}
+                  />
+                  <InputMessage>{shopCategoryMessage}</InputMessage>
+                  <ShopTitle>전체 카테고리</ShopTitle>
+                </InputMessageWrapper>
+              </ShopInnerWrapper>
+            ) : (
+              <>
+                <ShopInnerWrapper>
+                  <ShopTitle>카테고리</ShopTitle>
+                  <InputMessageWrapper>
+                    <ShopInput
+                      style={{ cursor: "pointer" }}
+                      placeholder="카테고리를 정해주세요."
+                      onChange={onChangeShopCategory}
+                      value={categoryValue}
+                      onClick={() => onClickVisibleCategory()}
+                    />
+                    <InputMessage />
+                  </InputMessageWrapper>
+                </ShopInnerWrapper>
+                {visibleCategory === true ? (
+                  <>
+                    <CategoryWrapper>
+                      {CATEGORY.map((item) => (
+                        <CategoryList>
+                          <span
+                            style={{ cursor: "pointer" }}
+                            onClick={() => onClickCategory(item.name)}
+                          >
+                            {item.name}
+                          </span>
+                          <RightArrow />
+                        </CategoryList>
+                      ))}
+                    </CategoryWrapper>
+                  </>
+                ) : null}
+              </>
             )}
           </ShopInnerOutlineWrapper>
         </ShopWrapper>
@@ -278,9 +533,13 @@ export default function EnrollShop() {
             </ShopInnerOutlineTitleWrapper>
 
             <ShopPhotoInputWrapper>
-              {shopImages.map((url, i) => (
+              {shopImages.map((url, idx) => (
                 <React.Fragment key={url}>
-                  <PreViewImage src={url} alt={`image${i}`} />
+                  <PreViewImage
+                    src={url}
+                    alt={`image${idx}`}
+                    onClick={() => onClickDeltePohoto(idx)}
+                  />
                 </React.Fragment>
               ))}
               <ShopPhotoForm>
@@ -311,39 +570,62 @@ export default function EnrollShop() {
         </ShopWrapper>
 
         {/* 가게 영엉 시간 */}
-        <ShopWrapper style={{ marginTop: "5%" }}>
-          <ShopInnerOutlineWrapper>
-            <ShopInnerOutlineTitleWrapper>
-              <ShopInnerOutlineBigTitle>
-                영업시간 정보 <span>*</span>
-              </ShopInnerOutlineBigTitle>
-            </ShopInnerOutlineTitleWrapper>
+        {inputItems.map((item, index) => (
+          <>
+            <ShopWrapper
+              style={{
+                marginTop: "5%",
+                display: "flex",
+                flexDirection: "column-reverse",
+              }}
+            >
+              <ShopInnerOutlineWrapper>
+                <ShopInnerOutlineTitleWrapper>
+                  <ShopInfoDeleteWrapper>
+                    {inputItems.length >= 1 && item.id !== 0 && (
+                      <DeleteIcon
+                        style={{ cursor: "pointer" }}
+                        onClick={() => deleteInputItem(item.id)}
+                      />
+                    )}
+                  </ShopInfoDeleteWrapper>
+                  <ShopInnerOutlineBigTitle>
+                    영업시간 정보 <span>*</span>
+                  </ShopInnerOutlineBigTitle>
+                </ShopInnerOutlineTitleWrapper>
 
-            <ShopDayWrapper>
-              <ShopDayUl>
-                <ShopDayList>월</ShopDayList>
-                <ShopDayList>화</ShopDayList>
-                <ShopDayList>수</ShopDayList>
-                <ShopDayList>목</ShopDayList>
-                <ShopDayList>금</ShopDayList>
-                <ShopDayList>토</ShopDayList>
-                <ShopDayList>일</ShopDayList>
-              </ShopDayUl>
-            </ShopDayWrapper>
-            <ShopInnerWrapper>
-              <ShopTitle style={{ flex: 0.3, fontWeight: "500" }}>
-                영업중
-              </ShopTitle>
-              <ShopInputItemsWrapper>
-                {inputItems.map((item, index) => (
-                  <div
-                    key={item.id}
-                    style={{
-                      display: "flex",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    {inputCheckBox1 ? (
+                <ShopDayWrapper>
+                  <ShopDayUl>
+                    {item.week.map((day, idx) => (
+                      <>
+                        {day.status === true ? (
+                          <ShopDayList
+                            style={{ backgroundColor: "#FFB5B5" }}
+                            onClick={(e) => onClickDay(e, day, idx)}
+                          >
+                            {day.day}
+                          </ShopDayList>
+                        ) : (
+                          <ShopDayList onClick={(e) => onClickDay(e, day, idx)}>
+                            {day.day}
+                          </ShopDayList>
+                        )}
+                      </>
+                    ))}
+                  </ShopDayUl>
+                </ShopDayWrapper>
+                <ShopInnerWrapper>
+                  <ShopTitle style={{ flex: 0.3, fontWeight: "500" }}>
+                    영업중
+                  </ShopTitle>
+                  <ShopInputItemsWrapper>
+                    <div
+                      key={item.id}
+                      style={{
+                        display: "flex",
+                        marginBottom: "10px",
+                      }}
+                    >
                       <ShopInputItmsBox key={index}>
                         <ShopTimeInput
                           style={{ width: "100%" }}
@@ -361,107 +643,85 @@ export default function EnrollShop() {
                           onChange={(e) => onChangeStoreEndTimeInput(e, index)}
                         />
                       </ShopInputItmsBox>
-                    ) : (
-                      <ShopInputItmsBox>
-                        <ShopTimeInput
-                          style={{ width: "100%" }}
-                          disabled
-                          type="time"
-                          defaultValue={"00:00"}
-                        />
-                        <span className="time-wave">~</span>
-                        <ShopTimeInput
-                          style={{ width: "100%" }}
-                          disabled
-                          type="time"
-                          defaultValue={"00:00"}
-                        />
-                      </ShopInputItmsBox>
-                    )}
-                    {item.id === 0 && (
+                    </div>
+                  </ShopInputItemsWrapper>
+                </ShopInnerWrapper>
+
+                <ShopInnerWrapper>
+                  <ShopTitle style={{ flex: 0.3, fontWeight: "500" }}>
+                    break time
+                  </ShopTitle>
+                  <ShopInputItemsWrapper>
+                    <div style={{ display: "flex" }}>
+                      {item.breakTimeCheckBox ? (
+                        <ShopInputItmsBox>
+                          <ShopTimeInput
+                            style={{ width: "100%" }}
+                            type="time"
+                            defaultValue={item.startBreakTime || ""}
+                            onChange={(e) =>
+                              onChangeStartBreakTimeValue(e, index)
+                            }
+                          />
+                          <span className="time-wave">~</span>
+                          <ShopTimeInput
+                            style={{ width: "100%" }}
+                            defaultValue={item.endBreakTime || ""}
+                            onChange={(e) =>
+                              onChangeEndBreakTimeValue(e, index)
+                            }
+                            type="time"
+                          />
+                        </ShopInputItmsBox>
+                      ) : (
+                        <ShopInputItmsBox>
+                          <ShopTimeInput
+                            style={{ width: "100%" }}
+                            disabled
+                            type="time"
+                            defaultValue={"00:00"}
+                          />
+                          <span className="time-wave">~</span>
+                          <ShopTimeInput
+                            style={{ width: "100%" }}
+                            disabled
+                            type="time"
+                            defaultValue={"00:00"}
+                          />
+                        </ShopInputItmsBox>
+                      )}
                       <ShopCheckBoxWrapper>
                         <ShopInput
-                          id="checkbox1"
+                          id={`checkbox-${index}`}
                           type="checkbox"
-                          onClick={onClickCheckBox1}
+                          onClick={onClickBreakTimeCheckBox}
+                          onChange={(e) => onChangeBreakTimeCheckBox(e, index)}
                         />
-                        <label htmlFor="checkbox1" />
+                        {item.breakTimeCheckBox === true ? (
+                          <label htmlFor={`checkbox-${index}`}>✔</label>
+                        ) : (
+                          <label htmlFor={`checkbox-${index}`} />
+                        )}
                       </ShopCheckBoxWrapper>
-                    )}
-                    {inputItems.length >= 2 && (
-                      <ShopTimeButtonWrapper>
-                        <ShopTimeDeleteButton
-                          onClick={() => deleteInputItem(item.id)}
-                        >
-                          삭제
-                        </ShopTimeDeleteButton>
-                      </ShopTimeButtonWrapper>
-                    )}
-                  </div>
-                ))}
-              </ShopInputItemsWrapper>
-            </ShopInnerWrapper>
+                    </div>
+                  </ShopInputItemsWrapper>
+                </ShopInnerWrapper>
 
-            <ShopInnerWrapper>
-              <ShopTitle style={{ flex: 0.3, fontWeight: "500" }}>
-                has break time
-              </ShopTitle>
-              <ShopInputItemsWrapper>
-                <div style={{ display: "flex" }}>
-                  {inputCheckBox2 ? (
-                    <ShopInputItmsBox>
-                      <ShopTimeInput
-                        style={{ width: "100%" }}
-                        type="time"
-                        defaultValue={startBreakTimeValue}
-                        onChange={onChangeStartBreakTimeValue}
-                      />
-                      <span className="time-wave">~</span>
-                      <ShopTimeInput
-                        style={{ width: "100%" }}
-                        defaultValue={endBreakTimeValue}
-                        onChange={onChangeEndBreakTimeValue}
-                        type="time"
-                      />
-                    </ShopInputItmsBox>
-                  ) : (
-                    <ShopInputItmsBox>
-                      <ShopTimeInput
-                        style={{ width: "100%" }}
-                        disabled
-                        type="time"
-                        defaultValue={startBreakTimeValue}
-                      />
-                      <span className="time-wave">~</span>
-                      <ShopTimeInput
-                        style={{ width: "100%" }}
-                        disabled
-                        type="time"
-                        defaultValue={endBreakTimeValue}
-                      />
-                    </ShopInputItmsBox>
+                <ShopTimeButtonWrapper>
+                  {item.id === 0 && (
+                    <>
+                      {inputItems.length <= 6 && (
+                        <ShopTimeButton onClick={addInputItem}>
+                          영업시간 추가
+                        </ShopTimeButton>
+                      )}
+                    </>
                   )}
-                  <ShopCheckBoxWrapper>
-                    <ShopInput
-                      id="checkbox2"
-                      type="checkbox"
-                      onClick={onClickCheckBox2}
-                    />
-                    <label htmlFor="checkbox2"></label>
-                  </ShopCheckBoxWrapper>
-                </div>
-              </ShopInputItemsWrapper>
-            </ShopInnerWrapper>
-
-            <ShopTimeButtonWrapper>
-              {inputItems.length < 6 && (
-                <ShopTimeButton onClick={addInputItem}>
-                  영업시간 추가
-                </ShopTimeButton>
-              )}
-            </ShopTimeButtonWrapper>
-          </ShopInnerOutlineWrapper>
-        </ShopWrapper>
+                </ShopTimeButtonWrapper>
+              </ShopInnerOutlineWrapper>
+            </ShopWrapper>
+          </>
+        ))}
 
         {/* 메뉴 */}
         <ShopWrapper style={{ marginTop: "5%" }}>
@@ -586,11 +846,13 @@ const ShopInnerWrapper = styled.div`
     display: none;
   }
   input[type="checkbox"] + label {
-    display: inline-block;
+    display: flex;
     width: 30px;
     height: 30px;
     border: 1px solid ${({ theme }) => theme.colors.subColor1};
     position: relative;
+    align-items: center;
+    justify-content: center;
   }
   input[id="checkbox1"]:checked + label::after,
   [id="checkbox2"]:checked + label::after {
@@ -617,6 +879,21 @@ const InputMessage = styled.span`
   height: 20px;
   color: ${({ theme }) => theme.colors.subColor3};
   font-size: ${({ theme }) => theme.fontSizes.small};
+`;
+const CategoryWrapper = styled.div`
+  width: 50%;
+  margin-left: 17%;
+  padding: 1% 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid ${({ theme }) => theme.colors.subColor1};
+`;
+const CategoryList = styled.div`
+  padding: 2% 15%;
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  border-left: 1px solid ${({ theme }) => theme.colors.subColor1};
 `;
 const ShopTitle = styled.span`
   flex: 1;
@@ -655,6 +932,7 @@ const ShopPhotoInputWrapper = styled.div`
 const PreViewImage = styled.img`
   width: 228px;
   height: 204px;
+  cursor: pointer;
 `;
 const ShopPhotoForm = styled.div`
   width: 228px;
@@ -691,6 +969,10 @@ const ShopDayUl = styled.ul`
   width: 40%;
   display: flex;
   align-items: center;
+  .active {
+    background-color: #505bf0;
+    color: #fff;
+  }
 `;
 const ShopDayList = styled.li`
   list-style: none;
@@ -700,6 +982,7 @@ const ShopDayList = styled.li`
   padding: 10px 12px;
   font-weight: bold;
   margin-right: 4%;
+  cursor: pointer;
 `;
 const ShopInputItemsWrapper = styled.div`
   display: flex;
@@ -735,19 +1018,21 @@ const ShopTimeButton = styled.button`
   border: 1px solid ${({ theme }) => theme.colors.subColor1};
   cursor: pointer;
 `;
-const ShopTimeDeleteButton = styled.button`
-  padding: 2% 5%;
-  background-color: transparent;
-  border: 1px solid ${({ theme }) => theme.colors.subColor1};
-  border-radius: 9999px;
-  width: 80px;
-  cursor: pointer;
+const ShopInfoDeleteWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
 `;
 
 const ShopCheckBoxWrapper = styled.div`
   display: flex;
   align-items: center;
   margin-left: 8%;
+  label {
+    color: #ff8181;
+    font-size: 20px;
+  }
 `;
 
 const ShopMenuContainer = styled.div`
@@ -755,6 +1040,17 @@ const ShopMenuContainer = styled.div`
   display: flex;
   gap: 5px;
   overflow-x: scroll;
+  &::-webkit-scrollbar {
+    height: 8px;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) =>
+      theme.colors.subColor1}; /*스크롤바의 색상*/
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent; /*스크롤바 트랙 색상*/
+  }
 `;
 const ShopMenuInnerWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.subColor1};
