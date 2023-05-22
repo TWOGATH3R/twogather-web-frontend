@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import { ReactComponent as PhotoIcon } from "../assets/photo-icon.svg";
 import { ReactComponent as PlusIcon } from "../assets/plus-icon.svg";
 import { ReactComponent as DeleteIcon } from "../assets/delete-icon.svg";
+import { ReactComponent as RightArrow } from "../assets/right-arrow.svg";
 import AddressModal from "../components/address/AddressModal";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { address, visibleAddress } from "../store/addressAtom";
@@ -36,6 +37,9 @@ export default function EnrollShop() {
     useRecoilState(visibleAddress);
   const [shopNumber, setShopNumber] = useState<string>("");
   const [shopCategory, setShopCategory] = useState<string>("");
+
+  const [visibleCategory, setVisibleCategory] = useState(false);
+  const [categoryValue, setCategoryValue] = useState("");
   const CATEGORY = [
     {
       categoryId: 1,
@@ -137,6 +141,14 @@ export default function EnrollShop() {
 
   const onClickShopAddress = () => {
     setVisibleShopAddress(true);
+  };
+
+  const onClickVisibleCategory = () => {
+    setVisibleCategory((prev) => !prev);
+  };
+  const onClickCategory = (item: string) => {
+    setCategoryValue(item);
+    setVisibleCategory(false);
   };
 
   const onClickBreakTimeCheckBox = () => {
@@ -253,7 +265,6 @@ export default function EnrollShop() {
     const targetFiles = (e.target as HTMLInputElement).files as FileList;
     const targetFilesList = Array.from(targetFiles);
     const selectedFiles: string[] = targetFilesList.map((file) => {
-      console.log("업로드");
       return URL.createObjectURL(file);
     });
     setShopImages((prev) => prev.concat(selectedFiles));
@@ -368,7 +379,7 @@ export default function EnrollShop() {
   function deleteInputItem(index: number) {
     setInputItems(inputItems.filter((item) => item.id !== index));
   }
-
+  console.log(visibleCategory);
   function addMenuItem() {
     const menu = {
       id: shopMenuID.current,
@@ -472,19 +483,42 @@ export default function EnrollShop() {
                     onChange={onChangeShopCategory}
                   />
                   <InputMessage>{shopCategoryMessage}</InputMessage>
+                  <ShopTitle>전체 카테고리</ShopTitle>
                 </InputMessageWrapper>
               </ShopInnerWrapper>
             ) : (
-              <ShopInnerWrapper>
-                <ShopTitle>카테고리</ShopTitle>
-                <InputMessageWrapper>
-                  <ShopInput
-                    placeholder="입력해주세요"
-                    onChange={onChangeShopCategory}
-                  />
-                  <InputMessage />
-                </InputMessageWrapper>
-              </ShopInnerWrapper>
+              <>
+                <ShopInnerWrapper>
+                  <ShopTitle>카테고리</ShopTitle>
+                  <InputMessageWrapper>
+                    <ShopInput
+                      style={{ cursor: "pointer" }}
+                      placeholder="카테고리를 정해주세요."
+                      onChange={onChangeShopCategory}
+                      value={categoryValue}
+                      onClick={() => onClickVisibleCategory()}
+                    />
+                    <InputMessage />
+                  </InputMessageWrapper>
+                </ShopInnerWrapper>
+                {visibleCategory === true ? (
+                  <>
+                    <CategoryWrapper>
+                      {CATEGORY.map((item) => (
+                        <CategoryList>
+                          <span
+                            style={{ cursor: "pointer" }}
+                            onClick={() => onClickCategory(item.name)}
+                          >
+                            {item.name}
+                          </span>
+                          <RightArrow />
+                        </CategoryList>
+                      ))}
+                    </CategoryWrapper>
+                  </>
+                ) : null}
+              </>
             )}
           </ShopInnerOutlineWrapper>
         </ShopWrapper>
@@ -845,6 +879,21 @@ const InputMessage = styled.span`
   height: 20px;
   color: ${({ theme }) => theme.colors.subColor3};
   font-size: ${({ theme }) => theme.fontSizes.small};
+`;
+const CategoryWrapper = styled.div`
+  width: 50%;
+  margin-left: 17%;
+  padding: 1% 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid ${({ theme }) => theme.colors.subColor1};
+`;
+const CategoryList = styled.div`
+  padding: 2% 15%;
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  border-left: 1px solid ${({ theme }) => theme.colors.subColor1};
 `;
 const ShopTitle = styled.span`
   flex: 1;

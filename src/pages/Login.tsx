@@ -1,17 +1,33 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
+import { loginMutaionPostInfo } from "../api/queries/LoginQuery";
+import { useMutation } from "react-query";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [id, setId] = useState<string>("");
   const [pw, setPw] = useState<string>("");
+
+  const { mutate: login, isLoading: loginLoading } = useMutation(
+    () => loginMutaionPostInfo(id, pw),
+    {
+      onSuccess: (res) => {
+        console.log(res);
+        navigate("/");
+      },
+      onError: (err: any) => {
+        alert(err.response.data.message);
+      },
+    }
+  );
 
   const emailPattern =
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
   const idOnChange = (idText: string) => {
     setId(idText);
   };
-
   const pwPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/;
   const pwOnChange = (pwText: string) => {
     setPw(pwText);
@@ -22,6 +38,7 @@ const Login = () => {
     else if (pw.length === 0) alert("비밀번호를 입력해주세요");
     else if (!emailPattern.test(id)) alert("이메일이 형식에 맞지 않습니다");
     else if (!pwPattern.test(pw)) alert("비밀번호가 형식에 맞지 않습니다");
+    else login();
   };
 
   return (
@@ -30,14 +47,17 @@ const Login = () => {
         <Title>로그인</Title>
         <IdInputBox valid={id.length > 0 ? emailPattern.test(id) : true}>
           <IdInput
+            value={id}
             placeholder="이메일"
             onChange={(e) => idOnChange(e.target.value)}
           />
         </IdInputBox>
         <PwInputBox valid={pw.length > 0 ? pwPattern.test(pw) : true}>
           <PwInput
+            value={pw}
             placeholder="비밀번호"
             onChange={(e) => pwOnChange(e.target.value)}
+            type={"password"}
           />
         </PwInputBox>
         <LoginBtn onClick={() => loginBtnOnClick()}>로그인</LoginBtn>
@@ -76,7 +96,7 @@ const Title = styled.h1`
   font-size: ${({ theme }) => theme.fontSizes.xxxl};
 `;
 
-const IdInputBox = styled.div<{ valid: any }>`
+const IdInputBox = styled.div<{ valid: boolean }>`
   position: relative;
   display: flex;
   flex-direction: column;
