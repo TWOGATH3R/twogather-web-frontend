@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useMutation } from "react-query";
 import { useNavigate, useParams, useLocation } from "react-router";
 import styled, { css } from "styled-components";
-import { consumersMutaionPostInfo } from "../../api/queries/RegisterQuery";
+import { consumersMutaionPostInfo } from "../../api/queries/SignUpQuery";
 
 const InfoInput = () => {
   const location = useLocation();
@@ -18,7 +18,7 @@ const InfoInput = () => {
     password: pw,
     name: name,
   };
-  const { mutate: consumersRegister, isLoading: consumersRegisterLoading } =
+  const { mutate: consumersSignUp, isLoading: consumersSignUpLoading } =
     useMutation(() => consumersMutaionPostInfo(info), {
       onSuccess: (res) => {
         console.log(res);
@@ -45,11 +45,11 @@ const InfoInput = () => {
     else if (!pwCheck) alert("비밀번호를 확인해주세요");
     else if (pw !== pwCheck) alert("비밀번호가 일치하지 않습니다");
     else if (!name) alert("이름을 입력해주세요");
-    else if (param.RegisterType === "customer") {
+    else if (param.SignUpType === "customer") {
       //고객전용 회원가입 api 실행
-      consumersRegister();
+      consumersSignUp();
     } else
-      navigate(`/register/storeowner/storeInfo`, {
+      navigate(`/signUp/storeowner/storeInfo`, {
         state: {
           email: location.state.email,
           pw: pw,
@@ -86,7 +86,7 @@ const InfoInput = () => {
           onChange={(e) => nameOnChange(e.target.value)}
         />
       </NameInputBox>
-      {param.RegisterType === "storeowner" ? (
+      {param.signUpType === "storeowner" ? (
         <NextBtn onClick={() => nextBtnOnClick()}>다음</NextBtn>
       ) : (
         <CompleteBtn onClick={() => nextBtnOnClick()}>완료</CompleteBtn>

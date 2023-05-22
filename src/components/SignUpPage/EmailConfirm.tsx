@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { emailCheckMutaionPostEmail } from "../../api/queries/RegisterQuery";
+import { emailCheckMutaionPostEmail } from "../../api/queries/SignUpQuery";
 
 const EmailConfirm = () => {
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ const EmailConfirm = () => {
     else if (!code) alert("인증번호를 입력해주세요");
     else if (!codeConfirm) alert("인증번호 확인을 완료해주세요");
     else
-      navigate(`/register/${Param.RegisterType}/Privacy`, {
+      navigate(`/signUp/${Param.signUpType}/Privacy`, {
         state: {
           email: email,
         },
