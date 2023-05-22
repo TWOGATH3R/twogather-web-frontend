@@ -39,13 +39,10 @@ export default function Header() {
             <MenuItem>
               <NavLink to="/">Home</NavLink>
             </MenuItem>
-            <MenuItem>
-              <NavLink to="/enrollshop">Resgistration</NavLink>
-            </MenuItem>
             {localStorage.getItem("role") === "ROLE_STORE_OWNER" ? (
               <>
                 <MenuItem>
-                  <NavLink to="/">Resgistration</NavLink>
+                  <NavLink to="/enrollshop">Resgistration</NavLink>
                 </MenuItem>
                 <MenuItem>
                   <NavLink to="/">Stores</NavLink>
