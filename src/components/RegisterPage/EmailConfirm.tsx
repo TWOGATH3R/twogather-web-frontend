@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { emailCheckMutaionPostEmail } from "../../api/queries/RegisterQuery";
+import { emailCheckMutaionPostEmail } from "../../apis/queries/RegisterQuery";
 
 const EmailConfirm = () => {
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { loginMutaionPostInfo } from "../api/queries/LoginQuery";
+import { loginMutaionPostInfo } from "../apis/queries/LoginQuery";
 import { useMutation } from "react-query";
 
 const Login = () => {
