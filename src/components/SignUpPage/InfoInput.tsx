@@ -24,6 +24,7 @@ const InfoInput = () => {
       onSuccess: (res) => {
         console.log(res);
         navigate("/login");
+        alert("회원가입 성공");
       },
     });
 
@@ -46,7 +47,7 @@ const InfoInput = () => {
     else if (!pwCheck) alert("비밀번호를 확인해주세요");
     else if (pw !== pwCheck) alert("비밀번호가 일치하지 않습니다");
     else if (!name) alert("이름을 입력해주세요");
-    else if (param.SignUpType === "customer") {
+    else if (param.signUpType === "customer") {
       //고객전용 회원가입 api 실행
       consumersSignUp();
     } else
