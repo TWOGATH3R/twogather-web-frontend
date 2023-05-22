@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { emailCheckMutaionPostEmail } from "../../apis/queries/RegisterQuery";
+
+import { emailCheckMutaionPostEmail } from "../../apis/queries/SignUpQuery";
 
 const EmailConfirm = () => {
   const navigate = useNavigate();
@@ -10,7 +11,6 @@ const EmailConfirm = () => {
 
   const [email, setEmail] = useState<string>("");
   const [code, setCode] = useState<string>("");
-  const [timer, setTimer] = useState<string>("");
   const [codeConfirm, setCodeConfrim] = useState<boolean>(false);
 
   const [codeAnswer, setCodeAnswer] = useState<string>("");
@@ -20,7 +20,6 @@ const EmailConfirm = () => {
       onSuccess: (res) => {
         console.log(res);
         setCodeAnswer(res.data.verificationCode);
-        alert("이메일에 전송된 인증코드를 확인해주세요");
       },
     }
   );
@@ -41,7 +40,7 @@ const EmailConfirm = () => {
     else if (!emailPattern.test(email)) alert("이메일이 형식에 맞지 않습니다");
     else {
       emailCheck();
-      timerInterval();
+      alert("이메일에 전송된 인증코드를 확인해주세요");
     }
   };
   const codeBtnOnClick = () => {
@@ -58,29 +57,11 @@ const EmailConfirm = () => {
     else if (!code) alert("인증번호를 입력해주세요");
     else if (!codeConfirm) alert("인증번호 확인을 완료해주세요");
     else
-      navigate(`/register/${Param.RegisterType}/Privacy`, {
+      navigate(`/signUp/${Param.signUpType}/Privacy`, {
         state: {
           email: email,
         },
       });
-  };
-
-  //인증코드 유효 타이머
-  const timerInterval = () => {
-    var time: any = 600;
-    var min: any = 0;
-    var sec: any = 0;
-
-    var x = setInterval(() => {
-      min = time / 60;
-      sec = time % 60;
-      setTimer(`${Math.floor(min)}분${sec}초`);
-      time--;
-      if (time < 0) {
-        clearInterval(x);
-        setTimer(`시간초과`);
-      }
-    }, 1000);
   };
 
   return (
@@ -102,7 +83,6 @@ const EmailConfirm = () => {
           onChange={(e) => codeOnChange(e.target.value)}
         />
         <ConfirmBtn onClick={() => codeBtnOnClick()}>인증</ConfirmBtn>
-        {timer && <TimerBox>{timer}</TimerBox>}
       </ConfirmBox>
       <NextBtn onClick={() => nextBtnOnClick()}>다음</NextBtn>
     </>
@@ -154,13 +134,6 @@ const ConfirmBox = styled(EmailBox)`
   justify-content: center;
   margin-bottom: 45px;
   width: 100%;
-`;
-const TimerBox = styled.div`
-  position: absolute;
-  top: 100%;
-  left: calc(10% + 10px);
-  font-size: ${({ theme }) => theme.fontSizes.small};
-  color: #ff0000;
 `;
 const ConfirmInput = styled(EmailInput)``;
 const ConfirmBtn = styled(EmailSendBtn)``;

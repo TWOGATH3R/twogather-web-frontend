@@ -2,14 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-const RegisterType = () => {
+const SignUpType = () => {
   return (
     <>
       <StoreOwnerBtnBox>
-        <Link to={"/register/storeowner"}>사업자</Link>
+        <Link to={"/signUp/storeowner"}>사업자</Link>
       </StoreOwnerBtnBox>
       <CustomerBtnBox>
-        <Link to={"/register/customer"}>개인</Link>
+        <Link to={"/signUp/customer"}>개인</Link>
       </CustomerBtnBox>
     </>
   );
@@ -38,4 +38,4 @@ const StoreOwnerBtnBox = styled.button`
 `;
 const CustomerBtnBox = styled(StoreOwnerBtnBox)``;
 
-export default RegisterType;
+export default SignUpType;

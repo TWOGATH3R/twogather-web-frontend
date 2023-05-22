@@ -4,7 +4,7 @@ import { useMutation } from "react-query";
 import {
   buisnessCheckMutaionPostInfo,
   storeOwnerMutaionPostInfo,
-} from "../../apis/queries/RegisterQuery";
+} from "../../apis/queries/SignUpQuery";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const StoreInfo = () => {
@@ -28,7 +28,7 @@ const StoreInfo = () => {
         onSuccess: (res) => {
           if (!res.data[0].status)
             alert("사업자 조회 정보를 다시 확인해주세요");
-          else storeOwnerRegister();
+          else storeOwnerSignUp();
         },
       }
     );
@@ -41,11 +41,14 @@ const StoreInfo = () => {
     businessName: ownerName,
     businessStartDate: businessDate,
   };
-  const { mutate: storeOwnerRegister, isLoading: storeOwnerRegisterLoading } =
+  const { mutate: storeOwnerSignUp, isLoading: storeOwnerSignUpLoading } =
     useMutation(() => storeOwnerMutaionPostInfo(storeOwerInfo), {
       onSuccess: (res) => {
         console.log(res);
         navigate("/login");
+      },
+      onError: (err: any) => {
+        alert(err.response.data.message);
       },
     });
 

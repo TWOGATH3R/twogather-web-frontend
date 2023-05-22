@@ -2,20 +2,20 @@ import React from "react";
 import { Outlet } from "react-router";
 import styled from "styled-components";
 
-const Register = () => {
+const SignUp = () => {
   return (
     <>
-      <RegisterContainer>
-        <RegisterWrraper>
+      <SignUpContainer>
+        <SignUpWrraper>
           <Title>회원가입</Title>
           <Outlet />
-        </RegisterWrraper>
-      </RegisterContainer>
+        </SignUpWrraper>
+      </SignUpContainer>
     </>
   );
 };
 
-const RegisterContainer = styled.div`
+const SignUpContainer = styled.div`
   padding-top: 8vh;
   height: calc(93vh - 8vh);
   font-family: "Inter";
@@ -30,7 +30,7 @@ const RegisterContainer = styled.div`
     cursor: pointer;
   }
 `;
-const RegisterWrraper = styled.div`
+const SignUpWrraper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,4 +47,4 @@ const Title = styled.h1`
   font-size: ${({ theme }) => theme.fontSizes.xxxl};
 `;
 
-export default Register;
+export default SignUp;

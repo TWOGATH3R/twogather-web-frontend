@@ -4,7 +4,6 @@ import styled, { css } from "styled-components";
 const FindPw = () => {
   const [email, setEmail] = useState<string>("");
   const [code, setCode] = useState<string>("");
-  const [timer, setTimer] = useState<string>("");
   const [newPw, setNewPw] = useState<string>("");
   const [pwCheck, setPwCheck] = useState<string>("");
   const [codeConfirm, setCodeConfrim] = useState<boolean>(false);
@@ -30,7 +29,6 @@ const FindPw = () => {
   const emailBtnOnClick = () => {
     if (!email) alert("이메일을 입력해주세요");
     else if (!emailPattern.test(email)) alert("이메일이 형식에 맞지 않습니다");
-    else timerInterval();
   };
   const codeBtnOnClick = () => {
     if (!email) alert("이메일을 입력해주세요");
@@ -46,24 +44,6 @@ const FindPw = () => {
     else if (!pwCheck) alert("비밀번호를 확인해주세요");
     else if (!pwPattern.test(newPw)) alert("비밀번호가 양식에 맞지 않습니다");
     else if (newPw !== pwCheck) alert("비밀번호가 일치하지 않습니다");
-  };
-
-  //인증코드 유효 타이머
-  const timerInterval = () => {
-    var time: any = 600;
-    var min: any = 0;
-    var sec: any = 0;
-
-    var x = setInterval(() => {
-      min = time / 60;
-      sec = time % 60;
-      setTimer(`${Math.floor(min)}분${sec}초`);
-      time--;
-      if (time < 0) {
-        clearInterval(x);
-        setTimer(`시간초과`);
-      }
-    }, 1000);
   };
 
   return (
@@ -87,7 +67,6 @@ const FindPw = () => {
             onChange={(e) => codeOnChange(e.target.value)}
           />
           <ConfirmBtn onClick={() => codeBtnOnClick()}>인증</ConfirmBtn>
-          {timer && <TimerBox>{timer}</TimerBox>}
         </ConfirmBox>
         {codeConfirm && (
           <>
@@ -181,13 +160,6 @@ const EmailSendBtn = styled.button`
 `;
 
 const ConfirmBox = styled(EmailBox)``;
-const TimerBox = styled.div`
-  position: absolute;
-  top: 100%;
-  left: calc(10% + 10px);
-  font-size: ${({ theme }) => theme.fontSizes.small};
-  color: #ff0000;
-`;
 const ConfirmInput = styled(EmailInput)``;
 const ConfirmBtn = styled(EmailSendBtn)``;
 

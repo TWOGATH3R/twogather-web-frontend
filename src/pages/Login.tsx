@@ -65,9 +65,9 @@ const Login = () => {
           <Link to={"/findId"}>아이디 찾기</Link>
           <Link to={"/findPw"}>비밀번호 찾기</Link>
         </FindMeunBtnBox>
-        <RegisterBtnBox>
-          <Link to={"/register/selectType"}>회원가입</Link>
-        </RegisterBtnBox>
+        <SignUpBtnBox>
+          <Link to={"/signUp/selectType"}>회원가입</Link>
+        </SignUpBtnBox>
       </LoginWrraper>
     </LoginContainer>
   );
@@ -167,7 +167,7 @@ const LoginBtn = styled.button`
   color: ${({ theme }) => theme.colors.white};
   cursor: pointer;
 `;
-const RegisterBtnBox = styled.div`
+const SignUpBtnBox = styled.div`
   padding-top: 20px;
   a {
     text-decoration-line: underline;
