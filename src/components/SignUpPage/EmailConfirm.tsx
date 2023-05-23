@@ -41,6 +41,8 @@ const EmailConfirm = () => {
     else {
       emailCheck();
       alert("이메일에 전송된 인증코드를 확인해주세요");
+      const emailBtn = document.querySelector(".emailBtn") as HTMLElement;
+      emailBtn.innerText = "재전송"
     }
   };
   const codeBtnOnClick = () => {
@@ -72,7 +74,7 @@ const EmailConfirm = () => {
           placeholder="이메일"
           onChange={(e) => emailOnChange(e.target.value)}
         />
-        <EmailSendBtn onClick={() => emailBtnOnClick()}>
+        <EmailSendBtn className="emailBtn" onClick={() => emailBtnOnClick()}>
           인증 메일 전송
         </EmailSendBtn>
       </EmailBox>
