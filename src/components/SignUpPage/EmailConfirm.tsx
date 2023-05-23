@@ -42,7 +42,7 @@ const EmailConfirm = () => {
       emailCheck();
       alert("이메일에 전송된 인증코드를 확인해주세요");
       const emailBtn = document.querySelector(".emailBtn") as HTMLElement;
-      emailBtn.innerText = "재전송"
+      emailBtn.innerText = "재전송";
     }
   };
   const codeBtnOnClick = () => {
@@ -51,19 +51,12 @@ const EmailConfirm = () => {
     else {
       alert("인증완료");
       setCodeConfrim(true);
-    }
-  };
-  const nextBtnOnClick = () => {
-    if (!email) alert("이메일을 입력해주세요");
-    else if (!emailPattern.test(email)) alert("이메일 형식을 맞춰주세요");
-    else if (!code) alert("인증번호를 입력해주세요");
-    else if (!codeConfirm) alert("인증번호 확인을 완료해주세요");
-    else
       navigate(`/signUp/${Param.signUpType}/Privacy`, {
         state: {
           email: email,
         },
       });
+    }
   };
 
   return (
@@ -84,9 +77,8 @@ const EmailConfirm = () => {
           placeholder="인증코드"
           onChange={(e) => codeOnChange(e.target.value)}
         />
-        <ConfirmBtn onClick={() => codeBtnOnClick()}>인증</ConfirmBtn>
       </ConfirmBox>
-      <NextBtn onClick={() => nextBtnOnClick()}>다음</NextBtn>
+      <ConfirmBtn onClick={() => codeBtnOnClick()}>인증</ConfirmBtn>
     </>
   );
 };
@@ -137,8 +129,16 @@ const ConfirmBox = styled(EmailBox)`
   margin-bottom: 45px;
   width: 100%;
 `;
-const ConfirmInput = styled(EmailInput)``;
-const ConfirmBtn = styled(EmailSendBtn)``;
+const ConfirmInput = styled(EmailInput)`
+margin-left: 15px;
+  width: calc(50% + 125px);
+`;
+const ConfirmBtn = styled(EmailSendBtn)`
+  margin-top: 190px;
+  width: 187px;
+  height: 55px;
+  font-size: ${({ theme }) => theme.fontSizes.xl};
+`;
 
 const NextBtn = styled(EmailSendBtn)`
   margin-top: 190px;
