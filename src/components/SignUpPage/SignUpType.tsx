@@ -26,8 +26,11 @@ const StoreOwnerBtnBox = styled.button`
   font-size: ${({ theme }) => theme.fontSizes.xxl};
   transition: all 0.5s;
   a {
+    display: block;
     color: ${({ theme }) => theme.colors.black};
     transition: all 0.5s;
+    width: 100%;
+    height: 100%;
   }
   &:hover {
     border: 1px solid #ff5171;
