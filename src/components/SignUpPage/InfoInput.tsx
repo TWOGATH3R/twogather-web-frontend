@@ -3,17 +3,22 @@ import { useMutation } from "react-query";
 import { useNavigate, useParams, useLocation } from "react-router";
 import styled, { css } from "styled-components";
 
-import { consumersMutaionPostInfo } from "../../apis/queries/SignUpQuery";
+import {
+  consumersMutaionPostInfo,
+  storeOwnerMutaionPostInfo,
+} from "../../apis/queries/SignUpQuery";
 
 const InfoInput = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const param = useParams();
 
+  const [id, setId] = useState<string>("");
   const [pw, setPw] = useState<string>("");
   const [pwCheck, setPwCheck] = useState<string>("");
   const [name, setName] = useState<string>("");
 
+  //개인 회원가입 query
   const info = {
     email: location.state.email,
     password: pw,
@@ -28,7 +33,27 @@ const InfoInput = () => {
       },
     });
 
+  //사업자 회원가입 query
+  const storeOwerInfo = {
+    email: location.state.email,
+    password: location.state.pw,
+    name: location.state.name,
+  };
+  const { mutate: storeOwnerSignUp, isLoading: storeOwnerSignUpLoading } =
+    useMutation(() => storeOwnerMutaionPostInfo(storeOwerInfo), {
+      onSuccess: (res) => {
+        console.log(res);
+        navigate("/login");
+      },
+      onError: (err: any) => {
+        alert(err.response.data.message);
+      },
+    });
+
   //onChange
+  const idOnChange = (idText: string) => {
+    setId(idText);
+  };
   const pwPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/;
   const pwOnChange = (pwText: string) => {
     setPw(pwText);
@@ -50,20 +75,29 @@ const InfoInput = () => {
     else if (param.signUpType === "customer") {
       //고객전용 회원가입 api 실행
       consumersSignUp();
-    } else
-      navigate(`/signUp/storeowner/storeInfo`, {
-        state: {
-          email: location.state.email,
-          pw: pw,
-          name: name,
-        },
-      });
+    } else storeOwnerSignUp();
   };
 
   return (
     <>
+      <NameInputBox valid={true}>
+        <NameText>이름</NameText>
+        <NameInput
+          value={name}
+          placeholder="이름을 입력해주세요"
+          onChange={(e) => nameOnChange(e.target.value)}
+        />
+      </NameInputBox>
+      <IdCheckInputBox valid={true}>
+        <IdCheckText>아이디</IdCheckText>
+        <IdCheckInput
+          value={id}
+          placeholder="아이디"
+          onChange={(e) => idOnChange(e.target.value)}
+        />
+      </IdCheckInputBox>
       <PwInputBox valid={pw.length > 0 ? pwPattern.test(pw) : true}>
-        <PwText>password</PwText>
+        <PwText>비밀번호</PwText>
         <PwInput
           value={pw}
           placeholder="비밀번호"
@@ -72,7 +106,7 @@ const InfoInput = () => {
         />
       </PwInputBox>
       <PwCheckInputBox valid={pwCheck.length > 0 ? pwCheck === pw : true}>
-        <PwCheckText>password</PwCheckText>
+        <PwCheckText>비밀번호 확인</PwCheckText>
         <PwCheckInput
           value={pwCheck}
           placeholder="비밀번호 확인"
@@ -80,14 +114,6 @@ const InfoInput = () => {
           type="password"
         />
       </PwCheckInputBox>
-      <NameInputBox valid={true}>
-        <NameText>name</NameText>
-        <NameInput
-          value={name}
-          placeholder="이름을 입력해주세요"
-          onChange={(e) => nameOnChange(e.target.value)}
-        />
-      </NameInputBox>
       {param.signUpType === "storeowner" ? (
         <NextBtn onClick={() => nextBtnOnClick()}>다음</NextBtn>
       ) : (
@@ -131,6 +157,20 @@ const PwInput = styled.input`
   height: fit-content;
   border: 1px solid rgba(0, 0, 0, 0.2);
 `;
+
+const IdCheckInputBox = styled(PwInputBox)`
+  ${(props) => {
+    if (!props.valid) {
+      return css`
+        &::after {
+          content: "일치하지 않습니다.";
+        }
+      `;
+    }
+  }}
+`;
+const IdCheckText = styled(PwText)``;
+const IdCheckInput = styled(PwInput)``;
 
 const PwCheckInputBox = styled(PwInputBox)`
   ${(props) => {

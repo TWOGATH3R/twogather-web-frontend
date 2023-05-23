@@ -51,18 +51,12 @@ type storeOwnerInfo = {
   email: string;
   password: string;
   name: string;
-  businessNumber: string;
-  businessName: string;
-  businessStartDate: string;
 };
 export const storeOwnerMutaionPostInfo = async (info: storeOwnerInfo) => {
   const res = await api.post(`/api/owners`, {
     email: info.email,
     password: info.password,
     name: info.name,
-    businessNumber: info.businessNumber,
-    businessName: info.businessName,
-    businessStartDate: info.businessStartDate,
   });
   return res.data;
 };
