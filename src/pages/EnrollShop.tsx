@@ -201,13 +201,6 @@ export default function EnrollShop() {
         day.status = false;
       }
     }
-    for (let i = 0; i < inputItems.length; i++) {
-      if (inputItems[i].week[0].status === true) {
-        console.log("aa");
-      } else {
-        console.log("안중복");
-      }
-    }
     console.log(inputItems);
   };
 
