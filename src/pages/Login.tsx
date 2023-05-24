@@ -63,7 +63,7 @@ const Login = () => {
         <LoginBtn onClick={() => loginBtnOnClick()}>로그인</LoginBtn>
         <FindMeunBtnBox>
           <Link to={"/findId"}>아이디 찾기</Link>
-          <Link to={"/findPw"}>비밀번호 찾기</Link>
+          <Link to={"/findPw/verification"}>비밀번호 찾기</Link>
         </FindMeunBtnBox>
         <SignUpBtnBox>
           <Link to={"/signUp/selectType"}>회원가입</Link>

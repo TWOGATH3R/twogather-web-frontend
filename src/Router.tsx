@@ -12,6 +12,8 @@ import InfoInput from "./components/SignUpPage/InfoInput";
 import StoreInfo from "./components/SignUpPage/StoreInfo";
 import FindId from "./pages/FindId";
 import FindPw from "./pages/FindPw";
+import Verification from "./components/FindPwPage/Verification";
+import PwChange from "./components/FindPwPage/PwChange";
 
 const Router = () => {
   return (
@@ -23,7 +25,10 @@ const Router = () => {
         <Route path="/editenrollshop" element={<EditEnrollShop />}></Route>
         <Route path="/login" element={<Login />} />
         <Route path="/findid" element={<FindId />} />
-        <Route path="/findPw" element={<FindPw />} />
+        <Route path="/findPw" element={<FindPw />}>
+          <Route path="verification" element={<Verification />} />
+          <Route path="pwChange" element={<PwChange />} />
+        </Route>
         <Route path="/signUp" element={<SignUp />}>
           <Route path="selectType" element={<SignUpType />} />
           <Route path="/signUp/:signUpType" element={<EmailConfirm />} />
