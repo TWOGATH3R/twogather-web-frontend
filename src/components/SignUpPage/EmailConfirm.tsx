@@ -130,17 +130,10 @@ const ConfirmBox = styled(EmailBox)`
   width: 100%;
 `;
 const ConfirmInput = styled(EmailInput)`
-margin-left: 15px;
+  margin-left: 15px;
   width: calc(50% + 125px);
 `;
 const ConfirmBtn = styled(EmailSendBtn)`
-  margin-top: 190px;
-  width: 187px;
-  height: 55px;
-  font-size: ${({ theme }) => theme.fontSizes.xl};
-`;
-
-const NextBtn = styled(EmailSendBtn)`
   margin-top: 190px;
   width: 187px;
   height: 55px;
