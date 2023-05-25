@@ -136,11 +136,8 @@ export default function EnrollShop() {
   const onClickBreakTimeCheckBox = () => {
     setBreakTimeInputCheckBox((prev) => !prev);
   };
-  const onClickDay = (
-    e: React.MouseEvent<HTMLLIElement>,
-    day: any,
-    idx: number
-  ) => {
+
+  const onClickDay = (day: any, idx: number) => {
     if (day.day === "월") {
       if (day.status === false) {
         setTab([...tab]);
@@ -204,16 +201,17 @@ export default function EnrollShop() {
         day.status = false;
       }
     }
+    console.log(inputItems);
   };
 
   // onChange
   const onChangeShopName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const regShopName = /^[가-힣a-zA-Z0-9]+$/;
+    const regShopName = /^[가-힣a-zA-Z0-9\s]+$/;
     const shopNameCurrent = e.target.value;
     setShopName(e.target.value);
 
     if (!regShopName.test(shopNameCurrent)) {
-      setShopNameMessage("이름이 옳바르지 않습니다.");
+      setShopNameMessage("가게명이 옳바르지 않습니다.");
       return;
     } else {
       setShopName("");
@@ -361,7 +359,6 @@ export default function EnrollShop() {
   function deleteInputItem(index: number) {
     setInputItems(inputItems.filter((item) => item.id !== index));
   }
-  console.log(visibleCategory);
   function addMenuItem() {
     const menu = {
       id: shopMenuID.current,
@@ -552,13 +549,17 @@ export default function EnrollShop() {
         </ShopWrapper>
 
         {/* 가게 영엉 시간 */}
-        {inputItems.map((item, index) => (
-          <>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column-reverse",
+          }}
+        >
+          {inputItems.map((item, index) => (
             <ShopWrapper
+              key={index}
               style={{
                 marginTop: "5%",
-                display: "flex",
-                flexDirection: "column-reverse",
               }}
             >
               <ShopInnerOutlineWrapper>
@@ -579,26 +580,26 @@ export default function EnrollShop() {
                 <ShopDayWrapper>
                   <ShopDayUl>
                     {item.week.map((day, idx) => (
-                      <>
+                      <React.Fragment key={idx}>
                         {day.status === true ? (
                           <ShopDayList
                             style={{ backgroundColor: "#FFB5B5" }}
-                            onClick={(e) => onClickDay(e, day, idx)}
+                            onClick={() => onClickDay(day, idx)}
                           >
                             {day.day}
                           </ShopDayList>
                         ) : (
-                          <ShopDayList onClick={(e) => onClickDay(e, day, idx)}>
+                          <ShopDayList onClick={() => onClickDay(day, idx)}>
                             {day.day}
                           </ShopDayList>
                         )}
-                      </>
+                      </React.Fragment>
                     ))}
                   </ShopDayUl>
                 </ShopDayWrapper>
                 <ShopInnerWrapper>
                   <ShopTitle style={{ flex: 0.3, fontWeight: "500" }}>
-                    영업중
+                    영업 시간
                   </ShopTitle>
                   <ShopInputItemsWrapper>
                     <div
@@ -631,7 +632,7 @@ export default function EnrollShop() {
 
                 <ShopInnerWrapper>
                   <ShopTitle style={{ flex: 0.3, fontWeight: "500" }}>
-                    break time
+                    휴식 시간
                   </ShopTitle>
                   <ShopInputItemsWrapper>
                     <div style={{ display: "flex" }}>
@@ -702,14 +703,16 @@ export default function EnrollShop() {
                 </ShopTimeButtonWrapper>
               </ShopInnerOutlineWrapper>
             </ShopWrapper>
-          </>
-        ))}
+          ))}
+        </div>
 
         {/* 메뉴 */}
         <ShopWrapper style={{ marginTop: "5%" }}>
           <ShopInnerOutlineWrapper>
             <ShopInnerOutlineTitleWrapper>
-              <ShopInnerOutlineBigTitle>메뉴</ShopInnerOutlineBigTitle>
+              <ShopInnerOutlineBigTitle>
+                메뉴 <span>*</span>
+              </ShopInnerOutlineBigTitle>
             </ShopInnerOutlineTitleWrapper>
 
             <ShopMenuContainer>
