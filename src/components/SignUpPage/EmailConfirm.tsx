@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import styled, { css } from "styled-components";
+import sendMailImg from "../../assets/sendmail.svg";
 
 import { emailCheckMutaionPostEmail } from "../../apis/queries/SignUpQuery";
+import Swal from "sweetalert2";
 
 const EmailConfirm = () => {
   const navigate = useNavigate();
@@ -40,7 +42,11 @@ const EmailConfirm = () => {
     else if (!emailPattern.test(email)) alert("이메일이 형식에 맞지 않습니다");
     else {
       emailCheck();
-      alert("이메일에 전송된 인증코드를 확인해주세요");
+      Swal.fire({
+        text: "이메일로 인증코드를 발송했습니다.",
+        imageUrl: `${sendMailImg}`,
+        confirmButtonColor: "#0075FF",
+      });
       const emailBtn = document.querySelector(".emailBtn") as HTMLElement;
       emailBtn.innerText = "재전송";
     }

@@ -4,7 +4,6 @@ import styled, { css } from "styled-components";
 const PwChange = () => {
   const [newPw, setNewPw] = useState<string>("");
   const [pwCheck, setPwCheck] = useState<string>("");
-  const [codeConfirm, setCodeConfrim] = useState<boolean>(false);
 
   //onChange
   const pwPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/;
@@ -43,9 +42,7 @@ const PwChange = () => {
   );
 };
 
-
-
-const ConfirmBox = styled.div<{ valid: boolean }>`
+const NewPwBox = styled.div<{ valid: boolean }>`
   position: relative;
   display: flex;
   justify-content: center;
@@ -58,7 +55,7 @@ const ConfirmBox = styled.div<{ valid: boolean }>`
           border-color: #ff3a3a;
         }
         &::after {
-          content: "이메일 형식에 맞게 입력해주세요.";
+          content: "영어,숫자를 포함 8~20자 이내로 입력해주세요.";
           position: absolute;
           top: calc(100% + 2px);
           left: 10%;
@@ -69,42 +66,17 @@ const ConfirmBox = styled.div<{ valid: boolean }>`
     }
   }}
 `;
-const ConfirmInput = styled.input`
+const NewPwInput = styled.input`
   margin-right: 15px;
   padding: 15px 10px;
-  width: 50%;
+  width: 75%;
   outline: none;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 2px;
   font-size: ${({ theme }) => theme.fontSizes.base};
 `;
-const ConfirmBtn = styled.button`
-  padding: 5px 10px;
-  width: 110px;
-  background: #2663ff;
-  box-sizing: border-box;
-  border: none;
-  border-radius: 20px;
-  color: ${({ theme }) => theme.colors.white};
-  cursor: pointer;
-`;
 
-const NewPwBox = styled(ConfirmBox)`
-  ${(props) => {
-    if (!props.valid) {
-      return css`
-        &::after {
-          content: "영어,숫자를 포함 8~20자 이내로 입력해주세요.";
-        }
-      `;
-    }
-  }}
-`;
-const NewPwInput = styled(ConfirmInput)`
-  margin-right: 125px;
-`;
-
-const PwCheckBox = styled(ConfirmBox)`
+const PwCheckBox = styled(NewPwBox)`
   ${(props) => {
     if (!props.valid) {
       return css`
@@ -115,13 +87,20 @@ const PwCheckBox = styled(ConfirmBox)`
     }
   }}
 `;
-const PwCheckInput = styled(ConfirmInput)``;
+const PwCheckInput = styled(NewPwInput)``;
 
-const ChangeBtn = styled(ConfirmBtn)`
+const ChangeBtn = styled.button`
+  padding: 5px 10px;
   margin-top: 20px;
   width: 187px;
   height: 55px;
   font-size: ${({ theme }) => theme.fontSizes.xl};
+  background: #2663ff;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 20px;
+  color: ${({ theme }) => theme.colors.white};
+  cursor: pointer;
 `;
 
 export default PwChange;
