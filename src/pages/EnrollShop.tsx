@@ -135,10 +135,13 @@ export default function EnrollShop() {
 
   const onClickBreakTimeCheckBox = () => {
     setBreakTimeInputCheckBox((prev) => !prev);
+    console.log(checkWeekList);
   };
 
+  const [checkWeekList, setCheckWeekList] = useState<Array<string>>([]);
   const onClickDay = (day: any, idx: number) => {
-    if (day.day === "월") {
+    if (!checkWeekList.includes(day.day, 0)) {
+      setCheckWeekList((data) => [...data, day.day]);
       if (day.status === false) {
         setTab([...tab]);
         day.status = true;
@@ -146,61 +149,75 @@ export default function EnrollShop() {
         setTab(tab.filter((item) => item.id !== idx));
         day.status = false;
       }
+    } else {
+      checkWeekList.filter((v, i) => day.day !== v);
+      Swal.fire({
+        text:"이미 입력한 요일입니다."
+      })
     }
-    if (day.day === "화") {
-      if (day.status === false) {
-        setTab([...tab]);
-        day.status = true;
-      } else {
-        setTab(tab.filter((item) => item.id !== idx));
-        day.status = false;
-      }
-    }
-    if (day.day === "수") {
-      if (day.status === false) {
-        setTab([...tab]);
-        day.status = true;
-      } else {
-        setTab(tab.filter((item) => item.id !== idx));
-        day.status = false;
-      }
-    }
-    if (day.day === "목") {
-      if (day.status === false) {
-        setTab([...tab]);
-        day.status = true;
-      } else {
-        setTab(tab.filter((item) => item.id !== idx));
-        day.status = false;
-      }
-    }
-    if (day.day === "금") {
-      if (day.status === false) {
-        setTab([...tab]);
-        day.status = true;
-      } else {
-        setTab(tab.filter((item) => item.id !== idx));
-        day.status = false;
-      }
-    }
-    if (day.day === "토") {
-      if (day.status === false) {
-        setTab([...tab]);
-        day.status = true;
-      } else {
-        setTab(tab.filter((item) => item.id !== idx));
-        day.status = false;
-      }
-    }
-    if (day.day === "일") {
-      if (day.status === false) {
-        setTab([...tab]);
-        day.status = true;
-      } else {
-        setTab(tab.filter((item) => item.id !== idx));
-        day.status = false;
-      }
-    }
+    // if (day.day === "월") {
+    //   if (day.status === false) {
+    //     setTab([...tab]);
+    //     day.status = true;
+    //   } else {
+    //     setTab(tab.filter((item) => item.id !== idx));
+    //     day.status = false;
+    //   }
+    // }
+    // if (day.day === "화") {
+    //   if (day.status === false) {
+    //     setTab([...tab]);
+    //     day.status = true;
+    //   } else {
+    //     setTab(tab.filter((item) => item.id !== idx));
+    //     day.status = false;
+    //   }
+    // }
+    // if (day.day === "수") {
+    //   if (day.status === false) {
+    //     setTab([...tab]);
+    //     day.status = true;
+    //   } else {
+    //     setTab(tab.filter((item) => item.id !== idx));
+    //     day.status = false;
+    //   }
+    // }
+    // if (day.day === "목") {
+    //   if (day.status === false) {
+    //     setTab([...tab]);
+    //     day.status = true;
+    //   } else {
+    //     setTab(tab.filter((item) => item.id !== idx));
+    //     day.status = false;
+    //   }
+    // }
+    // if (day.day === "금") {
+    //   if (day.status === false) {
+    //     setTab([...tab]);
+    //     day.status = true;
+    //   } else {
+    //     setTab(tab.filter((item) => item.id !== idx));
+    //     day.status = false;
+    //   }
+    // }
+    // if (day.day === "토") {
+    //   if (day.status === false) {
+    //     setTab([...tab]);
+    //     day.status = true;
+    //   } else {
+    //     setTab(tab.filter((item) => item.id !== idx));
+    //     day.status = false;
+    //   }
+    // }
+    // if (day.day === "일") {
+    //   if (day.status === false) {
+    //     setTab([...tab]);
+    //     day.status = true;
+    //   } else {
+    //     setTab(tab.filter((item) => item.id !== idx));
+    //     day.status = false;
+    //   }
+    // }
     console.log(inputItems);
   };
 
