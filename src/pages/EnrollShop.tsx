@@ -420,6 +420,7 @@ export default function EnrollShop() {
     nextID.current += 1;
   }
   function deleteInputItem(index: number) {
+    setCheckWeekList(checkWeekList.filter((v,i)=>i!==index));
     setInputItems(inputItems.filter((item) => item.id !== index));
   }
   function addMenuItem() {
