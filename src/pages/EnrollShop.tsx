@@ -138,23 +138,68 @@ export default function EnrollShop() {
     console.log(checkWeekList);
   };
 
-  const [checkWeekList, setCheckWeekList] = useState<Array<string>>([]);
-  const onClickDay = (day: any, idx: number) => {
-    if (!checkWeekList.includes(day.day, 0)) {
-      setCheckWeekList((data) => [...data, day.day]);
-      if (day.status === false) {
+  type checkWeekListType = {
+    day: string[];
+  };
+  const [checkWeekList, setCheckWeekList] = useState<Array<checkWeekListType>>([
+    { day: [] },
+  ]);
+  const onClickDay = (day: any, idx: number, index: number) => {
+    let 상황 = "";
+    for (let i = 0; i < checkWeekList.length; i++) {
+      if (checkWeekList[i].day.includes(day.day)) {
+        if (i !== index) {
+          console.log("다른 라인에 이미 있네");
+          상황 = "다른 라인에 이미 있네";
+          break;
+        } else {
+          console.log("같은 라인에 있네");
+          상황 = "같은 라인에 있네";
+          break;
+        }
+      }
+    }
+
+    if (checkWeekList[index].day.includes(day.day)) {
+      const newArray = checkWeekList[index].day.filter(
+        (value) => value !== day.day
+      );
+      checkWeekList[index].day = newArray;
+    } else {
+      if (상황 !== "다른 라인에 이미 있네") {
+        checkWeekList[index].day.push(day.day);
+      }
+    }
+
+    if (day.status === false) {
+      if (상황 === "다른 라인에 이미 있네") {
+        Swal.fire({
+          text: "이미 입력한 요일입니다.",
+        });
+      } else {
         setTab([...tab]);
         day.status = true;
-      } else {
-        setTab(tab.filter((item) => item.id !== idx));
-        day.status = false;
       }
-    } else {
-      checkWeekList.filter((v, i) => day.day !== v);
-      Swal.fire({
-        text:"이미 입력한 요일입니다."
-      })
+    } else if (day.status === true) {
+      setTab(tab.filter((item) => item.id !== idx));
+      day.status = false;
     }
+
+    // if (!checkWeekList.includes(day.day, 0)) {
+    //   setCheckWeekList((data) => [...data, day.day]);
+    //   if (day.status === false) {
+    //     setTab([...tab]);
+    //     day.status = true;
+    //   } else {
+    //     setTab(tab.filter((item) => item.id !== idx));
+    //     day.status = false;
+    //   }
+    // } else {
+    //   checkWeekList.filter((v, i) => day.day !== v);
+    //   Swal.fire({
+    //     text: "이미 입력한 요일입니다.",
+    //   });
+    // }
     // if (day.day === "월") {
     //   if (day.status === false) {
     //     setTab([...tab]);
@@ -353,6 +398,7 @@ export default function EnrollShop() {
   }
 
   function addInputItem() {
+    checkWeekList.push({ day: [] });
     const input = {
       id: nextID.current,
       startTime: "00:00",
@@ -601,12 +647,14 @@ export default function EnrollShop() {
                         {day.status === true ? (
                           <ShopDayList
                             style={{ backgroundColor: "#FFB5B5" }}
-                            onClick={() => onClickDay(day, idx)}
+                            onClick={() => onClickDay(day, idx, index)}
                           >
                             {day.day}
                           </ShopDayList>
                         ) : (
-                          <ShopDayList onClick={() => onClickDay(day, idx)}>
+                          <ShopDayList
+                            onClick={() => onClickDay(day, idx, index)}
+                          >
                             {day.day}
                           </ShopDayList>
                         )}
