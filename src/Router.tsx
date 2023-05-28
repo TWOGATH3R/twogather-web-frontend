@@ -5,15 +5,19 @@ import Main from "./pages/Main";
 import EnrollShop from "./pages/EnrollShop";
 import EditEnrollShop from "./components/resgistration/EditEnrollShop";
 import Login from "./pages/Login";
-import SignUpType from "./components/SignUpPage/SignUpType";
-import EmailConfirm from "./components/SignUpPage/EmailConfirm";
+import SignUpType from "./components/signUpPage/SignUpType";
+import EmailConfirm from "./components/signUpPage/EmailConfirm";
 import SignUp from "./pages/SignUp";
-import InfoInput from "./components/SignUpPage/InfoInput";
-import StoreInfo from "./components/SignUpPage/StoreInfo";
+import InfoInput from "./components/signUpPage/InfoInput";
+import StoreInfo from "./components/signUpPage/StoreInfo";
 import FindId from "./pages/FindId";
 import FindPw from "./pages/FindPw";
 import Verification from "./components/FindPwPage/Verification";
 import PwChange from "./components/FindPwPage/PwChange";
+import MyPage from "./pages/MyPage";
+import Info from "./components/myPage/Info";
+import Review from "./components/myPage/Review";
+import Withdraw from "./components/myPage/Withdraw";
 
 const Router = () => {
   return (
@@ -34,6 +38,11 @@ const Router = () => {
           <Route path="/signUp/:signUpType" element={<EmailConfirm />} />
           <Route path="/signUp/:signUpType/privacy" element={<InfoInput />} />
           <Route path="/signUp/:signUpType/storeInfo" element={<StoreInfo />} />
+        </Route>
+        <Route path="/mypage" element={<MyPage />}>
+          <Route path="info" element={<Info />} />
+          <Route path="review" element={<Review />} />
+          <Route path="withdraw" element={<Withdraw />} />
         </Route>
       </Routes>
     </BrowserRouter>
