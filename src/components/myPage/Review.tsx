@@ -11,6 +11,14 @@ const Review = () => {
   };
   return (
     <ReviewContainer>
+      <FilterBox>
+        <FilterSelect>
+          <option>최신순</option>
+          <option>오래된순</option>
+          <option>별점 높은순</option>
+          <option>별점 낮은순</option>
+        </FilterSelect>
+      </FilterBox>
       <ReviewList>
         <ReviewItem>
           <Link to={""}>
@@ -26,8 +34,7 @@ const Review = () => {
                 <UserNameStartBox>
                   <UserName>김민지</UserName>
                   <StarList>
-                    <StarItem>
-                    </StarItem>
+                    <StarItem></StarItem>
                   </StarList>
                 </UserNameStartBox>
                 <ReviewText>
@@ -59,6 +66,22 @@ const ReviewContainer = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
+`;
+
+const FilterBox = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  width: 100%;
+  padding: 0 0 15px;
+`;
+const FilterSelect = styled.select`
+  outline: none;
+  padding: 5px;
+  background: #0075ff;
+  border: none;
+  border-radius: 10px;
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.white};
 `;
 
 const ReviewList = styled.ul`
@@ -118,8 +141,7 @@ const UserName = styled.span`
 const StarList = styled.ul`
   list-style: none;
 `;
-const StarItem = styled.li`
-`;
+const StarItem = styled.li``;
 const ReviewText = styled.p`
   padding: 7px 0;
   font-weight: bolder;
