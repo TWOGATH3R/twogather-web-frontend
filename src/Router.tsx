@@ -14,6 +14,10 @@ import FindId from "./pages/FindId";
 import FindPw from "./pages/FindPw";
 import Verification from "./components/FindPwPage/Verification";
 import PwChange from "./components/FindPwPage/PwChange";
+import MyPage from "./pages/MyPage";
+import Info from "./components/myPage/Info";
+import Review from "./components/myPage/Review";
+import Withdraw from "./components/myPage/Withdraw";
 
 const Router = () => {
   return (
@@ -34,6 +38,11 @@ const Router = () => {
           <Route path="/signUp/:signUpType" element={<EmailConfirm />} />
           <Route path="/signUp/:signUpType/privacy" element={<InfoInput />} />
           <Route path="/signUp/:signUpType/storeInfo" element={<StoreInfo />} />
+        </Route>
+        <Route path="/mypage" element={<MyPage />}>
+          <Route path="info" element={<Info />} />
+          <Route path="review" element={<Review />} />
+          <Route path="withdraw" element={<Withdraw />} />
         </Route>
       </Routes>
     </BrowserRouter>

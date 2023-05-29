@@ -56,9 +56,38 @@ export default function EnrollShop() {
       name: "기타",
     },
   ];
+
+  const KEYWORD = [
+    { name: "분위기 좋은" },
+    { name: "저렴한 가격" },
+    { name: "아이들과 오기 좋은" },
+    { name: "사진찍기 좋은" },
+    { name: "친절한" },
+    { name: "고급스러운" },
+    { name: "조용한" },
+    { name: "모임하기 좋은" },
+    { name: "특별한 날" },
+    { name: "단체 회식" },
+    { name: "데이트하기 좋은" },
+    { name: "뷰가 좋은" },
+    { name: "특별한 메뉴" },
+    { name: "멋진 인테리어" },
+    { name: "디저트가 맛있는" },
+    { name: "청결한 매장" },
+    { name: "방송에 나온 맛집" },
+  ];
   const [shopNameMessage, setShopNameMessage] = useState("");
   const [shopNumberMessage, setShopNumberMessage] = useState("");
   const [shopCategoryMessage, setShopCategoryMessage] = useState("");
+
+  // 사업자정보
+  const [businessName, setBusinessName] = useState("");
+  const [businessNumber, setBusinessNumber] = useState("");
+  const [startBusiness, setStartBusiness] = useState("");
+
+  const [businessNameMessage, setBusinessNameMessage] = useState("");
+  const [businessNumberMessage, setBusinessNumberMessage] = useState("");
+  const [startBusinessMessage, setStartBusinessMessage] = useState("");
 
   // 가게 이미지 업로드
   const [shopImages, setShopImages] = useState<string[]>([]);
@@ -137,89 +166,50 @@ export default function EnrollShop() {
     setBreakTimeInputCheckBox((prev) => !prev);
   };
 
-  const [checkWeekList, setCheckWeekList] = useState<Array<string>>([]);
-  const onClickDay = (day: any, idx: number) => {
-    if (!checkWeekList.includes(day.day)) {
-      console.log(!checkWeekList);
+  type checkWeekListType = {
+    day: string[];
+  };
+  const [checkWeekList, setCheckWeekList] = useState<Array<checkWeekListType>>([
+    { day: [] },
+  ]);
+  const onClickDay = (day: any, idx: number, index: number) => {
+    let sameDay = true;
+    for (let i = 0; i < checkWeekList.length; i++) {
+      if (checkWeekList[i].day.includes(day.day)) {
+        if (i !== index) {
+          sameDay = false;
+          break;
+        } else {
+          sameDay = true;
+          break;
+        }
+      }
+    }
 
-      setCheckWeekList((data) => [...data, day.day]);
-      if (day.status === false) {
+    if (checkWeekList[index].day.includes(day.day)) {
+      const newArray = checkWeekList[index].day.filter(
+        (value) => value !== day.day
+      );
+      checkWeekList[index].day = newArray;
+    } else {
+      if (sameDay === true) {
+        checkWeekList[index].day.push(day.day);
+      }
+    }
+
+    if (day.status === false) {
+      if (sameDay === false) {
+        Swal.fire({
+          text: "이미 선택한 요일입니다.",
+        });
+      } else {
         setTab([...tab]);
         day.status = true;
-      } else {
-        setTab(tab.filter((item) => item.id !== idx));
-        day.status = false;
       }
-    } else {
-      setCheckWeekList(checkWeekList.filter((v, i) => day.day !== v));
-      console.log(checkWeekList);
-      Swal.fire({
-        text: "이미 입력한 요일입니다.",
-      });
+    } else if (day.status === true) {
+      setTab(tab.filter((item) => item.id !== idx));
+      day.status = false;
     }
-    // if (day.day === "월") {
-    //   if (day.status === false) {
-    //     setTab([...tab]);
-    //     day.status = true;
-    //   } else {
-    //     setTab(tab.filter((item) => item.id !== idx));
-    //     day.status = false;
-    //   }
-    // }
-    // if (day.day === "화") {
-    //   if (day.status === false) {
-    //     setTab([...tab]);
-    //     day.status = true;
-    //   } else {
-    //     setTab(tab.filter((item) => item.id !== idx));
-    //     day.status = false;
-    //   }
-    // }
-    // if (day.day === "수") {
-    //   if (day.status === false) {
-    //     setTab([...tab]);
-    //     day.status = true;
-    //   } else {
-    //     setTab(tab.filter((item) => item.id !== idx));
-    //     day.status = false;
-    //   }
-    // }
-    // if (day.day === "목") {
-    //   if (day.status === false) {
-    //     setTab([...tab]);
-    //     day.status = true;
-    //   } else {
-    //     setTab(tab.filter((item) => item.id !== idx));
-    //     day.status = false;
-    //   }
-    // }
-    // if (day.day === "금") {
-    //   if (day.status === false) {
-    //     setTab([...tab]);
-    //     day.status = true;
-    //   } else {
-    //     setTab(tab.filter((item) => item.id !== idx));
-    //     day.status = false;
-    //   }
-    // }
-    // if (day.day === "토") {
-    //   if (day.status === false) {
-    //     setTab([...tab]);
-    //     day.status = true;
-    //   } else {
-    //     setTab(tab.filter((item) => item.id !== idx));
-    //     day.status = false;
-    //   }
-    // }
-    // if (day.day === "일") {
-    //   if (day.status === false) {
-    //     setTab([...tab]);
-    //     day.status = true;
-    //   } else {
-    //     setTab(tab.filter((item) => item.id !== idx));
-    //     day.status = false;
-    //   }
-    // }
   };
 
   // onChange
@@ -242,7 +232,7 @@ export default function EnrollShop() {
     setShopNumber(e.target.value);
 
     if (!regShopNumber.test(shopNumberCurrent)) {
-      setShopNumberMessage("번호가 옳바르지 않습니다. (- 포함시켜 주세요.)");
+      setShopNumberMessage("번호가 옳바르지 않습니다 (- 포함시켜 주세요.)");
       return;
     } else {
       setShopNumberMessage("");
@@ -256,6 +246,44 @@ export default function EnrollShop() {
       setShopCategoryMessage("카테고리를 선택해주세요.");
     } else {
       setShopCategory("");
+    }
+  };
+
+  const onChangeBusinessName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const regBusinessName = /^[가-힣a-zA-Z0-9\s]+$/;
+    const businessNameCurrent = e.target.value;
+    setBusinessName(e.target.value);
+
+    if (!regBusinessName.test(businessNameCurrent)) {
+      setBusinessNameMessage("사업자명이 옳바르지 않습니다.");
+      return;
+    } else {
+      setBusinessName("");
+    }
+  };
+  const onChangeBusinessNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const regBusinessNumber = /^[0-9]{3}-[0-9]{2}-[0-9]{5}/;
+    const businessNumberCurrent = e.target.value;
+    setBusinessNumber(e.target.value);
+
+    if (!regBusinessNumber.test(businessNumberCurrent)) {
+      setBusinessNumberMessage(
+        "사업자번호가 옳바르지 않습니다 (- 포함시켜 주세요.)"
+      );
+      return;
+    } else {
+      setBusinessNumberMessage("");
+    }
+  };
+  const onChangeStartBusiness = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const startBusinessCurrent = e.target.value;
+    setStartBusiness(e.target.value);
+
+    if (startBusinessCurrent.length >= 0) {
+      setStartBusinessMessage("선택해주세요.");
+      return;
+    } else {
+      setStartBusinessMessage("");
     }
   };
 
@@ -354,6 +382,7 @@ export default function EnrollShop() {
   }
 
   function addInputItem() {
+    checkWeekList.push({ day: [] });
     const input = {
       id: nextID.current,
       startTime: "00:00",
@@ -375,6 +404,7 @@ export default function EnrollShop() {
     nextID.current += 1;
   }
   function deleteInputItem(index: number) {
+    setCheckWeekList(checkWeekList.filter((v, i) => i !== index));
     setInputItems(inputItems.filter((item) => item.id !== index));
   }
   function addMenuItem() {
@@ -470,53 +500,126 @@ export default function EnrollShop() {
                 </InputMessageWrapper>
               </ShopInnerWrapper>
             )}
-            {shopCategory.length > 0 ? (
+
+            <ShopInnerWrapper>
+              <ShopTitle>카테고리</ShopTitle>
+              <InputMessageWrapper>
+                <ShopInput
+                  style={{ cursor: "pointer" }}
+                  placeholder="카테고리를 정해주세요."
+                  onChange={onChangeShopCategory}
+                  value={categoryValue}
+                  onClick={() => onClickVisibleCategory()}
+                />
+                {visibleCategory !== true && <InputMessage />}
+              </InputMessageWrapper>
+            </ShopInnerWrapper>
+            {visibleCategory === true ? (
+              <>
+                <CategoryWrapper>
+                  {CATEGORY.map((item) => (
+                    <CategoryList>
+                      <span
+                        style={{ cursor: "pointer" }}
+                        onClick={() => onClickCategory(item.name)}
+                      >
+                        {item.name}
+                      </span>
+                      <RightArrow />
+                    </CategoryList>
+                  ))}
+                </CategoryWrapper>
+              </>
+            ) : null}
+
+            <ShopInnerWrapper>
+              <ShopTitle>가게 대표 키워드</ShopTitle>
+              <InputMessageWrapper>
+                <ShopInput
+                  placeholder="선택해주세요"
+                  // onChange={onChangeShopCategory}
+                />
+                {/* <InputMessage>{shopCategoryMessage}</InputMessage> */}
+              </InputMessageWrapper>
+            </ShopInnerWrapper>
+          </ShopInnerOutlineWrapper>
+        </ShopWrapper>
+
+        <ShopWrapper style={{ marginTop: "5%" }}>
+          <ShopInnerOutlineWrapper>
+            <ShopInnerOutlineTitleWrapper>
+              <ShopInnerOutlineBigTitle>
+                사업자정보 <span>*</span>
+              </ShopInnerOutlineBigTitle>
+            </ShopInnerOutlineTitleWrapper>
+
+            {businessName.length > 0 ? (
               <ShopInnerWrapper>
-                <ShopTitle>카테고리</ShopTitle>
+                <ShopTitle>사업자명</ShopTitle>
                 <InputMessageWrapper>
                   <ShopInput
-                    type="category"
-                    placeholder="선택해주세요"
-                    onChange={onChangeShopCategory}
+                    placeholder="입력해주세요"
+                    onChange={onChangeBusinessName}
                   />
-                  <InputMessage>{shopCategoryMessage}</InputMessage>
-                  <ShopTitle>전체 카테고리</ShopTitle>
+                  <InputMessage>{businessNameMessage}</InputMessage>
                 </InputMessageWrapper>
               </ShopInnerWrapper>
             ) : (
-              <>
-                <ShopInnerWrapper>
-                  <ShopTitle>카테고리</ShopTitle>
-                  <InputMessageWrapper>
-                    <ShopInput
-                      style={{ cursor: "pointer" }}
-                      placeholder="카테고리를 정해주세요."
-                      onChange={onChangeShopCategory}
-                      value={categoryValue}
-                      onClick={() => onClickVisibleCategory()}
-                    />
-                    <InputMessage />
-                  </InputMessageWrapper>
-                </ShopInnerWrapper>
-                {visibleCategory === true ? (
-                  <>
-                    <CategoryWrapper>
-                      {CATEGORY.map((item) => (
-                        <CategoryList>
-                          <span
-                            style={{ cursor: "pointer" }}
-                            onClick={() => onClickCategory(item.name)}
-                          >
-                            {item.name}
-                          </span>
-                          <RightArrow />
-                        </CategoryList>
-                      ))}
-                    </CategoryWrapper>
-                  </>
-                ) : null}
-              </>
+              <ShopInnerWrapper>
+                <ShopTitle>사업자명</ShopTitle>
+                <InputMessageWrapper>
+                  <ShopInput
+                    placeholder="입력해주세요"
+                    onChange={onChangeBusinessName}
+                  />
+                  <InputMessage />
+                </InputMessageWrapper>
+              </ShopInnerWrapper>
             )}
+
+            <ShopInnerWrapper>
+              <ShopTitle>사업자등록번호</ShopTitle>
+              {businessNumber.length > 0 ? (
+                <InputMessageWrapper>
+                  <ShopInput
+                    placeholder="입력해주세요"
+                    onChange={onChangeBusinessNumber}
+                  />
+                  <InputMessage>{businessNumberMessage}</InputMessage>
+                </InputMessageWrapper>
+              ) : (
+                <InputMessageWrapper>
+                  <ShopInput
+                    placeholder="입력해주세요"
+                    onChange={onChangeBusinessNumber}
+                  />
+                  <InputMessage />
+                </InputMessageWrapper>
+              )}
+            </ShopInnerWrapper>
+
+            <ShopInnerWrapper>
+              <ShopTitle>사업시작일</ShopTitle>
+              {startBusiness.length > 0 ? (
+                <InputMessageWrapper>
+                  <ShopInput
+                    placeholder="입력해주세요"
+                    type="date"
+                    onChange={onChangeStartBusiness}
+                  />
+                  <InputMessage>{startBusinessMessage}</InputMessage>
+                </InputMessageWrapper>
+              ) : (
+                <InputMessageWrapper>
+                  <ShopInput
+                    placeholder="입력해주세요"
+                    type="date"
+                    onChange={onChangeStartBusiness}
+                  />
+                  <InputMessage />
+                </InputMessageWrapper>
+              )}
+            </ShopInnerWrapper>
           </ShopInnerOutlineWrapper>
         </ShopWrapper>
 
@@ -602,12 +705,14 @@ export default function EnrollShop() {
                         {day.status === true ? (
                           <ShopDayList
                             style={{ backgroundColor: "#FFB5B5" }}
-                            onClick={() => onClickDay(day, idx)}
+                            onClick={() => onClickDay(day, idx, index)}
                           >
                             {day.day}
                           </ShopDayList>
                         ) : (
-                          <ShopDayList onClick={() => onClickDay(day, idx)}>
+                          <ShopDayList
+                            onClick={() => onClickDay(day, idx, index)}
+                          >
                             {day.day}
                           </ShopDayList>
                         )}
@@ -770,10 +875,10 @@ export default function EnrollShop() {
               <div>
                 <ShopAddMenuContainer>
                   <ShopAddMenuWrapper>
-                    <ShopAssMenuBox onClick={addMenuItem}>
+                    <ShopAddMenuBox onClick={addMenuItem}>
                       <PlusIcon />
                       <span>메뉴 추가하기</span>
-                    </ShopAssMenuBox>
+                    </ShopAddMenuBox>
                   </ShopAddMenuWrapper>
                 </ShopAddMenuContainer>
               </div>
@@ -898,6 +1003,7 @@ const CategoryList = styled.div`
   background-color: white;
   border-left: 1px solid ${({ theme }) => theme.colors.subColor1};
 `;
+const ShopKeywordWrapper = styled.div``;
 const ShopTitle = styled.span`
   flex: 1;
   font-size: ${({ theme }) => theme.fontSizes.base};
@@ -1099,7 +1205,7 @@ const ShopAddMenuWrapper = styled.div`
   align-items: center;
   justify-content: center;
 `;
-const ShopAssMenuBox = styled.div`
+const ShopAddMenuBox = styled.div`
   width: 100%;
   height: 100%;
   border: 1px solid ${({ theme }) => theme.colors.subColor1};
