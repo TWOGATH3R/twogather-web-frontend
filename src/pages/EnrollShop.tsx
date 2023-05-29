@@ -135,12 +135,13 @@ export default function EnrollShop() {
 
   const onClickBreakTimeCheckBox = () => {
     setBreakTimeInputCheckBox((prev) => !prev);
-    console.log(checkWeekList);
   };
 
   const [checkWeekList, setCheckWeekList] = useState<Array<string>>([]);
   const onClickDay = (day: any, idx: number) => {
-    if (!checkWeekList.includes(day.day, 0)) {
+    if (!checkWeekList.includes(day.day)) {
+      console.log(!checkWeekList);
+
       setCheckWeekList((data) => [...data, day.day]);
       if (day.status === false) {
         setTab([...tab]);
@@ -150,10 +151,11 @@ export default function EnrollShop() {
         day.status = false;
       }
     } else {
-      checkWeekList.filter((v, i) => day.day !== v);
+      setCheckWeekList(checkWeekList.filter((v, i) => day.day !== v));
+      console.log(checkWeekList);
       Swal.fire({
-        text:"이미 입력한 요일입니다."
-      })
+        text: "이미 입력한 요일입니다.",
+      });
     }
     // if (day.day === "월") {
     //   if (day.status === false) {
@@ -218,7 +220,6 @@ export default function EnrollShop() {
     //     day.status = false;
     //   }
     // }
-    console.log(inputItems);
   };
 
   // onChange
