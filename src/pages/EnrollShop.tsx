@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import { ReactComponent as PhotoIcon } from "../assets/photo-icon.svg";
 import { ReactComponent as PlusIcon } from "../assets/plus-icon.svg";
@@ -20,8 +20,8 @@ export default function EnrollShop() {
   const [shopNumber, setShopNumber] = useState<string>("");
   const [shopCategory, setShopCategory] = useState<string>("");
 
-  const [visibleCategory, setVisibleCategory] = useState(false);
-  const [categoryValue, setCategoryValue] = useState("");
+  const [visibleCategory, setVisibleCategory] = useState<boolean>(false);
+  const [categoryValue, setCategoryValue] = useState<string>("");
   const CATEGORY = [
     {
       categoryId: 1,
@@ -76,9 +76,11 @@ export default function EnrollShop() {
     { name: "청결한 매장" },
     { name: "방송에 나온 맛집" },
   ];
-  const [shopNameMessage, setShopNameMessage] = useState("");
-  const [shopNumberMessage, setShopNumberMessage] = useState("");
-  const [shopCategoryMessage, setShopCategoryMessage] = useState("");
+  const [shopNameMessage, setShopNameMessage] = useState<string>("");
+  const [shopNumberMessage, setShopNumberMessage] = useState<string>("");
+  const [shopCategoryMessage, setShopCategoryMessage] = useState<string>("");
+  const [visibleKeyword, setVisibleKeyword] = useState<boolean>(false);
+  const [keywordList, setKeywordList] = useState<Array<string>>([]);
 
   // 사업자정보
   const [businessName, setBusinessName] = useState("");
@@ -161,6 +163,30 @@ export default function EnrollShop() {
     setCategoryValue(item);
     setVisibleCategory(false);
   };
+
+  const onClickVisibleKeyword = () => {
+    setVisibleKeyword((prev) => !prev);
+    setKeywordList([]);
+  };
+  const onChangeKeyword = useCallback(
+    (checked: boolean, item: string) => {
+      console.log(checked);
+      if (keywordList.length >= 3 && checked === true) {
+        Swal.fire({
+          text: "3개이상 선택이 불가능합니다.",
+        });
+        // setVisibleKeyword(false);
+        return;
+      }
+      if (checked) {
+        setKeywordList((prev) => [...prev, item]);
+      } else if (!checked) {
+        setKeywordList(keywordList.filter((el) => el !== item));
+      }
+    },
+    [keywordList]
+  );
+  console.log(keywordList);
 
   const onClickBreakTimeCheckBox = () => {
     setBreakTimeInputCheckBox((prev) => !prev);
@@ -503,7 +529,9 @@ export default function EnrollShop() {
 
             <ShopInnerWrapper>
               <ShopTitle>카테고리</ShopTitle>
-              <InputMessageWrapper>
+              <InputMessageWrapper
+                style={{ height: visibleCategory !== true ? "65px" : "40px" }}
+              >
                 <ShopInput
                   style={{ cursor: "pointer" }}
                   placeholder="카테고리를 정해주세요."
@@ -534,14 +562,42 @@ export default function EnrollShop() {
 
             <ShopInnerWrapper>
               <ShopTitle>가게 대표 키워드</ShopTitle>
-              <InputMessageWrapper>
+              <InputMessageWrapper
+                style={{ height: visibleKeyword !== true ? "40px" : "40px" }}
+              >
                 <ShopInput
+                  style={{ cursor: "pointer" }}
                   placeholder="선택해주세요"
+                  onClick={() => onClickVisibleKeyword()}
+                  value={keywordList}
                   // onChange={onChangeShopCategory}
                 />
                 {/* <InputMessage>{shopCategoryMessage}</InputMessage> */}
               </InputMessageWrapper>
             </ShopInnerWrapper>
+
+            {visibleKeyword === true && (
+              <ShopKeywordWrapper>
+                {KEYWORD.map((item) => (
+                  <>
+                    <ShopKeywordList>
+                      <ShopKeywordLabelWrapper>
+                        <ShopKeywordLabel htmlFor={item.name}>
+                          {item.name}
+                        </ShopKeywordLabel>
+                      </ShopKeywordLabelWrapper>
+                      <ShopKeywordCheckBox
+                        type="checkbox"
+                        id={item.name}
+                        onChange={(e) => {
+                          onChangeKeyword(e.target.checked, e.target.id);
+                        }}
+                      />
+                    </ShopKeywordList>
+                  </>
+                ))}
+              </ShopKeywordWrapper>
+            )}
           </ShopInnerOutlineWrapper>
         </ShopWrapper>
 
@@ -1003,7 +1059,34 @@ const CategoryList = styled.div`
   background-color: white;
   border-left: 1px solid ${({ theme }) => theme.colors.subColor1};
 `;
-const ShopKeywordWrapper = styled.div``;
+const ShopKeywordWrapper = styled.div`
+  width: 30%;
+  margin-left: 16.5%;
+  padding: 1%;
+  height: 200px;
+  overflow-y: scroll;
+  border: 1px solid ${({ theme }) => theme.colors.subColor1};
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) =>
+      theme.colors.subColor1}; /*스크롤바의 색상*/
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent; /*스크롤바 트랙 색상*/
+  }
+`;
+const ShopKeywordList = styled.div`
+  width: 100%;
+  display: flex;
+`;
+const ShopKeywordCheckBox = styled.input``;
+const ShopKeywordLabelWrapper = styled.div`
+  width: 70%;
+`;
+const ShopKeywordLabel = styled.label``;
 const ShopTitle = styled.span`
   flex: 1;
   font-size: ${({ theme }) => theme.fontSizes.base};
@@ -1015,6 +1098,7 @@ const ShopInput = styled.input`
   outline: none;
   height: 34px;
   padding: 0 15px;
+
   &::placeholder {
     color: #999;
   }
