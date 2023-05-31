@@ -55,7 +55,7 @@ const ReviewTop10 = () => {
 };
 
 const ReviewTopContainer = styled.div`
-  padding-top: 60px;
+  padding-top: 20px;
   width: 100%;
   color: #4a4a4a;
 `;
@@ -73,7 +73,7 @@ const ReviewTop10List = styled.ul`
 `;
 const ReviewTop10Item = styled.li`
   width: calc(25% - 22.5px);
-  margin: 0 30px 30px 0;
+  margin-right: 30px;
   a {
     width: 100%;
     height: 100%;
