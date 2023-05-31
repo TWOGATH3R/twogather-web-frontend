@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Search from "../components/mainPage/Search";
 import ReviewTop10 from "../components/mainPage/ReviewTop10";
 import GradeTop10 from "../components/mainPage/GradeTop10";
+import LikeTop10 from "../components/mainPage/LikeTop10";
 
 const Main = () => {
   return (
@@ -10,6 +11,7 @@ const Main = () => {
       <Search />
       <ReviewTop10 />
       <GradeTop10 />
+      <LikeTop10 />
     </MainContainer>
   );
 };
