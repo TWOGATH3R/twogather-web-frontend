@@ -18,6 +18,7 @@ import MyPage from "./pages/MyPage";
 import Info from "./components/myPage/Info";
 import Review from "./components/myPage/Review";
 import Withdraw from "./components/myPage/Withdraw";
+import DetailShop from "./components/mainPage/DetailShop";
 
 const Router = () => {
   return (
@@ -25,6 +26,7 @@ const Router = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Main />} />
+        <Route path="/detailShop" element={<DetailShop />} />
         <Route path="/enrollshop" element={<EnrollShop />}></Route>
         <Route path="/editenrollshop" element={<EditEnrollShop />}></Route>
         <Route path="/login" element={<Login />} />

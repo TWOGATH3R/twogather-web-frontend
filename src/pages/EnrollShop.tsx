@@ -11,10 +11,12 @@ import { IShopAddressVisible } from "../apis/api";
 import { IShopInputItem } from "../apis/api";
 import { IShopMenuList } from "../apis/api";
 import Swal from "sweetalert2";
+import { postEnrollShopInfo } from "../apis/queries/storeQuery";
+import { useMutation } from "react-query";
 
 export default function EnrollShop() {
   const [shopName, setShopName] = useState<string>("");
-  const ShopAddress = useRecoilValue(address);
+  const shopAddress = useRecoilValue(address);
   const [visibleShopAddress, setVisibleShopAddress] =
     useRecoilState(visibleAddress);
   const [shopNumber, setShopNumber] = useState<string>("");
@@ -128,6 +130,19 @@ export default function EnrollShop() {
     { id: 0, shopMenuName: "", shopMenuPrice: "" },
   ]);
 
+  // Query
+  const { mutate: shopInfo } = useMutation(
+    () => postEnrollShopInfo(shopName, shopAddress, shopNumber),
+    {
+      onSuccess: (res) => {
+        console.log(res);
+      },
+      onError: (err) => {
+        console.log(err);
+      },
+    }
+  );
+
   // onClick
   const onClickPhotoFile = () => {
     inputPhotoFile.current?.click();
@@ -168,25 +183,6 @@ export default function EnrollShop() {
     setVisibleKeyword((prev) => !prev);
     setKeywordList([]);
   };
-  const onChangeKeyword = useCallback(
-    (checked: boolean, item: string) => {
-      console.log(checked);
-      if (keywordList.length >= 3 && checked === true) {
-        Swal.fire({
-          text: "3개이상 선택이 불가능합니다.",
-        });
-        // setVisibleKeyword(false);
-        return;
-      }
-      if (checked) {
-        setKeywordList((prev) => [...prev, item]);
-      } else if (!checked) {
-        setKeywordList(keywordList.filter((el) => el !== item));
-      }
-    },
-    [keywordList]
-  );
-  console.log(keywordList);
 
   const onClickBreakTimeCheckBox = () => {
     setBreakTimeInputCheckBox((prev) => !prev);
@@ -238,6 +234,10 @@ export default function EnrollShop() {
     }
   };
 
+  const onClickSubmit = () => {
+    shopInfo();
+  };
+
   // onChange
   const onChangeShopName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const regShopName = /^[가-힣a-zA-Z0-9\s]+$/;
@@ -274,6 +274,21 @@ export default function EnrollShop() {
       setShopCategory("");
     }
   };
+
+  const onChangeKeyword = useCallback(
+    (checked: boolean, item: string) => {
+      console.log(checked);
+      if (keywordList.length >= 2) {
+        setVisibleKeyword(false);
+      }
+      if (checked) {
+        setKeywordList((prev) => [...prev, item]);
+      } else if (!checked) {
+        setKeywordList(keywordList.filter((el) => el !== item));
+      }
+    },
+    [keywordList]
+  );
 
   const onChangeBusinessName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const regBusinessName = /^[가-힣a-zA-Z0-9\s]+$/;
@@ -492,7 +507,7 @@ export default function EnrollShop() {
               <InputMessageWrapper>
                 <ShopInput
                   placeholder="기본주소"
-                  defaultValue={ShopAddress}
+                  defaultValue={shopAddress}
                   onClick={onClickShopAddress}
                 />
                 <InputMessage />
@@ -567,12 +582,10 @@ export default function EnrollShop() {
               >
                 <ShopInput
                   style={{ cursor: "pointer" }}
-                  placeholder="선택해주세요"
+                  placeholder="선택해주세요 (최대 3개까지 가능합니다.)"
                   onClick={() => onClickVisibleKeyword()}
                   value={keywordList}
-                  // onChange={onChangeShopCategory}
                 />
-                {/* <InputMessage>{shopCategoryMessage}</InputMessage> */}
               </InputMessageWrapper>
             </ShopInnerWrapper>
 
@@ -943,7 +956,7 @@ export default function EnrollShop() {
         </ShopWrapper>
       </EnrollShopWrapper>
       <EnrollButtonContainer>
-        <EnrollButton>등록하기</EnrollButton>
+        <EnrollButton onClick={() => onClickSubmit()}>등록하기</EnrollButton>
       </EnrollButtonContainer>
     </EnrollShopContainer>
   );
@@ -1321,4 +1334,5 @@ const EnrollButton = styled.button`
   border-radius: 2px;
   padding: 10px;
   color: white;
+  cursor: pointer;
 `;
