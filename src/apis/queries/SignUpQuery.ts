@@ -31,15 +31,17 @@ export const emailCheckMutaionPostEmail = async (email: string) => {
   return res.data;
 };
 
-//고객 회원가입
-type consumersInfo = {
+type signUpInfo = {
   email: string;
+  username: string;
   password: string;
   name: string;
 };
-export const consumersMutaionPostInfo = async (info: consumersInfo) => {
+//고객 회원가입
+export const consumersMutaionPostInfo = async (info: signUpInfo) => {
   const res = await api.post(`/api/consumers`, {
     email: info.email,
+    username: info.username,
     password: info.password,
     name: info.name,
   });
@@ -47,14 +49,10 @@ export const consumersMutaionPostInfo = async (info: consumersInfo) => {
 };
 
 //사업자 회원가입
-type storeOwnerInfo = {
-  email: string;
-  password: string;
-  name: string;
-};
-export const storeOwnerMutaionPostInfo = async (info: storeOwnerInfo) => {
+export const storeOwnerMutaionPostInfo = async (info: signUpInfo) => {
   const res = await api.post(`/api/owners`, {
     email: info.email,
+    username: info.username,
     password: info.password,
     name: info.name,
   });
