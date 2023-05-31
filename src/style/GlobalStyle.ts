@@ -4,6 +4,9 @@ const GlobalStyle = createGlobalStyle`
     body {
         margin: 0;
         padding: 0;
+        #root{
+            position: relative;
+        }
     }
     p {
         margin:0;
