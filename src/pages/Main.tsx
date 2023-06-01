@@ -21,7 +21,6 @@ const MainContainer = styled.div`
   flex-direction: column;
   margin: 0 auto;
   width: 1080px;
-  height: 93vh;
 `;
 
 export default Main;
