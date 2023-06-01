@@ -307,21 +307,34 @@ const Search = () => {
     setSi("종로구");
   };
   const categoriesOnClick = (value: string) => {
-    setCategories(value);
+    if (value === categories) setCategories("모든 카테고리");
+    else setCategories(value);
+  };
+  const allCategoriesBtnOnClick = () => {
+    setCategories("모든 카테고리");
   };
   type cityType = {
     city: string;
     si: Array<any>;
   };
   const cityOnClick = (value: cityType) => {
-    setCity(value.city);
-    setSi(value.si[0]);
+    if (value.city === city) setCity("전체 지역");
+    else {
+      setCity(value.city);
+      setSi(value.si[0]);
+    }
   };
   const siOnClick = (value: any) => {
-    setSi(value);
+    if (si === value) setSi("");
+    else setSi(value);
+  };
+  const allCityBtn = () => {
+    setCity("전체 지역");
+    setSi("");
   };
   const keyWordOnClick = (value: string) => {
-    setKeyWord(value);
+    if (value === keyWord) setKeyWord("");
+    else setKeyWord(value);
   };
 
   const keyWordList = [
@@ -345,10 +358,17 @@ const Search = () => {
               <label htmlFor="categories"></label>
             </CategoriesHeader>
             <CategoriesList>
+              <AllCategoriesBtn
+                active={categories === "모든 카테고리"}
+                onClick={allCategoriesBtnOnClick}
+              >
+                전체 카테고리 선택
+              </AllCategoriesBtn>
               {CategoriesMenuList.map((value) => (
                 <CategoriesItem
                   key={value}
                   onClick={() => categoriesOnClick(value)}
+                  active={categories === value}
                 >
                   <span>{value}</span>
                 </CategoriesItem>
@@ -363,32 +383,41 @@ const Search = () => {
             </LocalHeader>
             <LocalInnerBox>
               <CityList>
+                <AllCityBtn
+                  active={city === "전체 지역"}
+                  onClick={() => allCityBtn()}
+                >
+                  전체 지역 선택
+                </AllCityBtn>
                 {cityList.map((value) => (
                   <CityItem
                     key={value.city}
                     onClick={() => cityOnClick(value)}
                     active={city === value.city}
                   >
-                    <CityInput id={value.city} type="radio" name="city" />
-                    <CityLabel htmlFor={value.city}>
-                      <span>{value.city}</span>
-                    </CityLabel>
+                    <span>{value.city}</span>
                   </CityItem>
                 ))}
               </CityList>
               <SiList>
+                <AllSiBtn active={si === ""} onClick={() => setSi("")}>
+                  {city} 전체
+                </AllSiBtn>
                 {cityList[
                   [...cityList].map((value) => value.city).indexOf(city)
-                ].si.map((value: any) => (
-                  <SiItem
-                    key={value}
-                    onClick={() => siOnClick(value)}
-                    active={si === value}
-                  >
-                    <SiInput id={value} type="radio" name="si" />
-                    <SiLabel htmlFor={value}>{value}</SiLabel>
-                  </SiItem>
-                ))}
+                ]
+                  ? cityList[
+                      [...cityList].map((value) => value.city).indexOf(city)
+                    ].si.map((value: any) => (
+                      <SiItem
+                        key={value}
+                        onClick={() => siOnClick(value)}
+                        active={si === value}
+                      >
+                        {value}
+                      </SiItem>
+                    ))
+                  : null}
               </SiList>
             </LocalInnerBox>
             <CompleteBtn htmlFor="categories">완료</CompleteBtn>
@@ -529,6 +558,7 @@ const CategoriesList = styled.ul`
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
+  justify-content: space-between;
   padding: 10px 15px;
   width: 280px;
   background-color: ${({ theme }) => theme.colors.white};
@@ -546,7 +576,7 @@ const CategoriesList = styled.ul`
     background-color: #dedede;
   }
 `;
-const CategoriesItem = styled.li`
+const CategoriesItem = styled.li<{ active: boolean }>`
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -555,6 +585,11 @@ const CategoriesItem = styled.li`
   height: fit-content;
   font-size: ${({ theme }) => theme.fontSizes.small};
   cursor: pointer;
+  ${(props) =>
+    props.active &&
+    css`
+      color: #0075ff;
+    `}
   ::after {
     position: absolute;
     top: 50%;
@@ -594,13 +629,13 @@ const CategoriesBtn = styled.label`
 const LocalBox = styled(CategoriesBox)`
   display: none;
   padding: 15px 30px 30px;
-  height: 730px;
+  height: 750px;
   overflow-y: hidden;
 `;
 const LocalHeader = styled(CategoriesHeader)``;
 const LocalInnerBox = styled.div`
   display: flex;
-  height: 620px;
+  height: 660px;
   border: 1px solid rgba(0, 0, 0, 0.11);
   border-radius: 2px;
   color: #535353;
@@ -610,31 +645,33 @@ const CityList = styled.ul`
   width: fit-content;
   border-right: 1px solid rgba(0, 0, 0, 0.11);
 `;
-const CityItem = styled(CategoriesItem)<{ active: boolean }>`
-  padding: 0;
-  width: 130px;
+const CityItem = styled(CategoriesItem)`
+  padding: 10px 8px;
+  min-width: 130px;
   ${(props) =>
     props.active &&
     css`
       color: #0075ff;
     `}
 `;
-const CityInput = styled.input`
-  display: none;
-  &:checked {
-    & + label {
-      color: #0075ff;
-    }
-  }
-`;
-const CityLabel = styled.label`
+
+const AllCityBtn = styled.li<{ active: boolean }>`
+  display: flex;
+  justify-content: space-between;
   padding: 10px 8px;
-  width: 100%;
+  width: 130px;
+  height: fit-content;
+  font-size: ${({ theme }) => theme.fontSizes.small};
   cursor: pointer;
-  &:hover {
-    color: #0075ff;
-  }
+  ${(props) =>
+    props.active &&
+    css`
+      color: #0075ff;
+    `}
 `;
+const AllSiBtn = styled(AllCityBtn)``;
+const AllCategoriesBtn = styled(AllCityBtn)``;
+
 const SiList = styled(CityList)`
   overflow-y: scroll;
   &::-webkit-scrollbar {
@@ -650,9 +687,6 @@ const SiList = styled(CityList)`
   }
 `;
 const SiItem = styled(CityItem)``;
-const SiInput = styled(CityInput)``;
-const SiLabel = styled(CityLabel)``;
-
 const LocalBtn = styled(CategoriesBtn)`
   width: 140px;
   span {
@@ -687,7 +721,7 @@ const CompleteBtn = styled.label`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 15px;
+  margin-top: 7px;
   width: 100px;
   height: 40px;
   background: #0075ff;
