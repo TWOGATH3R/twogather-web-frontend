@@ -130,9 +130,20 @@ export default function EnrollShop() {
     { id: 0, shopMenuName: "", shopMenuPrice: "" },
   ]);
 
+  const storeInfo = {
+    shopName,
+    shopAddress,
+    shopNumber,
+    businessName,
+    businessNumber,
+    startBusiness,
+  };
+
+  console.log(storeInfo);
+
   // Query
   const { mutate: shopInfo } = useMutation(
-    () => postEnrollShopInfo(shopName, shopAddress, shopNumber),
+    () => postEnrollShopInfo(storeInfo),
     {
       onSuccess: (res) => {
         console.log(res);
@@ -248,10 +259,10 @@ export default function EnrollShop() {
       setShopNameMessage("가게명이 옳바르지 않습니다.");
       return;
     } else {
-      setShopName("");
+      setShopNameMessage("");
     }
   };
-
+  console.log(shopName);
   const onChangeShopNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     const regShopNumber = /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}/;
     const shopNumberCurrent = e.target.value;
@@ -299,7 +310,7 @@ export default function EnrollShop() {
       setBusinessNameMessage("사업자명이 옳바르지 않습니다.");
       return;
     } else {
-      setBusinessName("");
+      setBusinessNameMessage("");
     }
   };
   const onChangeBusinessNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -482,6 +493,7 @@ export default function EnrollShop() {
                 <ShopTitle>가게명</ShopTitle>
                 <InputMessageWrapper>
                   <ShopInput
+                    value={shopName}
                     placeholder="입력해주세요"
                     onChange={onChangeShopName}
                   />
@@ -507,7 +519,7 @@ export default function EnrollShop() {
               <InputMessageWrapper>
                 <ShopInput
                   placeholder="기본주소"
-                  defaultValue={shopAddress}
+                  value={shopAddress}
                   onClick={onClickShopAddress}
                 />
                 <InputMessage />
