@@ -9,7 +9,10 @@ import SignUpType from "./components/SignUpPage/SignUpType";
 import EmailConfirm from "./components/SignUpPage/EmailConfirm";
 import SignUp from "./pages/SignUp";
 import InfoInput from "./components/SignUpPage/InfoInput";
+<<<<<<< HEAD
 import StoreInfo from "./components/SignUpPage/StoreInfo";
+=======
+>>>>>>> 7255be239e6ca22f151eadb46369c67ef2068f49
 import FindId from "./pages/FindId";
 import FindPw from "./pages/FindPw";
 import Verification from "./components/FindPwPage/Verification";
@@ -39,7 +42,6 @@ const Router = () => {
           <Route path="selectType" element={<SignUpType />} />
           <Route path="/signUp/:signUpType" element={<EmailConfirm />} />
           <Route path="/signUp/:signUpType/privacy" element={<InfoInput />} />
-          <Route path="/signUp/:signUpType/storeInfo" element={<StoreInfo />} />
         </Route>
         <Route path="/mypage" element={<MyPage />}>
           <Route path="info" element={<Info />} />

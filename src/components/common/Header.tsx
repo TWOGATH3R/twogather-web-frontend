@@ -58,7 +58,7 @@ export default function Header() {
                 <Link to="/" onClick={() => logoutOnClick()}>
                   logout
                 </Link>
-                <Link to="/mypage">
+                <Link to="/mypage/info">
                   <img src={mypageImg} alt="mypage" />
                 </Link>
               </>

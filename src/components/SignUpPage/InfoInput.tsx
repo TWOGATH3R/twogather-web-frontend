@@ -18,12 +18,13 @@ const InfoInput = () => {
   const [pwCheck, setPwCheck] = useState<string>("");
   const [name, setName] = useState<string>("");
 
-  //개인 회원가입 query
   const info = {
     email: location.state.email,
+    username: id,
     password: pw,
     name: name,
   };
+  //개인 회원가입 query
   const { mutate: consumersSignUp, isLoading: consumersSignUpLoading } =
     useMutation(() => consumersMutaionPostInfo(info), {
       onSuccess: (res) => {
@@ -34,13 +35,8 @@ const InfoInput = () => {
     });
 
   //사업자 회원가입 query
-  const storeOwerInfo = {
-    email: location.state.email,
-    password: location.state.pw,
-    name: location.state.name,
-  };
   const { mutate: storeOwnerSignUp, isLoading: storeOwnerSignUpLoading } =
-    useMutation(() => storeOwnerMutaionPostInfo(storeOwerInfo), {
+    useMutation(() => storeOwnerMutaionPostInfo(info), {
       onSuccess: (res) => {
         console.log(res);
         navigate("/login");
