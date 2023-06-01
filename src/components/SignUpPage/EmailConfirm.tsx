@@ -42,11 +42,13 @@ const EmailConfirm = () => {
     else if (!emailPattern.test(email)) alert("이메일이 형식에 맞지 않습니다");
     else {
       emailCheck();
-      Swal.fire({
-        text: "이메일로 인증코드를 발송했습니다.",
-        imageUrl: `${sendMailImg}`,
-        confirmButtonColor: "#0075FF",
-      });
+      if (sendMailImg) {
+        Swal.fire({
+          text: "이메일로 인증코드를 발송했습니다.",
+          imageUrl: `${sendMailImg}`,
+          confirmButtonColor: "#0075FF",
+        });
+      }
       const emailBtn = document.querySelector(".emailBtn") as HTMLElement;
       emailBtn.innerText = "재전송";
     }
