@@ -9,6 +9,10 @@ import SignUpType from "./components/SignUpPage/SignUpType";
 import EmailConfirm from "./components/SignUpPage/EmailConfirm";
 import SignUp from "./pages/SignUp";
 import InfoInput from "./components/SignUpPage/InfoInput";
+<<<<<<< HEAD
+import StoreInfo from "./components/SignUpPage/StoreInfo";
+=======
+>>>>>>> 7255be239e6ca22f151eadb46369c67ef2068f49
 import FindId from "./pages/FindId";
 import FindPw from "./pages/FindPw";
 import Verification from "./components/FindPwPage/Verification";
@@ -17,6 +21,7 @@ import MyPage from "./pages/MyPage";
 import Info from "./components/myPage/Info";
 import Review from "./components/myPage/Review";
 import Withdraw from "./components/myPage/Withdraw";
+import DetailShop from "./components/mainPage/DetailShop";
 
 const Router = () => {
   return (
@@ -24,6 +29,7 @@ const Router = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Main />} />
+        <Route path="/detailShop" element={<DetailShop />} />
         <Route path="/enrollshop" element={<EnrollShop />}></Route>
         <Route path="/editenrollshop" element={<EditEnrollShop />}></Route>
         <Route path="/login" element={<Login />} />
