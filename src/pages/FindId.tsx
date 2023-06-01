@@ -32,7 +32,7 @@ const FindId = () => {
         </SearchResultBox>
         <LoginBtn onClick={() => findBtnOnClick()}>조회</LoginBtn>
         <FingPwBtnBox>
-          <Link to={"/findPw"}>비밀번호 찾기</Link>
+          <Link to={"/findPw/verification"}>비밀번호 찾기</Link>
         </FingPwBtnBox>
       </FindIdWrraper>
     </FindIdContainer>
