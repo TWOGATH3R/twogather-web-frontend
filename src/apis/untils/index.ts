@@ -1,9 +1,5 @@
 import axios from "axios";
 
-const host = window.location.hostname === "localhost" 
-  ? 'http://ec2-15-165-96-247.ap-northeast-2.compute.amazonaws.com:8080'
-  : "";
-
 export const api = axios.create({
-  baseURL: host,
+  baseURL: process.env.REACT_APP_BASE_URL,
 });

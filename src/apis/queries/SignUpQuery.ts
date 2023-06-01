@@ -25,7 +25,7 @@ export const buisnessCheckMutaionPostInfo = async (
 
 //이메일 인증번호 보내기
 export const emailCheckMutaionPostEmail = async (email: string) => {
-  const res = await axios.post(`/api/email`, {
+  const res = await api.post(`/api/email`, {
     email: email,
   });
   return res.data;
