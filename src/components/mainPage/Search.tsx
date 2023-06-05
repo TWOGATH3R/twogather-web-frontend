@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import TodayDate from "./TodayDate";
+import { useNavigate } from "react-router-dom";
 
 const Search = () => {
+  const navigate = useNavigate();
+
   const [categories, setCategories] = useState<string>("모든 카테고리");
   const [categoriesBoolean, setCategoriesBoolean] = useState<boolean>(true);
 
@@ -298,6 +301,7 @@ const Search = () => {
     },
   ];
 
+  //onClick
   const categoriesBtnOnClick = () => {
     setCategoriesBoolean(true);
   };
@@ -335,6 +339,12 @@ const Search = () => {
   const keyWordOnClick = (value: string) => {
     if (value === keyWord) setKeyWord("");
     else setKeyWord(value);
+  };
+
+  //onSubmit
+  const searchOnSubmit = (e: any) => {
+    // e.preventDefault();
+    navigate(`/search/${categories}/${city}${si}/gvgh/1`);
   };
 
   const keyWordList = [
@@ -425,7 +435,7 @@ const Search = () => {
         )}
         <DateAndSearchBox>
           <TodayDate />
-          <SearchBox>
+          <SearchBox onSubmit={(e) => searchOnSubmit(e)}>
             <CategoriesBtn
               htmlFor="categories"
               onClick={() => categoriesBtnOnClick()}
@@ -446,7 +456,7 @@ const Search = () => {
               <p></p>
             </LocalBtn>
             <SearchInput placeholder="검색어를 입력해주세요." />
-            <SearchBtn>Search</SearchBtn>
+            <SearchBtn type="submit">Search</SearchBtn>
           </SearchBox>
         </DateAndSearchBox>
         <KeyWordBox>
@@ -480,7 +490,7 @@ const DateAndSearchBox = styled.div`
   width: 100%;
 `;
 
-const SearchBox = styled.div`
+const SearchBox = styled.form`
   flex: 2.8;
   height: 55px;
 `;
