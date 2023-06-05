@@ -16,3 +16,11 @@ export const getEnrollShopCategory = async () => {
   const res = await api.post(`/api/stores/ `, {});
   return res.data;
 };
+
+export const postEnrollShopImageList = async (storeInfo: any) => {
+  const res = await api.post(`/api/stores/1/images `, {
+    imageId: "1",
+    url: "",
+  });
+  return res.data;
+};

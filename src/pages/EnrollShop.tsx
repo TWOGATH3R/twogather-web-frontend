@@ -339,6 +339,8 @@ export default function EnrollShop() {
     }
   };
 
+  console.log(startBusiness);
+
   const onChangeShopImage = (e: React.ChangeEvent) => {
     const targetFiles = (e.target as HTMLInputElement).files as FileList;
     const targetFilesList = Array.from(targetFiles);
@@ -521,6 +523,7 @@ export default function EnrollShop() {
                   placeholder="기본주소"
                   value={shopAddress}
                   onClick={onClickShopAddress}
+                  style={{ cursor: "pointer" }}
                 />
                 <InputMessage />
               </InputMessageWrapper>
