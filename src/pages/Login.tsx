@@ -23,8 +23,7 @@ const Login = () => {
     }
   );
 
-  const emailPattern =
-    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+  const idPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{4,15}$/;
   const idOnChange = (idText: string) => {
     setId(idText);
   };
@@ -34,9 +33,9 @@ const Login = () => {
   };
 
   const loginBtnOnClick = () => {
-    if (id.length === 0) alert("이메일을 입력해주세요");
+    if (id.length === 0) alert("아이디를 입력해주세요");
     else if (pw.length === 0) alert("비밀번호를 입력해주세요");
-    else if (!emailPattern.test(id)) alert("이메일이 형식에 맞지 않습니다");
+    else if (!idPattern.test(id)) alert("아이디가 형식에 맞지 않습니다");
     else if (!pwPattern.test(pw)) alert("비밀번호가 형식에 맞지 않습니다");
     else login();
   };
@@ -45,10 +44,10 @@ const Login = () => {
     <LoginContainer>
       <LoginWrraper>
         <Title>로그인</Title>
-        <IdInputBox valid={id.length > 0 ? emailPattern.test(id) : true}>
+        <IdInputBox valid={id.length > 0 ? idPattern.test(id) : true}>
           <IdInput
             value={id}
-            placeholder="이메일"
+            placeholder="아이디"
             onChange={(e) => idOnChange(e.target.value)}
           />
         </IdInputBox>
@@ -110,7 +109,7 @@ const IdInputBox = styled.div<{ valid: boolean }>`
           border-color: #ff3a3a;
         }
         &::after {
-          content: "이메일 형식에 맞게 입력해주세요.";
+          content: "영어,숫자를 포함해서 4~15자 이내로 입력해주세요.";
           position: absolute;
           top: calc(100% + 2px);
           left: 0;
