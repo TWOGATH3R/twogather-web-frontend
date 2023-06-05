@@ -3,16 +3,17 @@ import jwt_decode from "jwt-decode";
 import { setCookie } from "../../components/cookie/cookie";
 
 //로그인
-export const loginMutaionPostInfo = async (email: string, pw: string) => {
+export const loginMutaionPostInfo = async (id: string, pw: string) => {
   const res = await api.post(`/api/login `, {
-    email: email,
+    username: id,
     password: pw,
   });
-  const token = res.headers.authorization.split(" ")[1];
-  setCookie("accessToken", token);
-  const jwt: any = jwt_decode(token);
-  const { role, username } = jwt;
+  const accessToken = res.headers.authorization.split(" ")[1];
+  setCookie("accessToken", accessToken);
+  const jwt: any = jwt_decode(accessToken);
+  const { role } = jwt;
+  //아직 리프레쉬 토큰 추출 미완
+  localStorage.setItem("refreshToken", role);
   localStorage.setItem("role", role);
-  localStorage.setItem("username", username);
   return res.data;
 };

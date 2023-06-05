@@ -32,6 +32,9 @@ const InfoInput = () => {
         navigate("/login");
         alert("회원가입 성공");
       },
+      onError: (err: any) => {
+        alert(err.response.data.message);
+      },
     });
 
   //사업자 회원가입 query
@@ -40,6 +43,7 @@ const InfoInput = () => {
       onSuccess: (res) => {
         console.log(res);
         navigate("/login");
+        alert("회원가입 성공");
       },
       onError: (err: any) => {
         alert(err.response.data.message);

@@ -328,18 +328,16 @@ export default function EnrollShop() {
     }
   };
   const onChangeStartBusiness = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const startBusinessCurrent = e.target.value;
     setStartBusiness(e.target.value);
-
-    if (startBusinessCurrent.length >= 0) {
-      setStartBusinessMessage("선택해주세요.");
+    if (startBusiness.length >= 0) {
+      setStartBusinessMessage("");
       return;
     } else {
-      setStartBusinessMessage("");
+      setStartBusinessMessage("선택해주세요.");
     }
   };
 
-  console.log(startBusiness);
+  console.log(startBusiness.length);
 
   const onChangeShopImage = (e: React.ChangeEvent) => {
     const targetFiles = (e.target as HTMLInputElement).files as FileList;
@@ -684,25 +682,14 @@ export default function EnrollShop() {
 
             <ShopInnerWrapper>
               <ShopTitle>사업시작일</ShopTitle>
-              {startBusiness.length > 0 ? (
-                <InputMessageWrapper>
-                  <ShopInput
-                    placeholder="입력해주세요"
-                    type="date"
-                    onChange={onChangeStartBusiness}
-                  />
-                  <InputMessage>{startBusinessMessage}</InputMessage>
-                </InputMessageWrapper>
-              ) : (
-                <InputMessageWrapper>
-                  <ShopInput
-                    placeholder="입력해주세요"
-                    type="date"
-                    onChange={onChangeStartBusiness}
-                  />
-                  <InputMessage />
-                </InputMessageWrapper>
-              )}
+              <InputMessageWrapper>
+                <ShopInput
+                  placeholder="입력해주세요"
+                  type="date"
+                  onChange={onChangeStartBusiness}
+                />
+                <InputMessage>{startBusinessMessage}</InputMessage>
+              </InputMessageWrapper>
             </ShopInnerWrapper>
           </ShopInnerOutlineWrapper>
         </ShopWrapper>
