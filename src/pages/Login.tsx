@@ -14,7 +14,7 @@ const Login = () => {
     () => loginMutaionPostInfo(id, pw),
     {
       onSuccess: (res) => {
-        console.log(res);
+        localStorage.setItem("memberId", res.data.memberId);
         navigate("/");
       },
       onError: (err: any) => {
