@@ -41,7 +41,12 @@ export default function DetailShop() {
             ))}
           </Slick>
         </DetailShopImageWrapper>
-        <DetailShopInfoWrapper></DetailShopInfoWrapper>
+        <DetailShopInfoWrapper>
+          <DetailShopInfoTitleWrapper>
+            <DetailShopInfoTitle>서울다이닝</DetailShopInfoTitle>
+            <DetailShopInfoRating>4.2</DetailShopInfoRating>
+          </DetailShopInfoTitleWrapper>
+        </DetailShopInfoWrapper>
       </DetailShopWrapper>
     </DetailShopContainer>
   );
@@ -63,4 +68,16 @@ const DetailShopImageWrapper = styled.div`
 const DetailShopInfoWrapper = styled.div`
   width: 100%;
   border: 1px solid blue;
+`;
+const DetailShopInfoTitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const DetailShopInfoTitle = styled.span`
+  font-size: 24px;
+  font-weight: bold;
+`;
+const DetailShopInfoRating = styled.span`
+  color: ${({ theme }) => theme.colors.subColor3};
+  font-weight: bold;
 `;
