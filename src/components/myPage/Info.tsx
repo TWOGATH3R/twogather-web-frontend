@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { useMutation } from "react-query";
 import styled, { css } from "styled-components";
-import { putInfoChange } from "../../apis/queries/MyPageQuery";
+import {
+  putConsumerInfoChange,
+  putOwnerInfoChange,
+} from "../../apis/queries/MyPageQuery";
+import axios from "axios";
+import { getCookie } from "../cookie/cookie";
 
 const Info = () => {
   const [id, setId] = useState<string>("");
@@ -14,16 +19,33 @@ const Info = () => {
     username: id,
     password: pw,
     name: name,
-    memberId: localStorage.getItem("memberId")
+    memberId: localStorage.getItem("memberId"),
   };
-  const { mutate: infoChange } = useMutation(() => putInfoChange(info), {
-    onSuccess: (res) => {
-      alert("수정 성공")
-    },
-    onError: (err: any) => {
-      alert(err.response.data.message);
-    },
-  });
+  //고객 정보 업데이트 query
+  const { mutate: consumerInfoChange } = useMutation(
+    () => putConsumerInfoChange(info),
+    {
+      onSuccess: (res) => {
+        alert("수정 성공");
+      },
+      onError: (err: any) => {
+        alert(err.response.data.message);
+      },
+    }
+  );
+
+  //사업자 정보 업데이트 query
+  const { mutate: ownerInfoChange } = useMutation(
+    () => putOwnerInfoChange(info),
+    {
+      onSuccess: (res) => {
+        alert("수정 성공");
+      },
+      onError: (err: any) => {
+        alert(err.response.data.message);
+      },
+    }
+  );
 
   //onChange
   const idPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{4,15}$/;
@@ -45,8 +67,8 @@ const Info = () => {
 
   //onClick
   const saveBtnOnClick = () => {
-    if (localStorage.getItem("role") === "ROLE_CONSUMER") infoChange();
-    else console.log("사업자 전용 함수자리");
+    if (localStorage.getItem("role") === "ROLE_CONSUMER") consumerInfoChange();
+    else ownerInfoChange();
   };
 
   return (
