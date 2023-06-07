@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import styled, { css } from "styled-components";
 import {
+  getConsumerInfo,
+  getOwnerInfo,
   putConsumerInfoChange,
   putOwnerInfoChange,
 } from "../../apis/queries/MyPageQuery";
-import axios from "axios";
-import { getCookie } from "../cookie/cookie";
 
 const Info = () => {
   const [id, setId] = useState<string>("");
@@ -33,13 +33,42 @@ const Info = () => {
       },
     }
   );
-
   //사업자 정보 업데이트 query
   const { mutate: ownerInfoChange } = useMutation(
     () => putOwnerInfoChange(info),
     {
       onSuccess: (res) => {
         alert("수정 성공");
+      },
+      onError: (err: any) => {
+        alert(err.response.data.message);
+      },
+    }
+  );
+  //고객 정보 가져오기 query
+  const { mutate: consumerInfoGet } = useMutation(
+    () => getConsumerInfo(info.memberId),
+    {
+      onSuccess: (res) => {
+        console.log(res);
+        setEmail(res.data.email);
+        setName(res.data.name);
+        setId(res.data.username);
+      },
+      onError: (err: any) => {
+        alert(err.response.data.message);
+      },
+    }
+  );
+  //사업자 정보 가져오기 query
+  const { mutate: ownerInfoGet } = useMutation(
+    () => getOwnerInfo(info.memberId),
+    {
+      onSuccess: (res) => {
+        console.log(res);
+        setEmail(res.data.email);
+        setName(res.data.name);
+        setId(res.data.username);
       },
       onError: (err: any) => {
         alert(err.response.data.message);
@@ -70,6 +99,11 @@ const Info = () => {
     if (localStorage.getItem("role") === "ROLE_CONSUMER") consumerInfoChange();
     else ownerInfoChange();
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("role") === "ROLE_CONSUMER") consumerInfoGet();
+    else ownerInfoGet();
+  }, []);
 
   return (
     <SignUpContainer>
