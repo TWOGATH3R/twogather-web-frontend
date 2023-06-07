@@ -11,8 +11,11 @@ import { IShopAddressVisible } from "../apis/api";
 import { IShopInputItem } from "../apis/api";
 import { IShopMenuList } from "../apis/api";
 import Swal from "sweetalert2";
-import { postEnrollShopInfo } from "../apis/queries/storeQuery";
-import { useMutation } from "react-query";
+import {
+  getEnrollShopCategory,
+  postEnrollShopInfo,
+} from "../apis/queries/storeQuery";
+import { useMutation, useQuery } from "react-query";
 
 export default function EnrollShop() {
   const [shopName, setShopName] = useState<string>("");
@@ -115,13 +118,13 @@ export default function EnrollShop() {
       endBreakTime: "00:00",
       breakTimeCheckBox: false,
       week: [
-        { day: "월", status: false },
-        { day: "화", status: false },
-        { day: "수", status: false },
-        { day: "목", status: false },
-        { day: "금", status: false },
-        { day: "토", status: false },
-        { day: "일", status: false },
+        { dayOfWeek: "MONDAY", day: "월", status: false },
+        { dayOfWeek: "TUESDAY", day: "화", status: false },
+        { dayOfWeek: "WEDNESDAY", day: "수", status: false },
+        { dayOfWeek: "THURSDAY", day: "목", status: false },
+        { dayOfWeek: "FRIDAY", day: "금", status: false },
+        { dayOfWeek: "SATURDAY", day: "토", status: false },
+        { dayOfWeek: "SUNDAY", day: "일", status: false },
       ],
     },
   ]);
@@ -137,6 +140,10 @@ export default function EnrollShop() {
     businessName,
     businessNumber,
     startBusiness,
+    keywordList,
+    inputItems,
+    shopMenuList,
+    shopImages,
   };
 
   console.log(storeInfo);
@@ -154,6 +161,13 @@ export default function EnrollShop() {
     }
   );
 
+  const { data: getCategoryId } = useQuery(
+    "categoryId",
+    getEnrollShopCategory,
+    { refetchOnWindowFocus: false }
+  );
+
+  console.log(getCategoryId);
   // onClick
   const onClickPhotoFile = () => {
     inputPhotoFile.current?.click();
@@ -262,7 +276,6 @@ export default function EnrollShop() {
       setShopNameMessage("");
     }
   };
-  console.log(shopName);
   const onChangeShopNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     const regShopNumber = /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}/;
     const shopNumberCurrent = e.target.value;
@@ -336,8 +349,6 @@ export default function EnrollShop() {
       setStartBusinessMessage("선택해주세요.");
     }
   };
-
-  console.log(startBusiness.length);
 
   const onChangeShopImage = (e: React.ChangeEvent) => {
     const targetFiles = (e.target as HTMLInputElement).files as FileList;
@@ -443,13 +454,13 @@ export default function EnrollShop() {
       endBreakTime: "00:00",
       breakTimeCheckBox: false,
       week: [
-        { day: "월", status: false },
-        { day: "화", status: false },
-        { day: "수", status: false },
-        { day: "목", status: false },
-        { day: "금", status: false },
-        { day: "토", status: false },
-        { day: "일", status: false },
+        { dayOfWeek: "MONDAY", day: "월", status: false },
+        { dayOfWeek: "TUESDAY", day: "화", status: false },
+        { dayOfWeek: "WEDNESDAY", day: "수", status: false },
+        { dayOfWeek: "THURSDAY", day: "목", status: false },
+        { dayOfWeek: "FRIDAY", day: "금", status: false },
+        { dayOfWeek: "SATURDAY", day: "토", status: false },
+        { dayOfWeek: "SUNDAY", day: "일", status: false },
       ],
     };
     setInputItems([...inputItems, input]);

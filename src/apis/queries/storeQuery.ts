@@ -13,10 +13,29 @@ export const postEnrollShopInfo = async (storeInfo: any) => {
       businessNumber: storeInfo.businessNumber,
       businessName: storeInfo.businessName,
       businessStartDate: storeInfo.startBusiness,
+      keywordList: storeInfo.keywordList,
+      businessHourList: [
+        {
+          startTime: storeInfo.inputItems.startTime,
+          endTime: storeInfo.inputItems.endTime,
+          dayOfWeek: storeInfo.inputItems.week,
+          isOpen: storeInfo.inputItems.week.status,
+          hasBreakTime: storeInfo.inputItems.breakTimeCheckBox,
+          breakStartTime: storeInfo.inputItems.startBreakTime,
+          breakEndTime: storeInfo.inputItems.endBreakTime,
+        },
+      ],
+      menuSaveList: [
+        {
+          name: storeInfo.shopMenuList.shopMenuName,
+          price: storeInfo.shopMenuList.shopMenuPrice,
+        },
+      ],
+      storeImageList: storeInfo.shopImages,
     },
     {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
         accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
@@ -26,7 +45,14 @@ export const postEnrollShopInfo = async (storeInfo: any) => {
 };
 
 export const getEnrollShopCategory = async () => {
-  const res = await api.post(`/api/stores `, {});
+  const res = await api.get(`/api/categories`, {
+    headers: {
+      "Content-Type": "application/json",
+      accept: "application/json,",
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+  });
+  console.log(res);
   return res.data;
 };
 
