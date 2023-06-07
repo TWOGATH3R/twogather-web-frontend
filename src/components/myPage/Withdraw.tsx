@@ -1,12 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 
 const Withdraw = () => {
+  const [pw, setPw] = useState<string>("");
+
+  const pwPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/;
+  const pwOnChange = (pwText: string) => {
+    setPw(pwText);
+  };
+
   return (
     <WithdrawContainer>
-      <PwBox valid={true}>
+      <PwBox valid={pw.length > 0 ? pwPattern.test(pw) : true}>
         <PwText>비밀번호</PwText>
-        <PwInput type="password" />
+        <PwInput
+          type="password"
+          value={pw}
+          onChange={(e) => pwOnChange(e.target.value)}
+        />
       </PwBox>
       <WithdrawBtn>탈퇴하기</WithdrawBtn>
     </WithdrawContainer>
