@@ -47,7 +47,7 @@ const Review = () => {
         </ReviewItem>
       </ReviewList>
       <PaginationBox>
-        {/* <Pagination
+        <Pagination
           activePage={page}
           itemsCountPerPage={10}
           totalItemsCount={60}
@@ -55,7 +55,7 @@ const Review = () => {
           prevPageText="‹"
           nextPageText="›"
           onChange={(page) => pageOnChange(page)}
-        /> */}
+        />
       </PaginationBox>
     </ReviewContainer>
   );
