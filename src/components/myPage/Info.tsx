@@ -7,17 +7,19 @@ import {
   putConsumerInfoChange,
   putOwnerInfoChange,
 } from "../../apis/queries/MyPageQuery";
+import { useRecoilState } from "recoil";
+import { Name } from "../../store/userInfoAtom";
 
 const Info = () => {
+  const [nameDate,setNameDate] = useRecoilState(Name);
+
   const [id, setId] = useState<string>("");
-  const [pw, setPw] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
 
   const info = {
     email: email,
     username: id,
-    password: pw,
     name: name,
     memberId: localStorage.getItem("memberId"),
   };
@@ -51,6 +53,7 @@ const Info = () => {
     {
       onSuccess: (res) => {
         console.log(res);
+        setNameDate(res.data.name);
         setEmail(res.data.email);
         setName(res.data.name);
         setId(res.data.username);
@@ -80,10 +83,6 @@ const Info = () => {
   const idPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{4,15}$/;
   const idOnChange = (idText: string) => {
     setId(idText);
-  };
-  const pwPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/;
-  const pwOnChange = (pwText: string) => {
-    setPw(pwText);
   };
   const emailPattern =
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
@@ -125,14 +124,6 @@ const Info = () => {
           onChange={(e) => nameOnChange(e.target.value)}
         />
       </NameBox>
-      <PwBox valid={pw.length > 0 ? pwPattern.test(pw) : true}>
-        <PwText>비밀번호</PwText>
-        <PwInput
-          type="password"
-          value={pw}
-          onChange={(e) => pwOnChange(e.target.value)}
-        />
-      </PwBox>
       <SaveBtn onClick={() => saveBtnOnClick()}>저장</SaveBtn>
     </SignUpContainer>
   );
@@ -206,20 +197,6 @@ const EmailInput = styled(IdInput)``;
 const NameBox = styled(IdBox)``;
 const NameText = styled(IdText)``;
 const NameInput = styled(IdInput)``;
-
-const PwBox = styled(IdBox)`
-  ${(props) => {
-    if (!props.valid) {
-      return css`
-        &::after {
-          content: "영어,숫자를 포함 8~20자 이내로 입력해주세요.";
-        }
-      `;
-    }
-  }}
-`;
-const PwText = styled(IdText)``;
-const PwInput = styled(IdInput)``;
 
 const SaveBtn = styled.button`
   margin-top: 20px;
