@@ -2,35 +2,39 @@ import { api } from "../untils";
 import { getCookie } from "../../components/cookie/cookie";
 
 export const postEnrollShopInfo = async (storeInfo: any) => {
-  console.log(getCookie("accessToken"));
-
   const res = await api.post(
-    `/api/stores/ `,
+    `/api/stores/categories/1 `,
     {
-      storeName: storeInfo.shopName,
-      address: storeInfo.shopAddress,
-      phone: storeInfo.shopNumber,
-      businessNumber: storeInfo.businessNumber,
-      businessName: storeInfo.businessName,
-      businessStartDate: storeInfo.startBusiness,
-      keywordList: storeInfo.keywordList,
-      businessHourList: [
-        {
-          startTime: storeInfo.inputItems.startTime,
-          endTime: storeInfo.inputItems.endTime,
-          dayOfWeek: storeInfo.inputItems.week,
-          isOpen: storeInfo.inputItems.week.status,
-          hasBreakTime: storeInfo.inputItems.breakTimeCheckBox,
-          breakStartTime: storeInfo.inputItems.startBreakTime,
-          breakEndTime: storeInfo.inputItems.endBreakTime,
-        },
-      ],
-      menuSaveList: [
-        {
-          name: storeInfo.shopMenuList.shopMenuName,
-          price: storeInfo.shopMenuList.shopMenuPrice,
-        },
-      ],
+      storeRequest: {
+        storeName: "김가네",
+        address: "전주시",
+        phone: "010-1234-1234",
+        businessNumber: "1231212312",
+        businessName: "홍길동",
+        businessStartDate: "2023-06-01",
+      },
+      keywordList: ["분위기좋은", "사진찍기좋은", "저렴한"],
+      businessHourRequest: {
+        businessHourList: [
+          {
+            startTime: "11:30",
+            endTime: "20:00",
+            dayOfWeek: "MONDAY",
+            isOpen: true,
+            hasBreakTime: false,
+            breakStartTime: null,
+            breakEndTime: null,
+          },
+        ],
+      },
+      menuRequest: {
+        menuSaveList: [
+          {
+            name: "감자",
+            price: 1000,
+          },
+        ],
+      },
       storeImageList: storeInfo.shopImages,
     },
     {
@@ -52,7 +56,6 @@ export const getEnrollShopCategory = async () => {
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
-  console.log(res);
   return res.data;
 };
 

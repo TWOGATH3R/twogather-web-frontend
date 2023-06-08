@@ -128,6 +128,13 @@ export default function EnrollShop() {
       ],
     },
   ]);
+  const [dayOfWeek, setDayOfWeek] = useState([
+    {
+      dayOfWeek: "",
+      day: "",
+      status: false,
+    },
+  ]);
   const shopMenuID = useRef<number>(1);
   const [shopMenuList, setShopMenuList] = useState<IShopMenuList[]>([
     { id: 0, shopMenuName: "", shopMenuPrice: "" },
@@ -144,9 +151,8 @@ export default function EnrollShop() {
     inputItems,
     shopMenuList,
     shopImages,
+    dayOfWeek,
   };
-
-  console.log(storeInfo);
 
   // Query
   const { mutate: shopInfo } = useMutation(
@@ -260,6 +266,23 @@ export default function EnrollShop() {
   };
 
   const onClickSubmit = () => {
+    for (let i = 0; i < inputItems.length; i++) {
+      for (let j = 0; j < 7; j++) {
+        if (inputItems[i].week[j].status === true) {
+          const addDay = [
+            ...dayOfWeek,
+            {
+              dayOfWeek: inputItems[i].week[j].dayOfWeek,
+              day: inputItems[i].week[j].day,
+              status: inputItems[i].week[j].status,
+            },
+          ];
+          setDayOfWeek(addDay);
+
+          console.log(addDay);
+        }
+      }
+    }
     shopInfo();
   };
 
