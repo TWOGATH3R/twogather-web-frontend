@@ -13,6 +13,7 @@ export type IShopInputItem = {
 };
 
 export type IShopDay = {
+  dayOfWeek: string;
   day: string;
   status: boolean;
 };
