@@ -20,9 +20,10 @@ export default function Header() {
       padding: "3em",
     }).then((result) => {
       if (result.isConfirmed) {
+        navigate("/login");
+        window.location.reload();
         removeCookie();
         localStorage.clear();
-        navigate("/login");
       }
     });
   };

@@ -4,7 +4,6 @@ import { api } from "../untils";
 type infoType = {
   email: string | null;
   username: string;
-  password: string;
   name: string;
   memberId: string | null;
 };
@@ -15,7 +14,6 @@ export const putConsumerInfoChange = async (info: infoType) => {
     {
       email: info.email,
       username: info.username,
-      password: info.password,
       name: info.name,
     },
     {
@@ -36,7 +34,6 @@ export const putOwnerInfoChange = async (info: infoType) => {
     {
       email: info.email,
       username: info.username,
-      password: info.password,
       name: info.name,
     },
     {
