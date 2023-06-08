@@ -1,13 +1,17 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { Name } from "../store/userInfoAtom";
 
 const MyPage = () => {
+  const name = useRecoilValue(Name);
+  
   return (
     <MyPageContainer>
       <MyPageWrraper>
         <UserNameBox>
-          <span>김민지</span>
+          <span>{name}</span>
         </UserNameBox>
         <MenuList>
           <MenuItem>
