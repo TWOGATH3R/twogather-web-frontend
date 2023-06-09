@@ -1,8 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { getTop10List } from "../../apis/queries/mainQuery";
+import { useMutation } from "react-query";
 
 const GradeTop10 = () => {
+  const { mutate: Top10List } = useMutation(() => getTop10List(), {
+    onSuccess: (res) => {
+      console.log(res);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
   return (
     <GradeTopContainer>
       <Title>평점 높은 Top10</Title>
@@ -45,7 +56,7 @@ const GradeTop10 = () => {
         </GradeTop10Item>
         <SeeMoreInput id="gradetop" type="checkbox" />
         <SeeMoreBtnBox>
-          <SeeMoreBtn htmlFor="gradetop">
+          <SeeMoreBtn htmlFor="gradetop" onClick={() => Top10List()}>
             &gt;<p>더보기</p>
           </SeeMoreBtn>
         </SeeMoreBtnBox>
