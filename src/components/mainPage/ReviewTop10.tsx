@@ -1,51 +1,62 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { getTop10List } from "../../apis/queries/mainQuery";
 
 const ReviewTop10 = () => {
+  const [storeList, setStoreList] = useState<Array<Object> | undefined>();
+
+  const { mutate: Top10List } = useMutation(
+    () => {
+      const HTML = document.querySelector("#reviewtop") as HTMLInputElement;
+      const type: string = "MOST_REVIEWED";
+      const count: string = HTML.checked === true ? "10" : "3";
+      return getTop10List(type, count);
+    },
+    {
+      onSuccess: (res) => {
+        console.log(res);
+        setStoreList(res.data);
+      },
+      onError: (err) => {
+        console.log(err);
+      },
+    }
+  );
+
+  //onClick
+  const seeMoreBtnOnClick = () => {
+    Top10List();
+  };
+
+  useEffect(() => {
+    Top10List();
+  }, [Top10List]);
+
   return (
     <ReviewTopContainer>
       <Title>리뷰 많은 Top10</Title>
       <ReviewTop10List>
-        <ReviewTop10Item>
-          <Link to={"/"}>
-            <StoreImgBox>
-              <StoreImg src="https://modo-phinf.pstatic.net/20190613_180/1560397211791mWzQc_JPEG/mosaUJSQm4.jpeg?type=w1100" />
-            </StoreImgBox>
-            <StoreNameAndGrade>
-              <StoreName>서초 고깃간</StoreName>
-              <StoreGrade>4.5</StoreGrade>
-            </StoreNameAndGrade>
-            <StoreAddress>전라남도 여수시</StoreAddress>
-          </Link>
-        </ReviewTop10Item>
-        <ReviewTop10Item>
-          <Link to={"/"}>
-            <StoreImgBox>
-              <StoreImg src="https://modo-phinf.pstatic.net/20190613_180/1560397211791mWzQc_JPEG/mosaUJSQm4.jpeg?type=w1100" />
-            </StoreImgBox>
-            <StoreNameAndGrade>
-              <StoreName>서초 고깃간</StoreName>
-              <StoreGrade>4.5</StoreGrade>
-            </StoreNameAndGrade>
-            <StoreAddress>전라남도 여수시</StoreAddress>
-          </Link>
-        </ReviewTop10Item>
-        <ReviewTop10Item>
-          <Link to={"/"}>
-            <StoreImgBox>
-              <StoreImg src="https://modo-phinf.pstatic.net/20190613_180/1560397211791mWzQc_JPEG/mosaUJSQm4.jpeg?type=w1100" />
-            </StoreImgBox>
-            <StoreNameAndGrade>
-              <StoreName>서초 고깃간</StoreName>
-              <StoreGrade>4.5</StoreGrade>
-            </StoreNameAndGrade>
-            <StoreAddress>전라남도 여수시</StoreAddress>
-          </Link>
-        </ReviewTop10Item>
+        {Array.isArray(storeList)
+          ? storeList.map((value: any, index: any) => (
+              <ReviewTop10Item key={index}>
+                <Link to={"/"}>
+                  <StoreImgBox>
+                    <StoreImg src="https://modo-phinf.pstatic.net/20190613_180/1560397211791mWzQc_JPEG/mosaUJSQm4.jpeg?type=w1100" />
+                  </StoreImgBox>
+                  <StoreNameAndGrade>
+                    <StoreName>서초 고깃간</StoreName>
+                    <StoreGrade>4.5</StoreGrade>
+                  </StoreNameAndGrade>
+                  <StoreAddress>전라남도 여수시</StoreAddress>
+                </Link>
+              </ReviewTop10Item>
+            ))
+          : null}
         <SeeMoreInput id="reviewtop" type="checkbox" />
         <SeeMoreBtnBox>
-          <SeeMoreBtn htmlFor="reviewtop">
+          <SeeMoreBtn htmlFor="reviewtop" onClick={() => seeMoreBtnOnClick()}>
             &gt;<p>더보기</p>
           </SeeMoreBtn>
         </SeeMoreBtnBox>
