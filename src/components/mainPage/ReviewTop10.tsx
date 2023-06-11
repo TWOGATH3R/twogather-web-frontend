@@ -9,9 +9,8 @@ const ReviewTop10 = () => {
 
   const { mutate: Top10List } = useMutation(
     () => {
-      const HTML = document.querySelector("#reviewtop") as HTMLInputElement;
       const type: string = "MOST_REVIEWED";
-      const count: string = HTML.checked === true ? "10" : "3";
+      const count: string = storeList ? "10" : "3";
       return getTop10List(type, count);
     },
     {
@@ -31,12 +30,13 @@ const ReviewTop10 = () => {
   };
 
   useEffect(() => {
-    Top10List();
+    if (!storeList) Top10List();
   }, [Top10List]);
 
   return (
     <ReviewTopContainer>
       <Title>리뷰 많은 Top10</Title>
+      <SeeMoreInput id="reviewtop" type="checkbox" />
       <ReviewTop10List>
         {Array.isArray(storeList)
           ? storeList.map((value: any, index: any) => (
@@ -54,8 +54,7 @@ const ReviewTop10 = () => {
               </ReviewTop10Item>
             ))
           : null}
-        <SeeMoreInput id="reviewtop" type="checkbox" />
-        <SeeMoreBtnBox>
+        <SeeMoreBtnBox className="seeMoreBtn">
           <SeeMoreBtn htmlFor="reviewtop" onClick={() => seeMoreBtnOnClick()}>
             &gt;<p>더보기</p>
           </SeeMoreBtn>
@@ -129,7 +128,14 @@ const SeeMoreBtnBox = styled(ReviewTop10Item)`
 const SeeMoreInput = styled.input`
   display: none;
   &:checked {
-    & + li {
+    & + ul {
+      justify-content: center;
+    }
+    & + ul > li {
+      margin: 0 15px 30px 15px;
+      width: calc(33.3333% - 30px);
+    }
+    & + ul > .seeMoreBtn {
       display: none;
     }
   }
