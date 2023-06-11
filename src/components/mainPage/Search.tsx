@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import TodayDate from "./TodayDate";
 import { useNavigate } from "react-router-dom";
@@ -514,13 +514,14 @@ const BackgroundBox = styled.label`
   visibility: hidden;
   transition: all 0.4s;
   width: 100%;
+  min-height: 100vh;
   height: 100%;
   background-color: rgb(216 216 216 / 48%);
 `;
 
 const CategoriesBox = styled.div`
   position: absolute;
-  top: calc(50% - 7vh);
+  top: 50vh;
   left: 50%;
   transform: translate(-50%, -50%);
   display: none;
