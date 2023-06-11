@@ -514,6 +514,7 @@ const BackgroundBox = styled.label`
   visibility: hidden;
   transition: all 0.4s;
   width: 100%;
+  min-height: 100vh;
   height: 100%;
   background-color: rgb(216 216 216 / 48%);
 `;
