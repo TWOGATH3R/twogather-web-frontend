@@ -1,17 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Pagination from "react-js-pagination";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
+import { useMutation } from "react-query";
+import { getStoreList } from "../../apis/queries/mainQuery";
 
 const SearchResult = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [page, setPage] = useState(1);
 
   const storeList = [1, 2, 3, 4, 5, 6];
+
+  const searchInfo = {
+    category: searchParams.get("category"),
+    search: searchParams.get("search"),
+    location: searchParams.get("location"),
+    pagenum: searchParams.get("pagenum"),
+    sort: searchParams.get("sort"),
+  };
+  //가게 검색 결과 리스트 query
+  const { mutate: storeSearch } = useMutation(() => getStoreList(searchInfo), {
+    onSuccess: (res) => {
+      console.log(res);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
 
   const pageOnChange = (page: any) => {
     setPage(page);
     console.log(page);
   };
+
+  useEffect(() => {
+    storeSearch();
+  }, [storeSearch]);
 
   return (
     <SearchResultContainer>

@@ -9,15 +9,14 @@ const LikeTop10 = () => {
 
   const { mutate: Top10List } = useMutation(
     () => {
-      const HTML = document.querySelector("#Like") as HTMLInputElement;
       const type: string = "MOST_LIKES_COUNT";
-      const count: string = HTML.checked === true ? "10" : "3";
+      const count: string = storeList ? "10" : "3";
       return getTop10List(type, count);
     },
     {
       onSuccess: (res) => {
         console.log(res);
-        setStoreList(res);
+        setStoreList(res.data);
       },
       onError: (err) => {
         console.log(err);
@@ -37,6 +36,7 @@ const LikeTop10 = () => {
   return (
     <LikeContainer>
       <Title>좋아요 많은 Top10</Title>
+      <SeeMoreInput id="Like" type="checkbox" />
       <Like10List>
         {Array.isArray(storeList)
           ? storeList.map((value: any, index: any) => (
@@ -54,8 +54,7 @@ const LikeTop10 = () => {
               </Like10Item>
             ))
           : null}
-        <SeeMoreInput id="Like" type="checkbox" />
-        <SeeMoreBtnBox>
+        <SeeMoreBtnBox className="seeMoreBtn">
           <SeeMoreBtn htmlFor="Like" onClick={() => seeMoreBtnOnClick()}>
             &gt;<p>더보기</p>
           </SeeMoreBtn>
@@ -129,7 +128,14 @@ const SeeMoreBtnBox = styled(Like10Item)`
 const SeeMoreInput = styled.input`
   display: none;
   &:checked {
-    & + li {
+    & + ul {
+      justify-content: center;
+    }
+    & + ul > li {
+      margin: 0 15px 30px 15px;
+      width: calc(33.3333% - 30px);
+    }
+    & + ul > .seeMoreBtn {
       display: none;
     }
   }

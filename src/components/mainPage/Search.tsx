@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import TodayDate from "./TodayDate";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
+import { getKeyWordList } from "../../apis/queries/mainQuery";
 
 const Search = () => {
   const navigate = useNavigate();
+
+  const [searchText, setSearchText] = useState<string>("");
 
   const [categories, setCategories] = useState<string>("모든 카테고리");
   const [categoriesBoolean, setCategoriesBoolean] = useState<boolean>(true);
@@ -13,6 +17,11 @@ const Search = () => {
   const [si, setSi] = useState<string>("");
 
   const [keyWord, setKeyWord] = useState<string>("");
+
+  //DB에 저장된 검색가능한 키워드 리스트 가져오기
+  const { data: keyWordList } = useQuery("keyWordList", getKeyWordList, {
+    refetchOnWindowFocus: false,
+  });
 
   const CategoriesMenuList = [
     "양식",
@@ -341,20 +350,23 @@ const Search = () => {
     else setKeyWord(value);
   };
 
-  //onSubmit
-  const searchOnSubmit = (e: any) => {
-    // e.preventDefault();
-    navigate(`/search/${categories}/${city}${si}/gvgh/1`);
+  //onChange
+  const searchOnChange = (value: string) => {
+    setSearchText(value);
   };
 
-  const keyWordList = [
-    "분위기 좋은",
-    "데이트 하기 좋은",
-    "저렴한",
-    "친절한",
-    "아이들이 좋아하는",
-    "가족들과 함께하기 좋은",
-  ];
+  //onSubmit
+  const searchOnSubmit = (e: any) => {
+    e.preventDefault();
+    navigate(
+      `/search?category=${
+        categories === "모든 카테고리" ? "" : categories
+      }&search=${searchText}&location=${
+        city === "전체 지역" ? "" : city + " " + si
+      }&pagenum=1&sort=TOP_RATED,desc`
+    );
+  };
+  console.log();
 
   return (
     <>
@@ -455,22 +467,27 @@ const Search = () => {
               {si}
               <p></p>
             </LocalBtn>
-            <SearchInput placeholder="검색어를 입력해주세요." />
+            <SearchInput
+              value={searchText}
+              placeholder="검색어를 입력해주세요."
+              onChange={(e) => searchOnChange(e.target.value)}
+            />
             <SearchBtn type="submit">Search</SearchBtn>
           </SearchBox>
         </DateAndSearchBox>
         <KeyWordBox>
           <KeyWordList>
-            {keyWordList &&
-              keyWordList.map((value) => (
-                <KeyWordItem
-                  active={keyWord === value}
-                  key={value}
-                  onClick={() => keyWordOnClick(value)}
-                >
-                  # {value}
-                </KeyWordItem>
-              ))}
+            {Array.isArray(keyWordList)
+              ? keyWordList.map((value: any, index: any) => (
+                  <KeyWordItem
+                    active={keyWord === value.name}
+                    onClick={() => keyWordOnClick(value.name)}
+                    key={value.keywordId}
+                  >
+                    # {value.name}
+                  </KeyWordItem>
+                ))
+              : null}
           </KeyWordList>
         </KeyWordBox>
       </SearchContainer>

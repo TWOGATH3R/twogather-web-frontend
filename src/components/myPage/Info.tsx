@@ -38,14 +38,14 @@ const Info = () => {
           });
         }
       },
-      onError:(err:any)=>{
+      onError: (err: any) => {
         alert(err.response.data.message);
-      }
+      },
     }
   );
 
   const info = {
-    email: email,
+    email: emailDate,
     username: id,
     name: name,
     memberId: localStorage.getItem("memberId"),
