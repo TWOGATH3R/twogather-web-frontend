@@ -29,7 +29,7 @@ const Router = () => {
         <Route path="/" element={<Main />}>
           <Route path="" element={<DefaultContents />} />
           <Route
-            path="search/:category/:local/:keyword/:pagenum"
+            path="search"
             element={<SearchResult />}
           />
         </Route>
