@@ -1,12 +1,47 @@
 import React, { useState } from "react";
+import { useMutation } from "react-query";
 import styled, { css } from "styled-components";
+import {
+  consumerPwCheck,
+  deleteConsumer,
+} from "../../apis/queries/MyPageQuery";
 
 const Withdraw = () => {
   const [pw, setPw] = useState<string>("");
 
+  const memberId = localStorage.getItem("memberId");
+  //고객 회원탈퇴
+  const { mutate: consumerDelete } = useMutation(
+    () => deleteConsumer(memberId),
+    {
+      onSuccess: (res) => {
+        console.log(res);
+      },
+      onError: (err: any) => {
+        alert(err.response.data.message);
+      },
+    }
+  );
+  //고객 비밀번호 확인
+  const { mutate: pwCheckConsumer } = useMutation(() => consumerPwCheck(pw), {
+    onSuccess: (res) => {
+      console.log(res.isValid);
+      if (res.isValid) consumerDelete();
+    },
+    onError: (err: any) => {
+      alert(err.response.data.message);
+    },
+  });
+
+  //onChange
   const pwPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/;
   const pwOnChange = (pwText: string) => {
     setPw(pwText);
+  };
+
+  //onClick
+  const WithdrawBtnOnClick = () => {
+    pwCheckConsumer();
   };
 
   return (
@@ -19,7 +54,7 @@ const Withdraw = () => {
           onChange={(e) => pwOnChange(e.target.value)}
         />
       </PwBox>
-      <WithdrawBtn>탈퇴하기</WithdrawBtn>
+      <WithdrawBtn onClick={WithdrawBtnOnClick}>탈퇴하기</WithdrawBtn>
     </WithdrawContainer>
   );
 };

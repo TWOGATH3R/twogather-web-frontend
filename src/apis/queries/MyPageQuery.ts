@@ -9,7 +9,7 @@ type infoType = {
 };
 //고객 정보 업데이트하기
 export const putConsumerInfoChange = async (info: infoType) => {
-  console.log(info)
+  console.log(info);
   const res = await api.put(
     `/api/consumers/${info.memberId}`,
     {
@@ -70,4 +70,36 @@ export const getOwnerInfo = async (memberId: string | null) => {
     },
   });
   return res.data;
+};
+
+//고객 탈퇴
+export const deleteConsumer = async (memberId: string | null) => {
+  console.log("삭제")
+  const res = await api.delete(`/api/consumers/${memberId}`, {
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+      accept: "application/json,",
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+  });
+  return res.data;
+};
+
+//고객 비밀번호 확인
+export const consumerPwCheck = async (pw: string) => {
+  console.log(pw)
+  const res = await api.post(
+    `/api/consumers/verify-password`,
+    {
+      password: "password1",
+    },
+    {
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+        accept: "application/json,",
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+      },
+    }
+  );
+  return res.data.data;
 };
