@@ -20,6 +20,7 @@ import Withdraw from "./components/myPage/Withdraw";
 import DetailShop from "./components/mainPage/DetailShop";
 import SearchResult from "./components/mainPage/SearchResult";
 import DefaultContents from "./components/mainPage/DefaultContents";
+import ContentsEnroll from "./components/resgistration/ContentsEnroll";
 
 const Router = () => {
   return (
@@ -28,13 +29,12 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<Main />}>
           <Route path="" element={<DefaultContents />} />
-          <Route
-            path="search"
-            element={<SearchResult />}
-          />
+          <Route path="search" element={<SearchResult />} />
         </Route>
         <Route path="/detailShop" element={<DetailShop />} />
-        <Route path="/enrollshop" element={<EnrollShop />}></Route>
+        <Route path="/enrollshop" element={<EnrollShop />}>
+          <Route path="contents" element={<ContentsEnroll />} />
+        </Route>
         <Route path="/editenrollshop" element={<EditEnrollShop />}></Route>
         <Route path="/login" element={<Login />} />
         <Route path="/findid" element={<FindId />} />
