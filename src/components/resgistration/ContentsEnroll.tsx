@@ -10,15 +10,14 @@ import {
   postEnrollShopInfo,
 } from "../../apis/queries/storeQuery";
 import { IShopMenuList } from "../../apis/api";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ContentsEnroll = () => {
-  const storeInfo = {
-    // inputItems,
-    // shopMenuList,
-    // shopImages,
-    // dayOfWeek,
-  };
-  //query
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const storeInfo = {};
+  //가게 등록 query
   const { mutate: shopInfo } = useMutation(
     () => postEnrollShopInfo(storeInfo),
     {
@@ -74,13 +73,7 @@ const ContentsEnroll = () => {
       ],
     },
   ]);
-  const [dayOfWeek, setDayOfWeek] = useState([
-    {
-      dayOfWeek: "",
-      day: "",
-      status: false,
-    },
-  ]);
+  const [dayOfWeek, setDayOfWeek] = useState();
   type checkWeekListType = {
     day: string[];
   };
@@ -283,24 +276,23 @@ const ContentsEnroll = () => {
 
   //onSubmit
   const enrollBtnOnSubmit = () => {
+    const addDay: any = [];
     for (let i = 0; i < inputItems.length; i++) {
       for (let j = 0; j < 7; j++) {
         if (inputItems[i].week[j].status === true) {
-          const addDay = [
-            ...dayOfWeek,
+          addDay.push(
             {
               dayOfWeek: inputItems[i].week[j].dayOfWeek,
               day: inputItems[i].week[j].day,
               status: inputItems[i].week[j].status,
             },
-          ];
+          );
           setDayOfWeek(addDay);
-
-          console.log(addDay);
         }
       }
     }
-    shopInfo();
+    console.log(dayOfWeek);
+    // shopInfo();
   };
 
   return (
@@ -562,12 +554,13 @@ const ContentsEnroll = () => {
         </ShopInnerOutlineWrapper>
       </ShopWrapper>
       <EnrollButtonContainer>
-          <EnrollButton onClick={() => enrollBtnOnSubmit()}>등록하기</EnrollButton>
-        </EnrollButtonContainer>
+        <EnrollButton onClick={() => enrollBtnOnSubmit()}>
+          등록하기
+        </EnrollButton>
+      </EnrollButtonContainer>
     </>
   );
 };
-
 
 const ShopWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.subColor1};
