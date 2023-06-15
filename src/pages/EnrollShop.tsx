@@ -105,26 +105,49 @@ export default function EnrollShop() {
     setKeywordList([]);
   };
   const nextBtnOnClick = () => {
-    navigate("/enrollshop/contents", {
-      state: {
-        shopName: shopName,
-        shopAddress: shopAddress,
-        shopNumber: shopNumber,
-        categoryValue: categoryValue,
-        keywordList: keywordList,
-        businessName: businessName,
-        businessNumber: businessNumber,
-        startBusiness: startBusiness,
-      },
-    });
+    console.log(keywordList);
+    if (
+      !shopName ||
+      !shopAddress ||
+      !shopNumber ||
+      !categoryValue ||
+      !keywordList ||
+      !businessName ||
+      !businessNumber ||
+      !startBusiness
+    )
+      alert("모든 정보를 입력해주세요");
+    else if (!regShopName.test(shopName)) alert("가게명이 옳바르지 않습니다.");
+    else if (!regShopNumber.test(shopNumber))
+      alert("번호가 옳바르지 않습니다 (- 포함시켜 주세요.)");
+    else if (!regBusinessName.test(businessName))
+      alert("사업자명이 옳바르지 않습니다.");
+    else if (!regBusinessNumber.test(businessNumber))
+      alert("사업자번호가 옳바르지 않습니다");
+    else
+      navigate("/enrollshop/contents", {
+        state: {
+          shopName: shopName,
+          shopAddress: shopAddress,
+          shopNumber: shopNumber,
+          categoryValue: categoryValue,
+          keywordList: keywordList,
+          businessName: businessName,
+          businessNumber: businessNumber,
+          startBusiness: startBusiness,
+        },
+      });
   };
+
+  const regShopName = /^[가-힣a-zA-Z0-9\s]+$/;
+  const regShopNumber = /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}/;
+  const regBusinessName = /^[가-힣a-zA-Z0-9\s]+$/;
+  const regBusinessNumber = /^[0-9]{10}/;
 
   // onChange
   const onChangeShopName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const regShopName = /^[가-힣a-zA-Z0-9\s]+$/;
     const shopNameCurrent = e.target.value;
     setShopName(e.target.value);
-
     if (!regShopName.test(shopNameCurrent)) {
       setShopNameMessage("가게명이 옳바르지 않습니다.");
       return;
@@ -133,10 +156,8 @@ export default function EnrollShop() {
     }
   };
   const onChangeShopNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const regShopNumber = /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}/;
     const shopNumberCurrent = e.target.value;
     setShopNumber(e.target.value);
-
     if (!regShopNumber.test(shopNumberCurrent)) {
       setShopNumberMessage("번호가 옳바르지 않습니다 (- 포함시켜 주세요.)");
       return;
@@ -168,10 +189,8 @@ export default function EnrollShop() {
     [keywordList]
   );
   const onChangeBusinessName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const regBusinessName = /^[가-힣a-zA-Z0-9\s]+$/;
     const businessNameCurrent = e.target.value;
     setBusinessName(e.target.value);
-
     if (!regBusinessName.test(businessNameCurrent)) {
       setBusinessNameMessage("사업자명이 옳바르지 않습니다.");
       return;
@@ -180,10 +199,8 @@ export default function EnrollShop() {
     }
   };
   const onChangeBusinessNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const regBusinessNumber = /^[0-9]{3}-[0-9]{2}-[0-9]{5}/;
     const businessNumberCurrent = e.target.value;
     setBusinessNumber(e.target.value);
-
     if (!regBusinessNumber.test(businessNumberCurrent)) {
       setBusinessNumberMessage(
         "사업자번호가 옳바르지 않습니다 (- 포함시켜 주세요.)"
@@ -227,6 +244,11 @@ export default function EnrollShop() {
                     value={shopName}
                     placeholder="입력해주세요"
                     onChange={onChangeShopName}
+                    disabled={
+                      location.pathname === "/enrollshop/contents"
+                        ? true
+                        : false
+                    }
                   />
                   <InputMessage>{shopNameMessage}</InputMessage>
                 </InputMessageWrapper>
@@ -238,6 +260,11 @@ export default function EnrollShop() {
                   <ShopInput
                     placeholder="입력해주세요"
                     onChange={onChangeShopName}
+                    disabled={
+                      location.pathname === "/enrollshop/contents"
+                        ? true
+                        : false
+                    }
                   />
                   <InputMessage />
                 </InputMessageWrapper>
@@ -253,6 +280,9 @@ export default function EnrollShop() {
                   value={shopAddress}
                   onClick={onClickShopAddress}
                   style={{ cursor: "pointer" }}
+                  disabled={
+                    location.pathname === "/enrollshop/contents" ? true : false
+                  }
                 />
                 <InputMessage />
               </InputMessageWrapper>
@@ -268,6 +298,11 @@ export default function EnrollShop() {
                     type="tel"
                     placeholder="입력해주세요"
                     onChange={onChangeShopNumber}
+                    disabled={
+                      location.pathname === "/enrollshop/contents"
+                        ? true
+                        : false
+                    }
                   />
                   <InputMessage>{shopNumberMessage}</InputMessage>
                 </InputMessageWrapper>
@@ -297,6 +332,9 @@ export default function EnrollShop() {
                   onChange={onChangeShopCategory}
                   value={categoryValue}
                   onClick={() => onClickVisibleCategory()}
+                  disabled={
+                    location.pathname === "/enrollshop/contents" ? true : false
+                  }
                 />
                 {visibleCategory !== true && <InputMessage />}
               </InputMessageWrapper>
@@ -329,6 +367,9 @@ export default function EnrollShop() {
                   placeholder="선택해주세요 (최대 3개까지 가능합니다.)"
                   onClick={() => onClickVisibleKeyword()}
                   value={keywordList}
+                  disabled={
+                    location.pathname === "/enrollshop/contents" ? true : false
+                  }
                 />
               </InputMessageWrapper>
             </ShopInnerWrapper>
@@ -371,6 +412,11 @@ export default function EnrollShop() {
                   <ShopInput
                     placeholder="입력해주세요"
                     onChange={onChangeBusinessName}
+                    disabled={
+                      location.pathname === "/enrollshop/contents"
+                        ? true
+                        : false
+                    }
                   />
                   <InputMessage>{businessNameMessage}</InputMessage>
                 </InputMessageWrapper>
@@ -382,6 +428,11 @@ export default function EnrollShop() {
                   <ShopInput
                     placeholder="입력해주세요"
                     onChange={onChangeBusinessName}
+                    disabled={
+                      location.pathname === "/enrollshop/contents"
+                        ? true
+                        : false
+                    }
                   />
                   <InputMessage />
                 </InputMessageWrapper>
@@ -395,6 +446,11 @@ export default function EnrollShop() {
                   <ShopInput
                     placeholder="입력해주세요"
                     onChange={onChangeBusinessNumber}
+                    disabled={
+                      location.pathname === "/enrollshop/contents"
+                        ? true
+                        : false
+                    }
                   />
                   <InputMessage>{businessNumberMessage}</InputMessage>
                 </InputMessageWrapper>
@@ -416,6 +472,9 @@ export default function EnrollShop() {
                   placeholder="입력해주세요"
                   type="date"
                   onChange={onChangeStartBusiness}
+                  disabled={
+                    location.pathname === "/enrollshop/contents" ? true : false
+                  }
                 />
                 <InputMessage>{startBusinessMessage}</InputMessage>
               </InputMessageWrapper>
