@@ -21,6 +21,8 @@ import DetailShop from "./pages/DetailShop";
 import SearchResult from "./components/mainPage/SearchResult";
 import DefaultContents from "./components/mainPage/DefaultContents";
 import ContentsEnroll from "./components/resgistration/ContentsEnroll";
+import Like from "./components/myPage/Like";
+import MyStore from "./components/myPage/MyStore";
 
 const Router = () => {
   return (
@@ -49,7 +51,9 @@ const Router = () => {
         </Route>
         <Route path="/mypage" element={<MyPage />}>
           <Route path="info" element={<Info />} />
+          <Route path="mystore" element={<MyStore />} />
           <Route path="review" element={<Review />} />
+          <Route path="like" element={<Like />} />
           <Route path="withdraw" element={<Withdraw />} />
         </Route>
       </Routes>
