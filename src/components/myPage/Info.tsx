@@ -26,7 +26,7 @@ const Info = () => {
     setId(IdDate);
     setName(nameDate);
     setEmail(emailDate);
-  }, []);
+  }, [IdDate, emailDate, nameDate]);
 
   const [codeAnswer, setCodeAnswer] = useState<string>("");
   const { mutate: emailCheck, isLoading: emailCheckLoading } = useMutation(
