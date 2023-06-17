@@ -2,26 +2,31 @@ import React, { useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import styled, { css } from "styled-components";
 import {
-  getConsumerInfo,
-  getOwnerInfo,
   putConsumerInfoChange,
   putOwnerInfoChange,
 } from "../../apis/queries/MyPageQuery";
-import { useRecoilState } from "recoil";
-import { Email, Id, Name } from "../../store/userInfoAtom";
+
 import sendMailImg from "../../assets/sendmail.svg";
 import { emailCheckMutaionPostEmail } from "../../apis/queries/SignUpQuery";
 import Swal from "sweetalert2";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { Email, Id, Name } from "../../store/userInfoAtom";
 
 const Info = () => {
-  const [nameDate, setNameDate] = useRecoilState(Name);
+  const nameDate = useRecoilValue(Name);
   const [emailDate, setEmailDate] = useRecoilState(Email);
-  const [IdDate, setIdDate] = useRecoilState(Id);
+  const IdDate = useRecoilValue(Id);
 
   const [id, setId] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [code, setCode] = useState<string>("");
+
+  useEffect(() => {
+    setId(IdDate);
+    setName(nameDate);
+    setEmail(emailDate);
+  }, []);
 
   const [codeAnswer, setCodeAnswer] = useState<string>("");
   const { mutate: emailCheck, isLoading: emailCheckLoading } = useMutation(
@@ -69,40 +74,6 @@ const Info = () => {
           icon: "success",
           confirmButtonColor: "#0075FF",
         });
-      },
-      onError: (err: any) => {
-        alert(err.response.data.message);
-      },
-    }
-  );
-  //고객 정보 가져오기 query
-  const { mutate: consumerInfoGet } = useMutation(
-    () => getConsumerInfo(info.memberId),
-    {
-      onSuccess: (res) => {
-        console.log(res);
-        setNameDate(res.data.name);
-        setEmailDate(res.data.email);
-        setIdDate(res.data.username);
-        setName(res.data.name);
-        setId(res.data.username);
-      },
-      onError: (err: any) => {
-        alert(err.response.data.message);
-      },
-    }
-  );
-  //사업자 정보 가져오기 query
-  const { mutate: ownerInfoGet } = useMutation(
-    () => getOwnerInfo(info.memberId),
-    {
-      onSuccess: (res) => {
-        console.log(res);
-        setNameDate(res.data.name);
-        setEmailDate(res.data.email);
-        setIdDate(res.data.username);
-        setName(res.data.name);
-        setId(res.data.username);
       },
       onError: (err: any) => {
         alert(err.response.data.message);
@@ -164,11 +135,6 @@ const Info = () => {
     setCode("");
     setEmail("");
   };
-
-  useEffect(() => {
-    if (localStorage.getItem("role") === "ROLE_CONSUMER") consumerInfoGet();
-    else ownerInfoGet();
-  }, []);
 
   return (
     <SignUpContainer>
