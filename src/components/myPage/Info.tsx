@@ -30,13 +30,6 @@ const Info = () => {
       onSuccess: (res) => {
         console.log(res);
         setCodeAnswer(res.data.verificationCode);
-        if (sendMailImg) {
-          Swal.fire({
-            text: "이메일로 인증코드를 발송했습니다.",
-            imageUrl: `${sendMailImg}`,
-            confirmButtonColor: "#0075FF",
-          });
-        }
       },
       onError: (err: any) => {
         alert(err.response.data.message);
@@ -55,7 +48,11 @@ const Info = () => {
     () => putConsumerInfoChange(info),
     {
       onSuccess: (res) => {
-        alert("수정 성공");
+        Swal.fire({
+          text: "정보수정 성공",
+          icon: "success",
+          confirmButtonColor: "#0075FF",
+        });
       },
       onError: (err: any) => {
         alert(err.response.data.message);
@@ -67,7 +64,11 @@ const Info = () => {
     () => putOwnerInfoChange(info),
     {
       onSuccess: (res) => {
-        alert("수정 성공");
+        Swal.fire({
+          text: "정보수정 성공",
+          icon: "success",
+          confirmButtonColor: "#0075FF",
+        });
       },
       onError: (err: any) => {
         alert(err.response.data.message);
@@ -134,6 +135,13 @@ const Info = () => {
       emailCheck();
       const emailBtn = document.querySelector(".emailBtn") as HTMLElement;
       emailBtn.innerText = "재전송";
+      if (sendMailImg) {
+        Swal.fire({
+          text: "이메일로 인증코드를 발송했습니다.",
+          imageUrl: `${sendMailImg}`,
+          confirmButtonColor: "#0075FF",
+        });
+      }
     }
   };
   const saveBtnOnClick = () => {
@@ -144,6 +152,7 @@ const Info = () => {
     if (!code) alert("인증번호를 입력해주세요");
     else if (code !== codeAnswer) alert("인증번호가 알맞지 않습니다");
     else {
+      alert("인증성공");
       const input = document.querySelector("#email-window") as HTMLInputElement;
       setEmailDate(email);
       input.checked = false;
