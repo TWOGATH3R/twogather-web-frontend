@@ -12,12 +12,10 @@ const ReviewEnroll = () => {
           <StarClick />
         </NameStarBox>
         <Score>평균 평점: 3.2</Score>
-        {/* /버튼 +  input박스/ */}
         <SubmitBox>
-          {/* input+날짜박스 */}
           <InputBtnBox>
             <Input rows={4} placeholder='리뷰를 작성해 주세요' />
-            <SubmitButton>전송</SubmitButton>
+            <SubmitButton>리뷰 작성</SubmitButton>
           </InputBtnBox>
           <Date>2023-06-17</Date>
         </SubmitBox>
@@ -56,13 +54,15 @@ const SubmitButton = styled.button`
   height: 40px;
   border-width: 0px;
   border-radius: 2px;
+  :hover {
+    cursor: pointer;
+  }
 `;
 const Date = styled.div`
   font-size: 0.75rem;
   color: #878787;
 `;
 const EnrollBox = styled.div`
-  height: 130px;
   padding: 20px 40px;
   border: 1px solid rgba(35, 35, 35, 0.1);
   border-radius: 2px;
@@ -74,7 +74,7 @@ const Name = styled.div`
   margin-right: 10px;
   font-size: 1rem;
   text-decoration: underline;
-  text-underline-offset: 4px;
+  text-underline-offset: 3px;
 `;
 const Input = styled.textarea`
   width: 100%;
