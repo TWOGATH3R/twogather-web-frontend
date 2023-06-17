@@ -17,7 +17,7 @@ import MyPage from "./pages/MyPage";
 import Info from "./components/myPage/Info";
 import Review from "./components/myPage/Review";
 import Withdraw from "./components/myPage/Withdraw";
-import DetailShop from "./components/mainPage/DetailShop";
+import DetailShop from "./pages/DetailShop";
 import SearchResult from "./components/mainPage/SearchResult";
 import DefaultContents from "./components/mainPage/DefaultContents";
 import ContentsEnroll from "./components/resgistration/ContentsEnroll";
