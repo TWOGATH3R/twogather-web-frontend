@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import styled, { css } from "styled-components";
-import Slick from "../../components/common/Slick";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { MdOutlineRateReview } from "react-icons/md";
+import React, { useState } from 'react';
+import styled, { css } from 'styled-components';
+import Slick from '../../components/common/Slick';
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+import { MdOutlineRateReview } from 'react-icons/md';
 
 const ShopImgInfo = () => {
-  const [checkDay, setCheckDay] = useState<string>("월");
+  const [checkDay, setCheckDay] = useState<string>('월');
 
   interface itemsProps {
     item: string;
@@ -13,40 +13,43 @@ const ShopImgInfo = () => {
   }
   const items: itemsProps[] = [
     {
-      item: "http://placehold.it/1200x400",
-      name: "이미지01",
+      item: 'http://placehold.it/1200x400',
+      name: '이미지01',
     },
     {
-      item: "http://placehold.it/1200x400/ff0000",
-      name: "이미지02",
+      item: 'http://placehold.it/1200x400/ff0000',
+      name: '이미지02',
     },
     {
-      item: "http://placehold.it/1200x400/00ffff",
-      name: "이미지03",
+      item: 'http://placehold.it/1200x400/00ffff',
+      name: '이미지03',
     },
   ];
 
-  const dayList = ["월", "화", "수", "목", "금", "토", "일"];
+  const dayList = ['월', '화', '수', '목', '금', '토', '일'];
 
   const menuList = [
-    { name: "아메리카노", price: 3000 },
-    { name: "아이스크림", price: 3000 },
-    { name: "오늘의 티", price: 4000 },
-    { name: "누텔라 바나나 와플", price: 13000 },
-    { name: "초코 와플", price: 4500 },
+    { name: '아메리카노', price: 3000 },
+    { name: '아이스크림', price: 3000 },
+    { name: '오늘의 티', price: 4000 },
+    { name: '누텔라 바나나 와플', price: 13000 },
+    { name: '초코 와플', price: 4500 },
   ];
-  
+
   return (
     <DetailShopWrapper>
-      <DetailShopImageWrapper>
-        <Slick>
-          {items.map((item, index) => (
-            <SliderItem key={index}>
-              <img src={item.item} alt={item.name} />
-            </SliderItem>
-          ))}
-        </Slick>
-      </DetailShopImageWrapper>
+      <ImageSlicer>
+        <DetailShopImageWrapper>
+          <Slick>
+            {items.map((item, index) => (
+              <SliderItem key={index}>
+                <img src={item.item} alt={item.name} />
+              </SliderItem>
+            ))}
+          </Slick>
+        </DetailShopImageWrapper>
+      </ImageSlicer>
+
       <DetailShopInfoWrapper>
         <DetailShopInfoTitleWrapper>
           <DetailShopInfoTitle>서울다이닝</DetailShopInfoTitle>
@@ -74,7 +77,7 @@ const ShopImgInfo = () => {
             <p>02-1234-1234</p>
           </PhoneBox>
           <DayList>
-            {dayList.map((value) => (
+            {dayList.map(value => (
               <DayItem key={value} active={checkDay === value}>
                 {value}
               </DayItem>
@@ -92,7 +95,7 @@ const ShopImgInfo = () => {
             <span>메뉴</span>
             <MenuList>
               {menuList &&
-                menuList.map((value) => (
+                menuList.map(value => (
                   <MenuItem key={value.name}>
                     <span>{value.name}</span>
                     <span>{value.price}원</span>
@@ -111,10 +114,17 @@ const ShopImgInfo = () => {
 
 const DetailShopWrapper = styled.div`
   display: flex;
+  flex-direction: row;
+`;
+const ImageSlicer = styled.div`
+  display: flex;
+  width: 45%;
+  padding: 0 60px;
+  margin: auto;
 `;
 const DetailShopImageWrapper = styled.div`
-  margin-right: 60px;
-  width: calc(45% - 30px);
+  margin: 0 auto;
+  width: calc(100% - 30px);
   .slick-prev {
     left: -40px;
   }
@@ -219,7 +229,7 @@ const DayItem = styled.li<{ active: boolean }>`
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 3px;
   cursor: pointer;
-  ${(props) =>
+  ${props =>
     props.active &&
     css`
       background-color: #0a3fff;
