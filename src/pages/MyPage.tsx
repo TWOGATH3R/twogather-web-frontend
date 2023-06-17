@@ -6,7 +6,7 @@ import { Name } from "../store/userInfoAtom";
 
 const MyPage = () => {
   const name = useRecoilValue(Name);
-  
+
   return (
     <MyPageContainer>
       <MyPageWrraper>
@@ -22,9 +22,20 @@ const MyPage = () => {
               정보
             </NavLink>
           </MenuItem>
-          <MenuItem>
-            <NavLink to={`/mypage/review`}>리뷰</NavLink>
-          </MenuItem>
+          {localStorage.getItem("role") === "ROLE_CONSUMER" ? (
+            <>
+              <MenuItem>
+                <NavLink to={`/mypage/review`}>리뷰</NavLink>
+              </MenuItem>
+              <MenuItem>
+                <NavLink to={`/mypage/like`}>좋아요</NavLink>
+              </MenuItem>
+            </>
+          ) : (
+            <MenuItem>
+              <NavLink to={`/mypage/mystore`}>내가게</NavLink>
+            </MenuItem>
+          )}
           <MenuItem>
             <NavLink to={`/mypage/withdraw`}>탈퇴</NavLink>
           </MenuItem>
