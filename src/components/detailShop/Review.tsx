@@ -31,6 +31,7 @@ const Review = ({ option }: ReviewType) => {
 
 const Container = styled.div`
   width: 100%;
+  height: 100%;
   padding: 20px 40px;
   border: 1px solid rgba(35, 35, 35, 0.1);
   border-radius: 2px;
