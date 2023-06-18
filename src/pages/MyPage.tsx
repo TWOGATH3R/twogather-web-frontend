@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { Email, Id, Name } from "../store/userInfoAtom";
 import { getConsumerInfo, getOwnerInfo } from "../apis/queries/MyPageQuery";
 import { useMutation } from "react-query";
-import role from "../rolePermission";
+import { role } from "../apis/types/common.type";
 
 const MyPage = () => {
   const name = useRecoilValue(Name);

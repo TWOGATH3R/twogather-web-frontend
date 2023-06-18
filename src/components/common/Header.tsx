@@ -5,7 +5,7 @@ import mypageImg from "../../assets/person-icon.svg";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { getCookie, removeCookie } from "../cookie/cookie";
 import Swal from "sweetalert2";
-import role from "../../rolePermission"
+import { role } from "../../apis/types/common.type";
 
 export default function Header() {
   const navigate = useNavigate();

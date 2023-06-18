@@ -8,7 +8,7 @@ import {
 } from "../../apis/queries/MyPageQuery";
 import Swal from "sweetalert2";
 import { removeCookie } from "../cookie/cookie";
-import role from "../../rolePermission";
+import { role } from "../../apis/types/common.type";
 
 const Withdraw = () => {
   const [pw, setPw] = useState<string>("");

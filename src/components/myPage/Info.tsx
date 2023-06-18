@@ -11,7 +11,7 @@ import { emailCheckMutaionPostEmail } from "../../apis/queries/SignUpQuery";
 import Swal from "sweetalert2";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Email, Id, Name } from "../../store/userInfoAtom";
-import role from "../../rolePermission";
+import { role } from "../../apis/types/common.type";
 
 const Info = () => {
   const nameDate = useRecoilValue(Name);
