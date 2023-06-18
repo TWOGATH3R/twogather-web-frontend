@@ -13,7 +13,9 @@ api.interceptors.response.use(
   },
   function (error) {
     // 응답 오류가 있는 작업 수행
-    if (error.response.data.message === "토큰이 유효하지 않습니다")
+    if (error.response.data.message === "토큰이 유효하지 않습니다") {
       removeCookie();
+      window.location.replace("/login");
+    }
   }
 );
