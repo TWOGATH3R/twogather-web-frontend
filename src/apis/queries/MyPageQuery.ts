@@ -74,7 +74,6 @@ export const getOwnerInfo = async (memberId: string | null) => {
 
 //고객 탈퇴
 export const deleteConsumer = async (memberId: string | null) => {
-  console.log("삭제")
   const res = await api.delete(`/api/consumers/${memberId}`, {
     headers: {
       "Content-type": "application/json; charset=UTF-8",
@@ -85,13 +84,24 @@ export const deleteConsumer = async (memberId: string | null) => {
   return res.data;
 };
 
+//사업자 탈퇴
+export const deleteOwner = async (memberId: string | null) => {
+  const res = await api.delete(`/api/Owner/${memberId}`, {
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+      accept: "application/json,",
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+  });
+  return res.data;
+};
+
 //고객 비밀번호 확인
-export const consumerPwCheck = async (pw: string) => {
-  console.log(pw)
+export const consumerPwCheck = async (pw: string, memberId: string | null) => {
   const res = await api.post(
-    `/api/consumers/verify-password`,
+    `/api/members/${memberId}/verify-password`,
     {
-      password: "password1",
+      password: pw,
     },
     {
       headers: {
@@ -101,5 +111,5 @@ export const consumerPwCheck = async (pw: string) => {
       },
     }
   );
-  return res.data.data;
+  return res.data;
 };
