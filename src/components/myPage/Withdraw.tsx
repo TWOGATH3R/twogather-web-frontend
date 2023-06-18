@@ -17,9 +17,6 @@ const Withdraw = () => {
   const { mutate: consumerDelete } = useMutation(
     () => deleteConsumer(memberId),
     {
-      onSuccess: (res) => {
-        console.log(res);
-      },
       onError: (err: any) => {
         alert(err.response.data.message);
       },
@@ -27,9 +24,6 @@ const Withdraw = () => {
   );
   //사업자 회원탈퇴
   const { mutate: ownerDelete } = useMutation(() => deleteOwner(memberId), {
-    onSuccess: (res) => {
-      console.log(res);
-    },
     onError: (err: any) => {
       alert(err.response.data.message);
     },
@@ -39,7 +33,6 @@ const Withdraw = () => {
     () => consumerPwCheck(pw, memberId),
     {
       onSuccess: (res) => {
-        console.log(res.data.isValid);
         if (res.data.isValid) {
           Swal.fire({
             title: "탈퇴 하시겠습니까?",
@@ -56,7 +49,6 @@ const Withdraw = () => {
               } else consumerDelete();
               removeCookie();
               localStorage.clear();
-              console.log(localStorage.length);
             }
           });
         }

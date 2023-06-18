@@ -9,7 +9,6 @@ type infoType = {
 };
 //고객 정보 업데이트하기
 export const putConsumerInfoChange = async (info: infoType) => {
-  console.log(info);
   const res = await api.put(
     `/api/consumers/${info.memberId}`,
     {

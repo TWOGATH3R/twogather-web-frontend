@@ -19,7 +19,6 @@ const MyPage = () => {
     () => getConsumerInfo(memberId),
     {
       onSuccess: (res) => {
-        console.log(res);
         setNameDate(res.data.name);
         setEmailDate(res.data.email);
         setIdDate(res.data.username);
@@ -32,7 +31,6 @@ const MyPage = () => {
   //사업자 정보 가져오기 query
   const { mutate: ownerInfoGet } = useMutation(() => getOwnerInfo(memberId), {
     onSuccess: (res) => {
-      console.log(res);
       setNameDate(res.data.name);
       setEmailDate(res.data.email);
       setIdDate(res.data.username);
