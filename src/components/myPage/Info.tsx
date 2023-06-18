@@ -11,6 +11,7 @@ import { emailCheckMutaionPostEmail } from "../../apis/queries/SignUpQuery";
 import Swal from "sweetalert2";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Email, Id, Name } from "../../store/userInfoAtom";
+import role from "../../rolePermission";
 
 const Info = () => {
   const nameDate = useRecoilValue(Name);
@@ -116,7 +117,7 @@ const Info = () => {
     }
   };
   const saveBtnOnClick = () => {
-    if (localStorage.getItem("role") === "ROLE_CONSUMER") consumerInfoChange();
+    if (localStorage.getItem("role") === role.ROLE_CONSUMER) consumerInfoChange();
     else ownerInfoChange();
   };
   const codeBtnOnClick = () => {

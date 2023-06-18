@@ -8,6 +8,7 @@ import {
 } from "../../apis/queries/MyPageQuery";
 import Swal from "sweetalert2";
 import { removeCookie } from "../cookie/cookie";
+import role from "../../rolePermission";
 
 const Withdraw = () => {
   const [pw, setPw] = useState<string>("");
@@ -44,7 +45,7 @@ const Withdraw = () => {
             padding: "3em",
           }).then((result) => {
             if (result.isConfirmed) {
-              if (localStorage.getItem("role") === "ROLE_STORE_OWNER") {
+              if (localStorage.getItem("role") === role.ROLE_STORE_OWNER) {
                 ownerDelete();
               } else consumerDelete();
               removeCookie();

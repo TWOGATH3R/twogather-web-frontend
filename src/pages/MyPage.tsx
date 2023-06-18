@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { Email, Id, Name } from "../store/userInfoAtom";
 import { getConsumerInfo, getOwnerInfo } from "../apis/queries/MyPageQuery";
 import { useMutation } from "react-query";
+import role from "../rolePermission";
 
 const MyPage = () => {
   const name = useRecoilValue(Name);
@@ -41,7 +42,7 @@ const MyPage = () => {
   });
 
   useEffect(() => {
-    if (localStorage.getItem("role") === "ROLE_CONSUMER") consumerInfoGet();
+    if (localStorage.getItem("role") === role.ROLE_CONSUMER) consumerInfoGet();
     else ownerInfoGet();
   }, []);
 
@@ -60,7 +61,7 @@ const MyPage = () => {
               정보
             </NavLink>
           </MenuItem>
-          {localStorage.getItem("role") === "ROLE_CONSUMER" ? (
+          {localStorage.getItem("role") === role.ROLE_CONSUMER ? (
             <>
               <MenuItem>
                 <NavLink to={`/mypage/review`}>리뷰</NavLink>
