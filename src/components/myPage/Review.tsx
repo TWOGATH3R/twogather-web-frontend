@@ -7,8 +7,8 @@ const Review = () => {
   const [page, setPage] = useState(1);
   const pageOnChange = (page: any) => {
     setPage(page);
-    console.log(page);
   };
+  
   return (
     <ReviewContainer>
       <FilterBox>

@@ -15,11 +15,7 @@ const GradeTop10 = () => {
     },
     {
       onSuccess: (res) => {
-        console.log(res);
         setStoreList(res.data);
-      },
-      onError: (err) => {
-        console.log(err);
       },
     }
   );

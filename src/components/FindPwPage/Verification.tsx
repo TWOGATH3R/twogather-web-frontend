@@ -18,7 +18,6 @@ const Verification = () => {
     () => emailCheckMutaionPostEmail(email),
     {
       onSuccess: (res) => {
-        console.log(res);
         setCodeAnswer(res.data.verificationCode);
         if (sendMailImg) {
           Swal.fire({

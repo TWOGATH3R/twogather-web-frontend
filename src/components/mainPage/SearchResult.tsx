@@ -31,7 +31,6 @@ const SearchResult = () => {
 
   const pageOnChange = (page: any) => {
     setPage(page);
-    console.log(page);
   };
 
   useEffect(() => {

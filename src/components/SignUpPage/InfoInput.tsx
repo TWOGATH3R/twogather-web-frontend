@@ -28,7 +28,6 @@ const InfoInput = () => {
   const { mutate: consumersSignUp, isLoading: consumersSignUpLoading } =
     useMutation(() => consumersMutaionPostInfo(info), {
       onSuccess: (res) => {
-        console.log(res);
         navigate("/login");
         alert("회원가입 성공");
       },
@@ -41,7 +40,6 @@ const InfoInput = () => {
   const { mutate: storeOwnerSignUp, isLoading: storeOwnerSignUpLoading } =
     useMutation(() => storeOwnerMutaionPostInfo(info), {
       onSuccess: (res) => {
-        console.log(res);
         navigate("/login");
         alert("회원가입 성공");
       },

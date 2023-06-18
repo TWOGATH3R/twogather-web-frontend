@@ -1,11 +1,50 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { Name } from "../store/userInfoAtom";
+import { Email, Id, Name } from "../store/userInfoAtom";
+import { getConsumerInfo, getOwnerInfo } from "../apis/queries/MyPageQuery";
+import { useMutation } from "react-query";
+import role from "../rolePermission";
 
 const MyPage = () => {
   const name = useRecoilValue(Name);
+
+  const setNameDate = useSetRecoilState(Name);
+  const setEmailDate = useSetRecoilState(Email);
+  const setIdDate = useSetRecoilState(Id);
+
+  const memberId = localStorage.getItem("memberId");
+  //고객 정보 가져오기 query
+  const { mutate: consumerInfoGet } = useMutation(
+    () => getConsumerInfo(memberId),
+    {
+      onSuccess: (res) => {
+        setNameDate(res.data.name);
+        setEmailDate(res.data.email);
+        setIdDate(res.data.username);
+      },
+      onError: (err: any) => {
+        alert(err.response.data.message);
+      },
+    }
+  );
+  //사업자 정보 가져오기 query
+  const { mutate: ownerInfoGet } = useMutation(() => getOwnerInfo(memberId), {
+    onSuccess: (res) => {
+      setNameDate(res.data.name);
+      setEmailDate(res.data.email);
+      setIdDate(res.data.username);
+    },
+    onError: (err: any) => {
+      alert(err.response.data.message);
+    },
+  });
+
+  useEffect(() => {
+    if (localStorage.getItem("role") === role.ROLE_CONSUMER) consumerInfoGet();
+    else ownerInfoGet();
+  }, []);
 
   return (
     <MyPageContainer>
@@ -22,7 +61,7 @@ const MyPage = () => {
               정보
             </NavLink>
           </MenuItem>
-          {localStorage.getItem("role") === "ROLE_CONSUMER" ? (
+          {localStorage.getItem("role") === role.ROLE_CONSUMER ? (
             <>
               <MenuItem>
                 <NavLink to={`/mypage/review`}>리뷰</NavLink>

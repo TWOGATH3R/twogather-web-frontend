@@ -4,7 +4,11 @@ import styled, { css } from "styled-components";
 import {
   consumerPwCheck,
   deleteConsumer,
+  deleteOwner,
 } from "../../apis/queries/MyPageQuery";
+import Swal from "sweetalert2";
+import { removeCookie } from "../cookie/cookie";
+import role from "../../rolePermission";
 
 const Withdraw = () => {
   const [pw, setPw] = useState<string>("");
@@ -14,24 +18,47 @@ const Withdraw = () => {
   const { mutate: consumerDelete } = useMutation(
     () => deleteConsumer(memberId),
     {
+      onError: (err: any) => {
+        alert(err.response.data.message);
+      },
+    }
+  );
+  //사업자 회원탈퇴
+  const { mutate: ownerDelete } = useMutation(() => deleteOwner(memberId), {
+    onError: (err: any) => {
+      alert(err.response.data.message);
+    },
+  });
+  //고객 비밀번호 확인
+  const { mutate: pwCheckConsumer } = useMutation(
+    () => consumerPwCheck(pw, memberId),
+    {
       onSuccess: (res) => {
-        console.log(res);
+        if (res.data.isValid) {
+          Swal.fire({
+            title: "탈퇴 하시겠습니까?",
+            confirmButtonColor: "#0075FF",
+            cancelButtonColor: "#738598",
+            showCancelButton: true,
+            confirmButtonText: "예",
+            cancelButtonText: "돌아가기",
+            padding: "3em",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              if (localStorage.getItem("role") === role.ROLE_STORE_OWNER) {
+                ownerDelete();
+              } else consumerDelete();
+              removeCookie();
+              localStorage.clear();
+            }
+          });
+        }
       },
       onError: (err: any) => {
         alert(err.response.data.message);
       },
     }
   );
-  //고객 비밀번호 확인
-  const { mutate: pwCheckConsumer } = useMutation(() => consumerPwCheck(pw), {
-    onSuccess: (res) => {
-      console.log(res.isValid);
-      if (res.isValid) consumerDelete();
-    },
-    onError: (err: any) => {
-      alert(err.response.data.message);
-    },
-  });
 
   //onChange
   const pwPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/;

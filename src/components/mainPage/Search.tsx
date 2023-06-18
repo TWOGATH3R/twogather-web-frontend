@@ -366,7 +366,6 @@ const Search = () => {
       }&pagenum=1&sort=TOP_RATED,desc`
     );
   };
-  console.log();
 
   return (
     <>
