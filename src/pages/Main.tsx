@@ -7,7 +7,7 @@ const Main = () => {
   return (
     <MainContainer>
       <Search />
-      <Outlet/>
+      <Outlet />
     </MainContainer>
   );
 };
@@ -16,6 +16,7 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  padding-bottom: 6vh;
   width: 1080px;
 `;
 

@@ -3,6 +3,7 @@ import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { getTop10List } from "../../apis/queries/mainQuery";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 const ReviewTop10 = () => {
   const [storeList, setStoreList] = useState<Array<Object> | undefined>();
@@ -10,7 +11,12 @@ const ReviewTop10 = () => {
   const { mutate: Top10List } = useMutation(
     () => {
       const type: string = "MOST_REVIEWED";
-      const count: string = storeList ? "10" : "3";
+      const count: string =
+        storeList && storeList?.length <= 3
+          ? storeList && storeList?.length <= 3
+            ? "10"
+            : "3"
+          : "3";
       return getTop10List(type, count);
     },
     {
@@ -50,11 +56,19 @@ const ReviewTop10 = () => {
               </ReviewTop10Item>
             ))
           : null}
-        <SeeMoreBtnBox className="seeMoreBtn">
-          <SeeMoreBtn htmlFor="reviewtop" onClick={() => seeMoreBtnOnClick()}>
-            &gt;<p>더보기</p>
-          </SeeMoreBtn>
-        </SeeMoreBtnBox>
+        <SeeMoreBtn htmlFor="reviewtop" onClick={() => seeMoreBtnOnClick()}>
+          {storeList && storeList?.length > 3 ? (
+            <>
+              <IoIosArrowUp />
+              <p>접기</p>
+            </>
+          ) : (
+            <>
+              <IoIosArrowDown />
+              <p>펼치기</p>
+            </>
+          )}
+        </SeeMoreBtn>
       </ReviewTop10List>
     </ReviewTopContainer>
   );
@@ -74,12 +88,12 @@ const ReviewTop10List = styled.ul`
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  padding: 15px;
+  padding-top: 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
 `;
 const ReviewTop10Item = styled.li`
-  width: calc(25% - 22.5px);
-  margin-right: 30px;
+  margin: 0 15px 30px 15px;
+  width: calc(33.3333% - 30px);
   a {
     width: 100%;
     height: 100%;
@@ -116,41 +130,26 @@ const StoreAddress = styled(StoreName)`
   font-weight: 400;
 `;
 
-const SeeMoreBtnBox = styled(ReviewTop10Item)`
-  display: flex;
-  justify-content: center;
-  margin: 0;
-`;
 const SeeMoreInput = styled.input`
   display: none;
-  &:checked {
-    & + ul {
-      justify-content: center;
-    }
-    & + ul > li {
-      margin: 0 15px 30px 15px;
-      width: calc(33.3333% - 30px);
-    }
-    & + ul > .seeMoreBtn {
-      display: none;
-    }
-  }
 `;
 const SeeMoreBtn = styled.label`
   display: flex;
-  flex-direction: column;
   align-items: center;
-  width: 50%;
+  justify-content: center;
+  padding: 10px 0;
+  width: 100%;
   height: fit-content;
   background-color: transparent;
   border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
   color: #666666;
-  font-size: 5rem;
+  font-size: 1.3rem;
   font-weight: 400;
   cursor: pointer;
   P {
     color: ${({ theme }) => theme.colors.black};
-    font-size: 0.8rem;
+    font-size: 1rem;
   }
 `;
 
