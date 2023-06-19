@@ -1,26 +1,26 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import styled, { css } from "styled-components";
-import { loginMutaionPostInfo } from "../apis/queries/LoginQuery";
-import { useMutation } from "react-query";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import styled, { css } from 'styled-components';
+import { loginMutaionPostInfo } from '../apis/queries/LoginQuery';
+import { useMutation } from '@tanstack/react-query';
 
 const Login = () => {
   const navigate = useNavigate();
 
-  const [id, setId] = useState<string>("");
-  const [pw, setPw] = useState<string>("");
+  const [id, setId] = useState<string>('');
+  const [pw, setPw] = useState<string>('');
 
   const { mutate: login, isLoading: loginLoading } = useMutation(
     () => loginMutaionPostInfo(id, pw),
     {
-      onSuccess: (res) => {
-        localStorage.setItem("memberId", res.data.memberId);
-        navigate("/");
+      onSuccess: res => {
+        localStorage.setItem('memberId', res.data.memberId);
+        navigate('/');
       },
       onError: (err: any) => {
         alert(err.response.data.message);
       },
-    }
+    },
   );
 
   const idPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{4,15}$/;
@@ -33,10 +33,10 @@ const Login = () => {
   };
 
   const loginBtnOnClick = () => {
-    if (id.length === 0) alert("아이디를 입력해주세요");
-    else if (pw.length === 0) alert("비밀번호를 입력해주세요");
-    else if (!idPattern.test(id)) alert("아이디가 형식에 맞지 않습니다");
-    else if (!pwPattern.test(pw)) alert("비밀번호가 형식에 맞지 않습니다");
+    if (id.length === 0) alert('아이디를 입력해주세요');
+    else if (pw.length === 0) alert('비밀번호를 입력해주세요');
+    else if (!idPattern.test(id)) alert('아이디가 형식에 맞지 않습니다');
+    else if (!pwPattern.test(pw)) alert('비밀번호가 형식에 맞지 않습니다');
     else login();
   };
 
@@ -47,25 +47,25 @@ const Login = () => {
         <IdInputBox valid={id.length > 0 ? idPattern.test(id) : true}>
           <IdInput
             value={id}
-            placeholder="아이디"
-            onChange={(e) => idOnChange(e.target.value)}
+            placeholder='아이디'
+            onChange={e => idOnChange(e.target.value)}
           />
         </IdInputBox>
         <PwInputBox valid={pw.length > 0 ? pwPattern.test(pw) : true}>
           <PwInput
             value={pw}
-            placeholder="비밀번호"
-            onChange={(e) => pwOnChange(e.target.value)}
-            type={"password"}
+            placeholder='비밀번호'
+            onChange={e => pwOnChange(e.target.value)}
+            type={'password'}
           />
         </PwInputBox>
         <LoginBtn onClick={() => loginBtnOnClick()}>로그인</LoginBtn>
         <FindMeunBtnBox>
-          <Link to={"/findId"}>아이디 찾기</Link>
-          <Link to={"/findPw/verification"}>비밀번호 찾기</Link>
+          <Link to={'/findId'}>아이디 찾기</Link>
+          <Link to={'/findPw/verification'}>비밀번호 찾기</Link>
         </FindMeunBtnBox>
         <SignUpBtnBox>
-          <Link to={"/signUp/selectType"}>회원가입</Link>
+          <Link to={'/signUp/selectType'}>회원가입</Link>
         </SignUpBtnBox>
       </LoginWrraper>
     </LoginContainer>
@@ -75,7 +75,7 @@ const Login = () => {
 const LoginContainer = styled.div`
   padding-top: 8vh;
   height: calc(93vh - 8vh);
-  font-family: "Inter";
+  font-family: 'Inter';
   font-weight: 400;
 `;
 const LoginWrraper = styled.div`
@@ -102,14 +102,14 @@ const IdInputBox = styled.div<{ valid: boolean }>`
   margin-bottom: 30px;
   width: 85%;
   color: #868686;
-  ${(props) => {
+  ${props => {
     if (!props.valid) {
       return css`
         input {
           border-color: #ff3a3a;
         }
         &::after {
-          content: "영어,숫자를 포함해서 4~15자 이내로 입력해주세요.";
+          content: '영어,숫자를 포함해서 4~15자 이내로 입력해주세요.';
           position: absolute;
           top: calc(100% + 2px);
           left: 0;
@@ -129,11 +129,11 @@ const IdInput = styled.input`
   font-size: ${({ theme }) => theme.fontSizes.base};
 `;
 const PwInputBox = styled(IdInputBox)`
-  ${(props) => {
+  ${props => {
     if (!props.valid) {
       return css`
         &::after {
-          content: "영어,숫자를 포함 8~20자 이내로 입력해주세요.";
+          content: '영어,숫자를 포함 8~20자 이내로 입력해주세요.';
         }
       `;
     }
@@ -145,7 +145,7 @@ const FindMeunBtnBox = styled.div`
   margin-top: 35%;
   a {
     margin: 5px 10px;
-    font-family: "Inter";
+    font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
     font-size: ${({ theme }) => theme.fontSizes.small};

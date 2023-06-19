@@ -1,11 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
 import StoreItem from '../components/stores/StoreItem';
+import { getMyStoreList } from '../apis/queries/storeQuery';
+import { GetMyStoreListProps } from '../apis/queries/type';
+import { useQuery } from '@tanstack/react-query';
 
 type Props = {};
 
 const Stores = (props: Props) => {
+  const MyStoreListProps: GetMyStoreListProps = {
+    ownerId: 9,
+  };
+  //todo 페이지 네이션 구현하기
+  const { data } = useQuery(['myRoom'], () => getMyStoreList(MyStoreListProps));
+  console.log(data);
+
   const arr = [0, 1];
+
   return (
     <Container>
       <Title>나의 가게</Title>

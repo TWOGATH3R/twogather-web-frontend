@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { useMutation } from "react-query";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { getTop10List } from "../../apis/queries/mainQuery";
+import React, { useState, useEffect } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { getTop10List } from '../../apis/queries/mainQuery';
 
 const ReviewTop10 = () => {
   const [storeList, setStoreList] = useState<Array<Object> | undefined>();
 
   const { mutate: Top10List } = useMutation(
     () => {
-      const type: string = "MOST_REVIEWED";
-      const count: string = storeList ? "10" : "3";
+      const type: string = 'MOST_REVIEWED';
+      const count: string = storeList ? '10' : '3';
       return getTop10List(type, count);
     },
     {
-      onSuccess: (res) => {
+      onSuccess: res => {
         console.log(res);
         setStoreList(res.data);
       },
-      onError: (err) => {
+      onError: err => {
         console.log(err);
       },
-    }
+    },
   );
 
   //onClick
@@ -36,14 +36,14 @@ const ReviewTop10 = () => {
   return (
     <ReviewTopContainer>
       <Title>리뷰 많은 Top10</Title>
-      <SeeMoreInput id="reviewtop" type="checkbox" />
+      <SeeMoreInput id='reviewtop' type='checkbox' />
       <ReviewTop10List>
         {Array.isArray(storeList)
           ? storeList.map((value: any, index: any) => (
               <ReviewTop10Item key={index}>
-                <Link to={"/"}>
+                <Link to={'/'}>
                   <StoreImgBox>
-                    <StoreImg src="https://modo-phinf.pstatic.net/20190613_180/1560397211791mWzQc_JPEG/mosaUJSQm4.jpeg?type=w1100" />
+                    <StoreImg src='https://modo-phinf.pstatic.net/20190613_180/1560397211791mWzQc_JPEG/mosaUJSQm4.jpeg?type=w1100' />
                   </StoreImgBox>
                   <StoreNameAndGrade>
                     <StoreName>서초 고깃간</StoreName>
@@ -54,8 +54,8 @@ const ReviewTop10 = () => {
               </ReviewTop10Item>
             ))
           : null}
-        <SeeMoreBtnBox className="seeMoreBtn">
-          <SeeMoreBtn htmlFor="reviewtop" onClick={() => seeMoreBtnOnClick()}>
+        <SeeMoreBtnBox className='seeMoreBtn'>
+          <SeeMoreBtn htmlFor='reviewtop' onClick={() => seeMoreBtnOnClick()}>
             &gt;<p>더보기</p>
           </SeeMoreBtn>
         </SeeMoreBtnBox>

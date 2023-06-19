@@ -1,30 +1,30 @@
-import React, { useState } from "react";
-import { useMutation } from "react-query";
-import styled, { css } from "styled-components";
+import React, { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import styled, { css } from 'styled-components';
 import {
   consumerPwCheck,
   deleteConsumer,
-} from "../../apis/queries/MyPageQuery";
+} from '../../apis/queries/MyPageQuery';
 
 const Withdraw = () => {
-  const [pw, setPw] = useState<string>("");
+  const [pw, setPw] = useState<string>('');
 
-  const memberId = localStorage.getItem("memberId");
+  const memberId = localStorage.getItem('memberId');
   //고객 회원탈퇴
   const { mutate: consumerDelete } = useMutation(
     () => deleteConsumer(memberId),
     {
-      onSuccess: (res) => {
+      onSuccess: res => {
         console.log(res);
       },
       onError: (err: any) => {
         alert(err.response.data.message);
       },
-    }
+    },
   );
   //고객 비밀번호 확인
   const { mutate: pwCheckConsumer } = useMutation(() => consumerPwCheck(pw), {
-    onSuccess: (res) => {
+    onSuccess: res => {
       console.log(res.isValid);
       if (res.isValid) consumerDelete();
     },
@@ -49,9 +49,9 @@ const Withdraw = () => {
       <PwBox valid={pw.length > 0 ? pwPattern.test(pw) : true}>
         <PwText>비밀번호</PwText>
         <PwInput
-          type="password"
+          type='password'
           value={pw}
-          onChange={(e) => pwOnChange(e.target.value)}
+          onChange={e => pwOnChange(e.target.value)}
         />
       </PwBox>
       <WithdrawBtn onClick={WithdrawBtnOnClick}>탈퇴하기</WithdrawBtn>
@@ -77,14 +77,14 @@ const PwBox = styled.div<{ valid: boolean }>`
   align-items: center;
   margin-bottom: 25px;
   width: 80%;
-  ${(props) => {
+  ${props => {
     if (!props.valid) {
       return css`
         input {
           border-color: #ff3a3a;
         }
         &::after {
-          content: "영어,숫자를 포함 8~20자 이내로 입력해주세요.";
+          content: '영어,숫자를 포함 8~20자 이내로 입력해주세요.';
           position: absolute;
           top: 100%;
           left: 20%;

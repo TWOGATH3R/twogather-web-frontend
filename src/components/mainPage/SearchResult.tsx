@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import Pagination from "react-js-pagination";
-import { Link, useSearchParams } from "react-router-dom";
-import styled from "styled-components";
-import { useMutation } from "react-query";
-import { getStoreList } from "../../apis/queries/mainQuery";
+import React, { useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
+import { Link, useSearchParams } from 'react-router-dom';
+import styled from 'styled-components';
+import { useMutation } from '@tanstack/react-query';
+import { getStoreList } from '../../apis/queries/mainQuery';
 
 const SearchResult = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -13,18 +13,18 @@ const SearchResult = () => {
   const storeList = [1, 2, 3, 4, 5, 6];
 
   const searchInfo = {
-    category: searchParams.get("category"),
-    search: searchParams.get("search"),
-    location: searchParams.get("location"),
-    pagenum: searchParams.get("pagenum"),
-    sort: searchParams.get("sort"),
+    category: searchParams.get('category'),
+    search: searchParams.get('search'),
+    location: searchParams.get('location'),
+    pagenum: searchParams.get('pagenum'),
+    sort: searchParams.get('sort'),
   };
   //가게 검색 결과 리스트 query
   const { mutate: storeSearch } = useMutation(() => getStoreList(searchInfo), {
-    onSuccess: (res) => {
+    onSuccess: res => {
       console.log(res);
     },
-    onError: (err) => {
+    onError: err => {
       console.log(err);
     },
   });
@@ -58,11 +58,11 @@ const SearchResult = () => {
       </Header>
       <StoreList>
         {storeList &&
-          storeList.map((value) => (
+          storeList.map(value => (
             <StoreItem key={value}>
-              <Link to={"/"}>
+              <Link to={'/'}>
                 <StoreImgBox>
-                  <StoreImg src="https://modo-phinf.pstatic.net/20190613_180/1560397211791mWzQc_JPEG/mosaUJSQm4.jpeg?type=w1100" />
+                  <StoreImg src='https://modo-phinf.pstatic.net/20190613_180/1560397211791mWzQc_JPEG/mosaUJSQm4.jpeg?type=w1100' />
                 </StoreImgBox>
                 <StoreNameAndGrade>
                   <StoreName>서초 고깃간</StoreName>
@@ -83,9 +83,9 @@ const SearchResult = () => {
           itemsCountPerPage={10}
           totalItemsCount={60}
           pageRangeDisplayed={5}
-          prevPageText="‹"
-          nextPageText="›"
-          onChange={(page) => pageOnChange(page)}
+          prevPageText='‹'
+          nextPageText='›'
+          onChange={page => pageOnChange(page)}
         />
       </PaginationBox>
     </SearchResultContainer>

@@ -1,22 +1,22 @@
-import React, { useState } from "react";
-import { useMutation } from "react-query";
-import { useNavigate, useParams, useLocation } from "react-router";
-import styled, { css } from "styled-components";
+import React, { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate, useParams, useLocation } from 'react-router';
+import styled, { css } from 'styled-components';
 
 import {
   consumersMutaionPostInfo,
   storeOwnerMutaionPostInfo,
-} from "../../apis/queries/SignUpQuery";
+} from '../../apis/queries/SignUpQuery';
 
 const InfoInput = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const param = useParams();
 
-  const [id, setId] = useState<string>("");
-  const [pw, setPw] = useState<string>("");
-  const [pwCheck, setPwCheck] = useState<string>("");
-  const [name, setName] = useState<string>("");
+  const [id, setId] = useState<string>('');
+  const [pw, setPw] = useState<string>('');
+  const [pwCheck, setPwCheck] = useState<string>('');
+  const [name, setName] = useState<string>('');
 
   const info = {
     email: location.state.email,
@@ -27,10 +27,10 @@ const InfoInput = () => {
   //개인 회원가입 query
   const { mutate: consumersSignUp, isLoading: consumersSignUpLoading } =
     useMutation(() => consumersMutaionPostInfo(info), {
-      onSuccess: (res) => {
+      onSuccess: res => {
         console.log(res);
-        navigate("/login");
-        alert("회원가입 성공");
+        navigate('/login');
+        alert('회원가입 성공');
       },
       onError: (err: any) => {
         alert(err.response.data.message);
@@ -40,10 +40,10 @@ const InfoInput = () => {
   //사업자 회원가입 query
   const { mutate: storeOwnerSignUp, isLoading: storeOwnerSignUpLoading } =
     useMutation(() => storeOwnerMutaionPostInfo(info), {
-      onSuccess: (res) => {
+      onSuccess: res => {
         console.log(res);
-        navigate("/login");
-        alert("회원가입 성공");
+        navigate('/login');
+        alert('회원가입 성공');
       },
       onError: (err: any) => {
         alert(err.response.data.message);
@@ -67,12 +67,12 @@ const InfoInput = () => {
 
   //onClick
   const nextBtnOnClick = () => {
-    if (!pw) alert("비밀번호를 입력해주세요");
-    else if (!pwPattern.test(pw)) alert("비밀번호가 양식에 맞지 않습니다");
-    else if (!pwCheck) alert("비밀번호를 확인해주세요");
-    else if (pw !== pwCheck) alert("비밀번호가 일치하지 않습니다");
-    else if (!name) alert("이름을 입력해주세요");
-    else if (param.signUpType === "customer") {
+    if (!pw) alert('비밀번호를 입력해주세요');
+    else if (!pwPattern.test(pw)) alert('비밀번호가 양식에 맞지 않습니다');
+    else if (!pwCheck) alert('비밀번호를 확인해주세요');
+    else if (pw !== pwCheck) alert('비밀번호가 일치하지 않습니다');
+    else if (!name) alert('이름을 입력해주세요');
+    else if (param.signUpType === 'customer') {
       //고객전용 회원가입 api 실행
       consumersSignUp();
     } else storeOwnerSignUp();
@@ -84,37 +84,37 @@ const InfoInput = () => {
         <NameText>이름</NameText>
         <NameInput
           value={name}
-          placeholder="이름을 입력해주세요"
-          onChange={(e) => nameOnChange(e.target.value)}
+          placeholder='이름을 입력해주세요'
+          onChange={e => nameOnChange(e.target.value)}
         />
       </NameInputBox>
       <IdCheckInputBox valid={true}>
         <IdCheckText>아이디</IdCheckText>
         <IdCheckInput
           value={id}
-          placeholder="아이디"
-          onChange={(e) => idOnChange(e.target.value)}
+          placeholder='아이디'
+          onChange={e => idOnChange(e.target.value)}
         />
       </IdCheckInputBox>
       <PwInputBox valid={pw.length > 0 ? pwPattern.test(pw) : true}>
         <PwText>비밀번호</PwText>
         <PwInput
           value={pw}
-          placeholder="비밀번호"
-          onChange={(e) => pwOnChange(e.target.value)}
-          type="password"
+          placeholder='비밀번호'
+          onChange={e => pwOnChange(e.target.value)}
+          type='password'
         />
       </PwInputBox>
       <PwCheckInputBox valid={pwCheck.length > 0 ? pwCheck === pw : true}>
         <PwCheckText>비밀번호 확인</PwCheckText>
         <PwCheckInput
           value={pwCheck}
-          placeholder="비밀번호 확인"
-          onChange={(e) => pwCheckOnChange(e.target.value)}
-          type="password"
+          placeholder='비밀번호 확인'
+          onChange={e => pwCheckOnChange(e.target.value)}
+          type='password'
         />
       </PwCheckInputBox>
-      {param.signUpType === "storeowner" ? (
+      {param.signUpType === 'storeowner' ? (
         <NextBtn onClick={() => nextBtnOnClick()}>다음</NextBtn>
       ) : (
         <CompleteBtn onClick={() => nextBtnOnClick()}>완료</CompleteBtn>
@@ -130,14 +130,14 @@ const PwInputBox = styled.div<{ valid: boolean }>`
   align-items: center;
   margin-bottom: 20px;
   width: 100%;
-  ${(props) => {
+  ${props => {
     if (!props.valid) {
       return css`
         input {
           border-color: #ff3a3a;
         }
         &::after {
-          content: "영어,숫자를 포함 8~20자 이내로 입력해주세요.";
+          content: '영어,숫자를 포함 8~20자 이내로 입력해주세요.';
           position: absolute;
           top: 100%;
           left: 40%;
@@ -159,11 +159,11 @@ const PwInput = styled.input`
 `;
 
 const IdCheckInputBox = styled(PwInputBox)`
-  ${(props) => {
+  ${props => {
     if (!props.valid) {
       return css`
         &::after {
-          content: "일치하지 않습니다.";
+          content: '일치하지 않습니다.';
         }
       `;
     }
@@ -173,11 +173,11 @@ const IdCheckText = styled(PwText)``;
 const IdCheckInput = styled(PwInput)``;
 
 const PwCheckInputBox = styled(PwInputBox)`
-  ${(props) => {
+  ${props => {
     if (!props.valid) {
       return css`
         &::after {
-          content: "일치하지 않습니다.";
+          content: '일치하지 않습니다.';
         }
       `;
     }
