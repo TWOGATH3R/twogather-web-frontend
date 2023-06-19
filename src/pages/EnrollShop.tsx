@@ -355,7 +355,7 @@ export default function EnrollShop() {
               title='사업시작일'
               placeholder='입력해주세요'
               onChangeHandler={onChangeStartBusiness}
-              pathName='location.pathname'
+              pathName={location.pathname}
               inputTxt={startBusiness}
               guideMsg={startBusinessMessage}
             />

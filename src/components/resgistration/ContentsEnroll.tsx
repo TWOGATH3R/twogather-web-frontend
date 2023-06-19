@@ -11,6 +11,8 @@ import {
 } from '../../apis/queries/storeQuery';
 import { IShopMenuList } from '../../apis/api';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Day from './Day';
+import ShopTimePicker from './ShopTimePicker';
 
 const ContentsEnroll = () => {
   const navigate = useNavigate();
@@ -370,26 +372,7 @@ const ContentsEnroll = () => {
               </ShopInnerOutlineTitleWrapper>
 
               <ShopDayWrapper>
-                <ShopDayUl>
-                  {item.week.map((day, idx) => (
-                    <React.Fragment key={idx}>
-                      {day.status === true ? (
-                        <ShopDayList
-                          style={{ backgroundColor: '#FFB5B5' }}
-                          onClick={() => onClickDay(day, idx, index)}
-                        >
-                          {day.day}
-                        </ShopDayList>
-                      ) : (
-                        <ShopDayList
-                          onClick={() => onClickDay(day, idx, index)}
-                        >
-                          {day.day}
-                        </ShopDayList>
-                      )}
-                    </React.Fragment>
-                  ))}
-                </ShopDayUl>
+                <Day dayItem={item} index={index} onClickDay={onClickDay}></Day>
               </ShopDayWrapper>
               <ShopInnerWrapper>
                 <ShopTitle style={{ flex: 0.3, fontWeight: '500' }}>
@@ -403,21 +386,13 @@ const ContentsEnroll = () => {
                       marginBottom: '10px',
                     }}
                   >
-                    <ShopInputItmsBox key={index}>
-                      <ShopTimeInput
-                        style={{ width: '100%' }}
-                        type='time'
-                        value={item.startTime || ''}
-                        onChange={e => onChangeStoreStartTimeInput(e, index)}
-                      />
-                      <span className='time-wave'>~</span>
-                      <ShopTimeInput
-                        style={{ width: '100%' }}
-                        type='time'
-                        value={item.endTime || ''}
-                        onChange={e => onChangeStoreEndTimeInput(e, index)}
-                      />
-                    </ShopInputItmsBox>
+                    <ShopTimePicker
+                      onChangeStartTime={onChangeStoreStartTimeInput}
+                      onChangeEndTime={onChangeStoreEndTimeInput}
+                      index={index}
+                      startTime={item.startTime}
+                      endTime={item.endTime}
+                    ></ShopTimePicker>
                   </div>
                 </ShopInputItemsWrapper>
               </ShopInnerWrapper>
@@ -428,39 +403,15 @@ const ContentsEnroll = () => {
                 </ShopTitle>
                 <ShopInputItemsWrapper>
                   <div style={{ display: 'flex' }}>
-                    {item.breakTimeCheckBox ? (
-                      <ShopInputItmsBox>
-                        <ShopTimeInput
-                          style={{ width: '100%' }}
-                          type='time'
-                          defaultValue={item.startBreakTime || ''}
-                          onChange={e => onChangeStartBreakTimeValue(e, index)}
-                        />
-                        <span className='time-wave'>~</span>
-                        <ShopTimeInput
-                          style={{ width: '100%' }}
-                          defaultValue={item.endBreakTime || ''}
-                          onChange={e => onChangeEndBreakTimeValue(e, index)}
-                          type='time'
-                        />
-                      </ShopInputItmsBox>
-                    ) : (
-                      <ShopInputItmsBox>
-                        <ShopTimeInput
-                          style={{ width: '100%' }}
-                          disabled
-                          type='time'
-                          defaultValue={'00:00'}
-                        />
-                        <span className='time-wave'>~</span>
-                        <ShopTimeInput
-                          style={{ width: '100%' }}
-                          disabled
-                          type='time'
-                          defaultValue={'00:00'}
-                        />
-                      </ShopInputItmsBox>
-                    )}
+                    <ShopTimePicker
+                      onChangeStartTime={onChangeStartBreakTimeValue}
+                      onChangeEndTime={onChangeEndBreakTimeValue}
+                      index={index}
+                      startTime={item.startBreakTime}
+                      endTime={item.endBreakTime}
+                      disabled={!item.breakTimeCheckBox}
+                    />
+
                     <ShopCheckBoxWrapper>
                       <ShopInput
                         id={`checkbox-${index}`}
@@ -468,7 +419,7 @@ const ContentsEnroll = () => {
                         onClick={onClickBreakTimeCheckBox}
                         onChange={e => onChangeBreakTimeCheckBox(e, index)}
                       />
-                      {item.breakTimeCheckBox === true ? (
+                      {item.breakTimeCheckBox ? (
                         <label htmlFor={`checkbox-${index}`}>✔</label>
                       ) : (
                         <label htmlFor={`checkbox-${index}`} />
@@ -479,7 +430,7 @@ const ContentsEnroll = () => {
               </ShopInnerWrapper>
 
               <ShopTimeButtonWrapper>
-                {item.id === 0 && (
+                {item.id === inputItems.length - 1 && (
                   <>
                     {inputItems.length <= 6 && (
                       <ShopTimeButton onClick={addInputItem}>
@@ -674,25 +625,6 @@ const ShopPhotoForm = styled.div`
 const ShopDayWrapper = styled.div`
   padding: 2% 0;
 `;
-const ShopDayUl = styled.ul`
-  width: 40%;
-  display: flex;
-  align-items: center;
-  .active {
-    background-color: #505bf0;
-    color: #fff;
-  }
-`;
-const ShopDayList = styled.li`
-  list-style: none;
-  border: 1px solid ${({ theme }) => theme.colors.subColor1};
-  font-size: ${({ theme }) => theme.fontSizes.xl};
-  border-radius: 9999px;
-  padding: 10px 12px;
-  font-weight: bold;
-  margin-right: 4%;
-  cursor: pointer;
-`;
 const ShopInputItemsWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -700,33 +632,14 @@ const ShopInputItemsWrapper = styled.div`
   width: 100%;
   flex: 1;
 `;
-const ShopInputItmsBox = styled.div`
-  display: flex;
-  align-items: center;
-`;
-const ShopTimeInput = styled.input`
-  border: 1px solid ${({ theme }) => theme.colors.subColor1};
-  outline: none;
-  height: 34px;
-  padding: 0 15px;
-  width: 15%;
-  &::placeholder {
-    color: #999;
-  }
-`;
+
 const ShopTimeButtonWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: flex-end;
 `;
-const ShopTimeButton = styled.button`
-  padding: 2% 5%;
-  border-radius: 9999px;
-  background-color: transparent;
-  border: 1px solid ${({ theme }) => theme.colors.subColor1};
-  cursor: pointer;
-`;
+
 const ShopInfoDeleteWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -844,5 +757,11 @@ const EnrollButton = styled.button`
   color: white;
   cursor: pointer;
 `;
-
+const ShopTimeButton = styled.button`
+  padding: 2% 5%;
+  border-radius: 9999px;
+  background-color: transparent;
+  border: 1px solid ${({ theme }) => theme.colors.subColor1};
+  cursor: pointer;
+`;
 export default ContentsEnroll;
