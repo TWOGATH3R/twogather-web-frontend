@@ -4,7 +4,7 @@ import styled from "styled-components";
 const TodayDate = () => {
   const date = new Date();
   const year = date.getFullYear();
-  const month = [
+  const month: string = [
     "January",
     "February",
     "March",
@@ -18,9 +18,15 @@ const TodayDate = () => {
     "November",
     "December",
   ][date.getMonth()];
-  const dayWeek = ["Sun", "Mon", "Tues", "Wednes", "Thurs", "Fri", "Satur"][
-    date.getDay()
-  ];
+  const dayWeek: string = [
+    "Sun",
+    "Mon",
+    "Tues",
+    "Wednes",
+    "Thurs",
+    "Fri",
+    "Satur",
+  ][date.getDay()];
   const days = date.getDate();
 
   return (

@@ -2,18 +2,19 @@ import React, { useState } from "react";
 import { useMutation } from "react-query";
 import styled, { css } from "styled-components";
 import {
-  consumerPwCheck,
+  userPwCheck,
   deleteConsumer,
   deleteOwner,
-} from "../../apis/queries/MyPageQuery";
+} from "../../apis/queries/myPageQuery";
 import Swal from "sweetalert2";
 import { removeCookie } from "../cookie/cookie";
 import { role } from "../../apis/types/common.type";
+import { userPwCheckProps } from "../../apis/types/mypage.type";
 
 const Withdraw = () => {
   const [pw, setPw] = useState<string>("");
 
-  const memberId = localStorage.getItem("memberId");
+  const memberId: string | null = localStorage.getItem("memberId");
   //고객 회원탈퇴
   const { mutate: consumerDelete } = useMutation(
     () => deleteConsumer(memberId),
@@ -29,36 +30,37 @@ const Withdraw = () => {
       alert(err.response.data.message);
     },
   });
+  const info: userPwCheckProps = {
+    pw,
+    memberId,
+  };
   //고객 비밀번호 확인
-  const { mutate: pwCheckConsumer } = useMutation(
-    () => consumerPwCheck(pw, memberId),
-    {
-      onSuccess: (res) => {
-        if (res.data.isValid) {
-          Swal.fire({
-            title: "탈퇴 하시겠습니까?",
-            confirmButtonColor: "#0075FF",
-            cancelButtonColor: "#738598",
-            showCancelButton: true,
-            confirmButtonText: "예",
-            cancelButtonText: "돌아가기",
-            padding: "3em",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              if (localStorage.getItem("role") === role.ROLE_STORE_OWNER) {
-                ownerDelete();
-              } else consumerDelete();
-              removeCookie();
-              localStorage.clear();
-            }
-          });
-        }
-      },
-      onError: (err: any) => {
-        alert(err.response.data.message);
-      },
-    }
-  );
+  const { mutate: pwCheckConsumer } = useMutation(() => userPwCheck(info), {
+    onSuccess: (res) => {
+      if (res.data.isValid) {
+        Swal.fire({
+          title: "탈퇴 하시겠습니까?",
+          confirmButtonColor: "#0075FF",
+          cancelButtonColor: "#738598",
+          showCancelButton: true,
+          confirmButtonText: "예",
+          cancelButtonText: "돌아가기",
+          padding: "3em",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            if (localStorage.getItem("role") === role.ROLE_STORE_OWNER) {
+              ownerDelete();
+            } else consumerDelete();
+            removeCookie();
+            localStorage.clear();
+          }
+        });
+      }
+    },
+    onError: (err: any) => {
+      alert(err.response.data.message);
+    },
+  });
 
   //onChange
   const pwPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/;

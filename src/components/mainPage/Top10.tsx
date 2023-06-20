@@ -10,10 +10,10 @@ import { getTop10ListProps } from "../../apis/types/main.type";
 const Top10 = ({ title, type }: Top10Type) => {
   const [storeList, setStoreList] = useState<Array<Object> | undefined>();
 
-  const listLength = storeList && storeList?.length;
+  const listLength: boolean | undefined = storeList && storeList?.length <= 3;
   const { mutate: Top10List } = useMutation(
     () => {
-      const count: string = listLength && listLength <= 3 ? "10" : "3";
+      const count: string = listLength ? "10" : "3";
       const info: getTop10ListProps = {
         type: type,
         count: count,
@@ -58,15 +58,15 @@ const Top10 = ({ title, type }: Top10Type) => {
             ))
           : null}
         <SeeMoreBtn htmlFor="reviewtop" onClick={() => seeMoreBtnOnClick()}>
-          {listLength && listLength > 3 ? (
-            <>
-              <IoIosArrowUp />
-              <p>접기</p>
-            </>
-          ) : (
+          {listLength ? (
             <>
               <IoIosArrowDown />
               <p>펼치기</p>
+            </>
+          ) : (
+            <>
+              <IoIosArrowUp />
+              <p>접기</p>
             </>
           )}
         </SeeMoreBtn>

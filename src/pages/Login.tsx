@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { loginMutaionPostInfo } from "../apis/queries/LoginQuery";
 import { useMutation } from "react-query";
+import { loginProps } from "../apis/types/login.type";
+import { loginMutaionPostInfo } from "../apis/queries/LoginQuery";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -10,8 +11,12 @@ const Login = () => {
   const [id, setId] = useState<string>("");
   const [pw, setPw] = useState<string>("");
 
+  const info: loginProps = {
+    id,
+    pw,
+  };
   const { mutate: login, isLoading: loginLoading } = useMutation(
-    () => loginMutaionPostInfo(id, pw),
+    () => loginMutaionPostInfo(info),
     {
       onSuccess: (res) => {
         localStorage.setItem("memberId", res.data.memberId);

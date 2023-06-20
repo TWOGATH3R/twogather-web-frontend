@@ -1,15 +1,17 @@
 import { getCookie } from "../../components/cookie/cookie";
+import {
+  userGetInfoResponse,
+  userPwCheckProps,
+  userUpdateProps,
+  userUpdateResponse,
+} from "../types/mypage.type";
 import { api } from "../untils";
 
-type infoType = {
-  email: string | null;
-  username: string;
-  name: string;
-  memberId: string | null;
-};
 //고객 정보 업데이트하기
-export const putConsumerInfoChange = async (info: infoType) => {
-  const res = await api.put(
+export const putConsumerInfoChange = async (
+  info: userUpdateProps
+): Promise<userUpdateResponse> => {
+  const { data } = await api.put(
     `/api/consumers/${info.memberId}`,
     {
       email: info.email,
@@ -24,12 +26,14 @@ export const putConsumerInfoChange = async (info: infoType) => {
       },
     }
   );
-  return res.data;
+  return data;
 };
 
 //사업자 정보 업데이트하기
-export const putOwnerInfoChange = async (info: infoType) => {
-  const res = await api.put(
+export const putOwnerInfoChange = async (
+  info: userUpdateProps
+): Promise<userUpdateResponse> => {
+  const { data } = await api.put(
     `/api/owners/${info.memberId}`,
     {
       email: info.email,
@@ -44,60 +48,64 @@ export const putOwnerInfoChange = async (info: infoType) => {
       },
     }
   );
-  return res.data;
+  return data;
 };
 
 //고객 정보 가져오기
-export const getConsumerInfo = async (memberId: string | null) => {
-  const res = await api.get(`/api/consumers/${memberId}`, {
+export const getConsumerInfo = async (
+  memberId: string | null
+): Promise<userGetInfoResponse> => {
+  const { data } = await api.get(`/api/consumers/${memberId}`, {
     headers: {
       "Content-type": "application/json; charset=UTF-8",
       accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
-  return res.data;
+  return data;
 };
 
 //사업자 정보 가져오기
-export const getOwnerInfo = async (memberId: string | null) => {
-  const res = await api.get(`/api/owners/${memberId}`, {
+export const getOwnerInfo = async (
+  memberId: string | null
+): Promise<userGetInfoResponse> => {
+  const { data } = await api.get(`/api/owners/${memberId}`, {
     headers: {
       "Content-type": "application/json; charset=UTF-8",
       accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
-  return res.data;
+  return data;
 };
 
 //고객 탈퇴
 export const deleteConsumer = async (memberId: string | null) => {
-  const res = await api.delete(`/api/consumers/${memberId}`, {
+  const { data } = await api.delete(`/api/consumers/${memberId}`, {
     headers: {
       "Content-type": "application/json; charset=UTF-8",
       accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
-  return res.data;
+  return data;
 };
 
 //사업자 탈퇴
 export const deleteOwner = async (memberId: string | null) => {
-  const res = await api.delete(`/api/Owner/${memberId}`, {
+  const { data } = await api.delete(`/api/Owner/${memberId}`, {
     headers: {
       "Content-type": "application/json; charset=UTF-8",
       accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
-  return res.data;
+  return data;
 };
 
 //고객 비밀번호 확인
-export const consumerPwCheck = async (pw: string, memberId: string | null) => {
-  const res = await api.post(
+export const userPwCheck = async ({ pw, memberId }: userPwCheckProps) => {
+  const { data } = await api.post(
     `/api/members/${memberId}/verify-password`,
     {
       password: pw,
@@ -110,5 +118,5 @@ export const consumerPwCheck = async (pw: string, memberId: string | null) => {
       },
     }
   );
-  return res.data;
+  return data;
 };
