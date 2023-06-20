@@ -9,10 +9,12 @@ export type userUpdateProps = {
 //고객,사업자 정보 업데이트 api response type정의
 export type userUpdateResponse = {
   data: {
-    memberId: number;
-    email: string;
-    username: string;
-    name: string;
+    data: {
+      memberId: number;
+      email: string;
+      username: string;
+      name: string;
+    };
   };
 };
 
