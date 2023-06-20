@@ -4,6 +4,7 @@ import TodayDate from "./TodayDate";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getKeyWordList } from "../../apis/queries/mainQuery";
+import { cityType } from "./type";
 
 const Search = () => {
   const navigate = useNavigate();
@@ -326,10 +327,6 @@ const Search = () => {
   const allCategoriesBtnOnClick = () => {
     setCategories("모든 카테고리");
   };
-  type cityType = {
-    city: string;
-    si: Array<any>;
-  };
   const cityOnClick = (value: cityType) => {
     if (value.city === city) setCity("전체 지역");
     else {
@@ -337,7 +334,7 @@ const Search = () => {
       setSi(value.si[0]);
     }
   };
-  const siOnClick = (value: any) => {
+  const siOnClick = (value: string) => {
     if (si === value) setSi("");
     else setSi(value);
   };

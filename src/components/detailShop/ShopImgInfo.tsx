@@ -247,7 +247,7 @@ const SliderItem = styled.div`
 `;
 
 const FillHeart = styled(AiFillHeart)`
-  color: #ffb800;
+  color: ${({ theme }) => theme.colors.yellow};
   font-size: 1.6rem;
   cursor: pointer;
 `;
