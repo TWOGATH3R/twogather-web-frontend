@@ -6,6 +6,7 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { Top10Type } from "./type";
 import { getTop10ListProps } from "../../apis/types/main.type";
+import { AiFillHeart } from "react-icons/ai";
 
 const Top10 = ({ title, type }: Top10Type) => {
   const [storeList, setStoreList] = useState<Array<Object> | undefined>();
@@ -53,6 +54,10 @@ const Top10 = ({ title, type }: Top10Type) => {
                     <StoreGrade>4.8</StoreGrade>
                   </StoreNameAndGrade>
                   <StoreAddress>경기도 부천시</StoreAddress>
+                  <LikeCount>
+                    <AiFillHeart />
+                    {4}
+                  </LikeCount>
                 </Link>
               </GradeTop10Item>
             ))
@@ -129,6 +134,14 @@ const StoreGrade = styled.span`
 const StoreAddress = styled(StoreName)`
   font-size: 0.8rem;
   font-weight: 400;
+`;
+const LikeCount = styled.p`
+  display: flex;
+  align-items: center;
+  svg {
+    margin-right: 5px;
+    color: ${({ theme }) => theme.colors.yellow};
+  }
 `;
 
 const SeeMoreInput = styled.input`
