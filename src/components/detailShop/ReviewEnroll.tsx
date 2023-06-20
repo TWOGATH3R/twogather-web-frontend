@@ -1,37 +1,46 @@
-import React from "react";
-import styled from "styled-components";
-import StarClick from "./StarClick";
+import React from 'react';
+import styled from 'styled-components';
+import StarClick from './StarClick';
+import InputBtnBox from './InputBtnBox';
 
 const ReviewEnroll = () => {
-  return (
-    <ReviewEnrollContainer>
-      <Title>리뷰작성하기</Title>
-      <EnrollBox>
-        <NameStarBox>
-          <Name>내닉네임</Name>
-          <StarClick />
-        </NameStarBox>
-      </EnrollBox>
-    </ReviewEnrollContainer>
-  );
+  return <InputBtnBox />;
 };
 
-const ReviewEnrollContainer = styled.div``;
-const Title = styled.h2`
-  color: #606060;
-`;
-
-const EnrollBox = styled.div`
+const Container = styled.div`
+  width: 100%;
   padding: 20px 40px;
   border: 1px solid rgba(35, 35, 35, 0.1);
   border-radius: 2px;
 `;
+const TitleBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+`;
+const Score = styled.div`
+  color: #a1a1a1;
+  font-weight: bold;
+  font-size: 0.75rem;
+`;
+
+// const SubmitBox = styled.div`
+//   display: flex;
+//   flex-direction: column;
+// `;
+
+const Date = styled.div`
+  font-size: 0.75rem;
+  color: #878787;
+`;
 const NameStarBox = styled.div`
   display: flex;
 `;
-const Name = styled.span`
+const Name = styled.div`
   margin-right: 10px;
+  font-size: 1rem;
   text-decoration: underline;
+  text-underline-offset: 3px;
 `;
 
 export default ReviewEnroll;
