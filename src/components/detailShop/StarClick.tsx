@@ -86,15 +86,15 @@ const StarBox = styled.div`
 `;
 const Star = styled(BsStar)`
   font-size: 1.5rem;
-  color: #ffb800;
+  color: ${({ theme }) => theme.colors.yellow};
 `;
 const HalfStar = styled(BsStarHalf)`
   font-size: 1.5rem;
-  color: #ffb800;
+  color: ${({ theme }) => theme.colors.yellow};
 `;
 const FillStar = styled(BsStarFill)`
   font-size: 1.5rem;
-  color: #ffb800;
+  color: ${({ theme }) => theme.colors.yellow};
 `;
 
 export default StarClick;
