@@ -12,6 +12,7 @@ import InputCategory from '../components/resgistration/InputCategory';
 import InputKeyword from '../components/resgistration/InputKeyword';
 import InputDate from '../components/resgistration/InputDate';
 import ShopSubTitle from '../components/resgistration/ShopSubTitle';
+import { postEnrollShopInfo } from '../apis/queries/storeQuery';
 
 export default function EnrollShop() {
   const navigate = useNavigate();
@@ -26,7 +27,12 @@ export default function EnrollShop() {
 
   const [visibleCategory, setVisibleCategory] = useState<boolean>(false);
   const [categoryValue, setCategoryValue] = useState<string>('');
-  const CATEGORY = [
+  type CATEGORY_TYPE = {
+    categoryId: number;
+    name: string;
+  };
+
+  const CATEGORY: CATEGORY_TYPE[] = [
     {
       categoryId: 1,
       name: '양식',
@@ -61,24 +67,44 @@ export default function EnrollShop() {
     },
   ];
 
+  // const KEYWORD = [
+  //   { name: '분위기 좋은' },
+  //   { name: '저렴한 가격' },
+  //   { name: '아이들과 오기 좋은' },
+  //   { name: '사진찍기 좋은' },
+  //   { name: '친절한' },
+  //   { name: '고급스러운' },
+  //   { name: '조용한' },
+  //   { name: '모임하기 좋은' },
+  //   { name: '특별한 날' },
+  //   { name: '단체 회식' },
+  //   { name: '데이트하기 좋은' },
+  //   { name: '뷰가 좋은' },
+  //   { name: '특별한 메뉴' },
+  //   { name: '멋진 인테리어' },
+  //   { name: '디저트가 맛있는' },
+  //   { name: '청결한 매장' },
+  //   { name: '방송에 나온 맛집' },
+  // ];
+
   const KEYWORD = [
-    { name: '분위기 좋은' },
-    { name: '저렴한 가격' },
-    { name: '아이들과 오기 좋은' },
-    { name: '사진찍기 좋은' },
-    { name: '친절한' },
-    { name: '고급스러운' },
-    { name: '조용한' },
-    { name: '모임하기 좋은' },
-    { name: '특별한 날' },
-    { name: '단체 회식' },
-    { name: '데이트하기 좋은' },
-    { name: '뷰가 좋은' },
-    { name: '특별한 메뉴' },
-    { name: '멋진 인테리어' },
-    { name: '디저트가 맛있는' },
-    { name: '청결한 매장' },
-    { name: '방송에 나온 맛집' },
+    '분위기 좋은',
+    '저렴한 가격',
+    '아이들과 오기 좋은',
+    '사진찍기 좋은',
+    '친절한',
+    '고급스러운',
+    '조용한',
+    '모임하기 좋은',
+    '특별한 날',
+    '단체 회식',
+    '데이트하기 좋은',
+    '뷰가 좋은',
+    '특별한 메뉴',
+    '멋진 인테리어',
+    '디저트가 맛있는',
+    '청결한 매장',
+    '방송에 나온 맛집',
   ];
   const [shopNameMessage, setShopNameMessage] = useState<string>('');
   const [shopNumberMessage, setShopNumberMessage] = useState<string>('');
@@ -110,7 +136,7 @@ export default function EnrollShop() {
     setVisibleKeyword(prev => !prev);
     setKeywordList([]);
   };
-  const nextBtnOnClick = () => {
+  const nextBtnOnClick = async () => {
     console.log(keywordList);
     if (
       !shopName ||
@@ -130,19 +156,38 @@ export default function EnrollShop() {
       alert('사업자명이 옳바르지 않습니다.');
     else if (!regBusinessNumber.test(businessNumber))
       alert('사업자번호가 옳바르지 않습니다');
-    else
-      navigate('/enrollshop/contents', {
-        state: {
-          shopName: shopName,
-          shopAddress: shopAddress,
-          shopNumber: shopNumber,
-          categoryValue: categoryValue,
-          keywordList: keywordList,
-          businessName: businessName,
-          businessNumber: businessNumber,
-          startBusiness: startBusiness,
-        },
-      });
+    else {
+      const keywordIdlist = keywordList.map(
+        kword => KEYWORD.indexOf(kword) + 1,
+      );
+      const categoryId = CATEGORY.filter(cate => cate.name === categoryValue)[0]
+        .categoryId;
+
+      const data = {
+        storeName: shopName,
+        address: shopAddress,
+        phone: shopNumber,
+        businessNumber: businessNumber.split('-').join(''),
+        businessName: businessName,
+        businessStartDate: startBusiness,
+        keywordIdList: keywordIdlist,
+        categoryId: categoryId,
+      };
+
+      const response = await postEnrollShopInfo(data);
+      // navigate('/enrollshop/contents', {
+      //   state: {
+      //     shopName: shopName,
+      //     shopAddress: shopAddress,
+      //     shopNumber: shopNumber,
+      //     categoryValue: categoryValue,
+      //     keywordList: keywordList,
+      //     businessName: businessName,
+      //     businessNumber: businessNumber,
+      //     startBusiness: startBusiness,
+      //   },
+      // });
+    }
   };
 
   const regShopName = /^[가-힣a-zA-Z0-9\s]+$/;
@@ -181,16 +226,20 @@ export default function EnrollShop() {
       setShopCategory('');
     }
   };
+  const keyWordListLengthIs3 = (keywordList: string[]) => {
+    console.log(keywordList);
+    setVisibleKeyword(keywordList.length >= 3 ? false : true);
+  };
+
   const onChangeKeyword = useCallback(
     (checked: boolean, item: string) => {
-      console.log(checked);
-      if (keywordList.length >= 2) {
-        setVisibleKeyword(false);
-      }
       if (checked) {
         setKeywordList(prev => [...prev, item]);
+        const newKeywordList = [...keywordList, item];
+        keyWordListLengthIs3(newKeywordList);
       } else if (!checked) {
-        setKeywordList(keywordList.filter(el => el !== item));
+        const newKeywordList = keywordList.filter(el => el !== item);
+        setKeywordList(newKeywordList);
       }
     },
     [keywordList],
@@ -313,13 +362,13 @@ export default function EnrollShop() {
                   <>
                     <ShopKeywordList>
                       <ShopKeywordLabelWrapper>
-                        <ShopKeywordLabel htmlFor={item.name}>
-                          {item.name}
+                        <ShopKeywordLabel htmlFor={item}>
+                          {item}
                         </ShopKeywordLabel>
                       </ShopKeywordLabelWrapper>
                       <ShopKeywordCheckBox
                         type='checkbox'
-                        id={item.name}
+                        id={item}
                         onChange={e => {
                           onChangeKeyword(e.target.checked, e.target.id);
                         }}

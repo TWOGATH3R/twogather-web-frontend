@@ -411,7 +411,6 @@ const ContentsEnroll = () => {
                       endTime={item.endBreakTime}
                       disabled={!item.breakTimeCheckBox}
                     />
-
                     <ShopCheckBoxWrapper>
                       <ShopInput
                         id={`checkbox-${index}`}
