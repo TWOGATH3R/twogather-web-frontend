@@ -1,15 +1,13 @@
 import React from "react";
-import ReviewTop10 from "./ReviewTop10";
-import GradeTop10 from "./GradeTop10";
-import LikeTop10 from "./LikeTop10";
-
+import Top10 from "./Top10";
+import { top10Title, top10lderType } from "./type";
 
 const DefaultContents = () => {
   return (
     <>
-      <ReviewTop10 />
-      <GradeTop10 />
-      <LikeTop10 />
+      <Top10 title={top10Title.REVIEW} type={top10lderType.REVIEW} />
+      <Top10 title={top10Title.RATED} type={top10lderType.RATED} />
+      <Top10 title={top10Title.LIKE} type={top10lderType.LIKE} />
     </>
   );
 };

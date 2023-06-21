@@ -1,25 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useMutation } from 'react-query';
 import styled from 'styled-components';
 import { getTop10List } from '../../apis/queries/mainQuery';
-import { useMutation } from '@tanstack/react-query';
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+import { Link } from 'react-router-dom';
+import { Top10Type } from './type';
+import { getTop10ListProps } from '../../apis/types/main.type';
+import { AiFillHeart } from 'react-icons/ai';
 
-const GradeTop10 = () => {
+const Top10 = ({ title, type }: Top10Type) => {
   const [storeList, setStoreList] = useState<Array<Object> | undefined>();
 
+  const listLength: boolean | undefined = storeList && storeList?.length <= 3;
   const { mutate: Top10List } = useMutation(
     () => {
-      const type: string = 'TOP_RATED';
-      const count: string = storeList ? '10' : '3';
-      return getTop10List(type, count);
+      const count: string = listLength ? '10' : '3';
+      const info: getTop10ListProps = {
+        type: type,
+        count: count,
+      };
+      return getTop10List(info);
     },
     {
       onSuccess: res => {
-        console.log(res);
         setStoreList(res.data);
-      },
-      onError: err => {
-        console.log(err);
       },
     },
   );
@@ -35,7 +39,7 @@ const GradeTop10 = () => {
 
   return (
     <GradeTopContainer>
-      <Title>평점 높은 Top10</Title>
+      <Title>{title} 높은 Top10</Title>
       <SeeMoreInput id='gradetop' type='checkbox' />
       <GradeTop10List>
         {Array.isArray(storeList)
@@ -50,15 +54,27 @@ const GradeTop10 = () => {
                     <StoreGrade>4.8</StoreGrade>
                   </StoreNameAndGrade>
                   <StoreAddress>경기도 부천시</StoreAddress>
+                  <LikeCount>
+                    <AiFillHeart />
+                    {4}
+                  </LikeCount>
                 </Link>
               </GradeTop10Item>
             ))
           : null}
-        <SeeMoreBtnBox className='seeMoreBtn'>
-          <SeeMoreBtn htmlFor='gradetop' onClick={() => seeMoreBtnOnClick()}>
-            &gt;<p>더보기</p>
-          </SeeMoreBtn>
-        </SeeMoreBtnBox>
+        <SeeMoreBtn htmlFor='reviewtop' onClick={() => seeMoreBtnOnClick()}>
+          {listLength ? (
+            <>
+              <IoIosArrowDown />
+              <p>펼치기</p>
+            </>
+          ) : (
+            <>
+              <IoIosArrowUp />
+              <p>접기</p>
+            </>
+          )}
+        </SeeMoreBtn>
       </GradeTop10List>
     </GradeTopContainer>
   );
@@ -78,12 +94,12 @@ const GradeTop10List = styled.ul`
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  padding: 15px;
+  padding-top: 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
 `;
 const GradeTop10Item = styled.li`
-  width: calc(25% - 22.5px);
-  margin-right: 30px;
+  margin: 0 15px 30px 15px;
+  width: calc(33.3333% - 30px);
   a {
     width: 100%;
     height: 100%;
@@ -119,43 +135,36 @@ const StoreAddress = styled(StoreName)`
   font-size: 0.8rem;
   font-weight: 400;
 `;
-
-const SeeMoreBtnBox = styled(GradeTop10Item)`
+const LikeCount = styled.p`
   display: flex;
-  justify-content: center;
-  margin: 0;
+  align-items: center;
+  svg {
+    margin-right: 5px;
+    color: ${({ theme }) => theme.colors.yellow};
+  }
 `;
+
 const SeeMoreInput = styled.input`
   display: none;
-  &:checked {
-    & + ul {
-      justify-content: center;
-    }
-    & + ul > li {
-      margin: 0 15px 30px 15px;
-      width: calc(33.3333% - 30px);
-    }
-    & + ul > .seeMoreBtn {
-      display: none;
-    }
-  }
 `;
 const SeeMoreBtn = styled.label`
   display: flex;
-  flex-direction: column;
   align-items: center;
-  width: 50%;
+  justify-content: center;
+  padding: 10px 0;
+  width: 100%;
   height: fit-content;
   background-color: transparent;
   border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
   color: #666666;
-  font-size: 5rem;
+  font-size: 1.3rem;
   font-weight: 400;
   cursor: pointer;
   P {
     color: ${({ theme }) => theme.colors.black};
-    font-size: 0.8rem;
+    font-size: 1rem;
   }
 `;
 
-export default GradeTop10;
+export default Top10;

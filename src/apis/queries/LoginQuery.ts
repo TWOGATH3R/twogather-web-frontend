@@ -1,9 +1,13 @@
 import { api } from '../untils';
 import jwt_decode from 'jwt-decode';
 import { setCookie } from '../../components/cookie/cookie';
+import { loginProps, loginResponse } from '../types/login.type';
 
 //로그인
-export const loginMutaionPostInfo = async (id: string, pw: string) => {
+export const loginMutaionPostInfo = async ({
+  id,
+  pw,
+}: loginProps): Promise<loginResponse> => {
   const res = await api.post(`/api/login `, {
     username: id,
     password: pw,

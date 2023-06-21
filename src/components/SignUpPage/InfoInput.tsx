@@ -6,7 +6,8 @@ import styled, { css } from 'styled-components';
 import {
   consumersMutaionPostInfo,
   storeOwnerMutaionPostInfo,
-} from '../../apis/queries/SignUpQuery';
+} from '../../apis/queries/signUpQuery';
+import { userSignUpProps } from '../../apis/types/signup.type';
 
 const InfoInput = () => {
   const location = useLocation();
@@ -18,7 +19,7 @@ const InfoInput = () => {
   const [pwCheck, setPwCheck] = useState<string>('');
   const [name, setName] = useState<string>('');
 
-  const info = {
+  const info: userSignUpProps = {
     email: location.state.email,
     username: id,
     password: pw,
@@ -28,7 +29,6 @@ const InfoInput = () => {
   const { mutate: consumersSignUp, isLoading: consumersSignUpLoading } =
     useMutation(() => consumersMutaionPostInfo(info), {
       onSuccess: res => {
-        console.log(res);
         navigate('/login');
         alert('회원가입 성공');
       },
@@ -41,7 +41,6 @@ const InfoInput = () => {
   const { mutate: storeOwnerSignUp, isLoading: storeOwnerSignUpLoading } =
     useMutation(() => storeOwnerMutaionPostInfo(info), {
       onSuccess: res => {
-        console.log(res);
         navigate('/login');
         alert('회원가입 성공');
       },

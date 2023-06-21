@@ -11,7 +11,7 @@ import SignUp from './pages/SignUp';
 import InfoInput from './components/SignUpPage/InfoInput';
 import FindId from './pages/FindId';
 import FindPw from './pages/FindPw';
-import Verification from './components/FindPwPage/Verification';
+import VerificationPw from './components/FindPwPage/Verification';
 import PwChange from './components/FindPwPage/PwChange';
 import MyPage from './pages/MyPage';
 import Info from './components/myPage/Info';
@@ -23,6 +23,8 @@ import DefaultContents from './components/mainPage/DefaultContents';
 import ContentsEnroll from './components/resgistration/ContentsEnroll';
 import Like from './components/myPage/Like';
 import MyStore from './components/myPage/MyStore';
+import VerificationId from './components/findIdPage/Verification';
+import Check from './components/findIdPage/Check';
 import Stores from './pages/Stores';
 
 const Router = () => {
@@ -40,9 +42,12 @@ const Router = () => {
         </Route>
         <Route path='/editenrollshop' element={<EditEnrollShop />}></Route>
         <Route path='/login' element={<Login />} />
-        <Route path='/findid' element={<FindId />} />
+        <Route path='/findid' element={<FindId />}>
+          <Route path='verification' element={<VerificationId />} />
+          <Route path='check' element={<Check />} />
+        </Route>
         <Route path='/findPw' element={<FindPw />}>
-          <Route path='verification' element={<Verification />} />
+          <Route path='verification' element={<VerificationPw />} />
           <Route path='pwChange' element={<PwChange />} />
         </Route>
         <Route path='/stores' element={<Stores />}></Route>

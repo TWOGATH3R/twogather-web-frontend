@@ -55,6 +55,7 @@ const colors = {
   subColor1: "#e5e5e5",
   subColor2: "#2663FF",
   subColor3: "#ff4f4f",
+  yellow: "#FFB800",
 };
 
 const theme = {

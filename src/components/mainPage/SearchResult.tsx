@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Pagination from 'react-js-pagination';
 import { Link, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation } from 'react-query';
 import { getStoreList } from '../../apis/queries/mainQuery';
+import { searchProps } from '../../apis/types/main.type';
 
 const SearchResult = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -12,7 +13,7 @@ const SearchResult = () => {
 
   const storeList = [1, 2, 3, 4, 5, 6];
 
-  const searchInfo = {
+  const searchInfo: searchProps = {
     category: searchParams.get('category'),
     search: searchParams.get('search'),
     location: searchParams.get('location'),
@@ -31,7 +32,6 @@ const SearchResult = () => {
 
   const pageOnChange = (page: any) => {
     setPage(page);
-    console.log(page);
   };
 
   useEffect(() => {
