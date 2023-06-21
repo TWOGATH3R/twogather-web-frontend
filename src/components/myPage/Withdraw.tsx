@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import { useMutation } from "react-query";
-import styled, { css } from "styled-components";
+import React, { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import styled, { css } from 'styled-components';
 import {
   userPwCheck,
   deleteConsumer,
   deleteOwner,
-} from "../../apis/queries/myPageQuery";
-import Swal from "sweetalert2";
-import { removeCookie } from "../cookie/cookie";
-import { role } from "../../apis/types/common.type";
-import { userPwCheckProps } from "../../apis/types/mypage.type";
+} from '../../apis/queries/myPageQuery';
+import Swal from 'sweetalert2';
+import { removeCookie } from '../cookie/cookie';
+import { role } from '../../apis/types/common.type';
+import { userPwCheckProps } from '../../apis/types/mypage.type';
 
 const Withdraw = () => {
-  const [pw, setPw] = useState<string>("");
+  const [pw, setPw] = useState<string>('');
 
-  const memberId: string | null = localStorage.getItem("memberId");
+  const memberId: string | null = localStorage.getItem('memberId');
   //고객 회원탈퇴
   const { mutate: consumerDelete } = useMutation(
     () => deleteConsumer(memberId),
@@ -22,7 +22,7 @@ const Withdraw = () => {
       onError: (err: any) => {
         alert(err.response.data.message);
       },
-    }
+    },
   );
   //사업자 회원탈퇴
   const { mutate: ownerDelete } = useMutation(() => deleteOwner(memberId), {
@@ -36,19 +36,19 @@ const Withdraw = () => {
   };
   //고객 비밀번호 확인
   const { mutate: pwCheckConsumer } = useMutation(() => userPwCheck(info), {
-    onSuccess: (res) => {
+    onSuccess: res => {
       if (res.data.isValid) {
         Swal.fire({
-          title: "탈퇴 하시겠습니까?",
-          confirmButtonColor: "#0075FF",
-          cancelButtonColor: "#738598",
+          title: '탈퇴 하시겠습니까?',
+          confirmButtonColor: '#0075FF',
+          cancelButtonColor: '#738598',
           showCancelButton: true,
-          confirmButtonText: "예",
-          cancelButtonText: "돌아가기",
-          padding: "3em",
-        }).then((result) => {
+          confirmButtonText: '예',
+          cancelButtonText: '돌아가기',
+          padding: '3em',
+        }).then(result => {
           if (result.isConfirmed) {
-            if (localStorage.getItem("role") === role.ROLE_STORE_OWNER) {
+            if (localStorage.getItem('role') === role.ROLE_STORE_OWNER) {
               ownerDelete();
             } else consumerDelete();
             removeCookie();
@@ -78,9 +78,9 @@ const Withdraw = () => {
       <PwBox valid={pw.length > 0 ? pwPattern.test(pw) : true}>
         <PwText>비밀번호</PwText>
         <PwInput
-          type="password"
+          type='password'
           value={pw}
-          onChange={(e) => pwOnChange(e.target.value)}
+          onChange={e => pwOnChange(e.target.value)}
         />
       </PwBox>
       <WithdrawBtn onClick={WithdrawBtnOnClick}>탈퇴하기</WithdrawBtn>
@@ -106,14 +106,14 @@ const PwBox = styled.div<{ valid: boolean }>`
   align-items: center;
   margin-bottom: 25px;
   width: 80%;
-  ${(props) => {
+  ${props => {
     if (!props.valid) {
       return css`
         input {
           border-color: #ff3a3a;
         }
         &::after {
-          content: "영어,숫자를 포함 8~20자 이내로 입력해주세요.";
+          content: '영어,숫자를 포함 8~20자 이내로 입력해주세요.';
           position: absolute;
           top: 100%;
           left: 20%;

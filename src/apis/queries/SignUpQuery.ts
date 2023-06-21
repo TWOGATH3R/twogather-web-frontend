@@ -2,12 +2,12 @@ import {
   emailCheckResponse,
   userSignUpProps,
   userSignUpResponse,
-} from "../types/signup.type";
-import { api } from "../untils";
+} from '../types/signup.type';
+import { api } from '../untils';
 
 //이메일 인증번호 보내기
 export const emailCheckMutaionPostEmail = async (
-  email: string
+  email: string,
 ): Promise<emailCheckResponse> => {
   const { data } = await api.post(`/api/email`, {
     email: email,
@@ -17,7 +17,7 @@ export const emailCheckMutaionPostEmail = async (
 
 //고객 회원가입
 export const consumersMutaionPostInfo = async (
-  info: userSignUpProps
+  info: userSignUpProps,
 ): Promise<userSignUpResponse> => {
   const { data } = await api.post(`/api/consumers`, {
     email: info.email,
@@ -30,7 +30,7 @@ export const consumersMutaionPostInfo = async (
 
 //사업자 회원가입
 export const storeOwnerMutaionPostInfo = async (
-  info: userSignUpProps
+  info: userSignUpProps,
 ): Promise<userSignUpResponse> => {
   const { data } = await api.post(`/api/owners`, {
     email: info.email,

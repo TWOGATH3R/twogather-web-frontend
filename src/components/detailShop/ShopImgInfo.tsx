@@ -49,7 +49,6 @@ const ShopImgInfo = () => {
           </Slick>
         </DetailShopImageWrapper>
       </ImageSlicer>
-
       <DetailShopInfoWrapper>
         <DetailShopInfoTitleWrapper>
           <DetailShopInfoTitle>서울다이닝</DetailShopInfoTitle>
