@@ -37,7 +37,7 @@ export interface PostEnrollShopInfo {
   businessName: string;
   businessStartDate: string;
   categoryId: Number;
-  keywordList: KEYWORD[];
+  keywordIdList: number[];
 }
 
 export type GetStoreInfoProps = {

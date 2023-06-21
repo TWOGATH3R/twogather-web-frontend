@@ -13,6 +13,8 @@ import InputKeyword from '../components/resgistration/InputKeyword';
 import InputDate from '../components/resgistration/InputDate';
 import ShopSubTitle from '../components/resgistration/ShopSubTitle';
 import { postEnrollShopInfo } from '../apis/queries/storeQuery';
+import { useMutation } from '@tanstack/react-query';
+import { PostEnrollShopInfo } from '../apis/queries/type';
 
 export default function EnrollShop() {
   const navigate = useNavigate();
@@ -67,26 +69,6 @@ export default function EnrollShop() {
     },
   ];
 
-  // const KEYWORD = [
-  //   { name: '분위기 좋은' },
-  //   { name: '저렴한 가격' },
-  //   { name: '아이들과 오기 좋은' },
-  //   { name: '사진찍기 좋은' },
-  //   { name: '친절한' },
-  //   { name: '고급스러운' },
-  //   { name: '조용한' },
-  //   { name: '모임하기 좋은' },
-  //   { name: '특별한 날' },
-  //   { name: '단체 회식' },
-  //   { name: '데이트하기 좋은' },
-  //   { name: '뷰가 좋은' },
-  //   { name: '특별한 메뉴' },
-  //   { name: '멋진 인테리어' },
-  //   { name: '디저트가 맛있는' },
-  //   { name: '청결한 매장' },
-  //   { name: '방송에 나온 맛집' },
-  // ];
-
   const KEYWORD = [
     '분위기 좋은',
     '저렴한 가격',
@@ -120,6 +102,11 @@ export default function EnrollShop() {
   const [businessNameMessage, setBusinessNameMessage] = useState('');
   const [businessNumberMessage, setBusinessNumberMessage] = useState('');
   const [startBusinessMessage, setStartBusinessMessage] = useState('');
+
+  const { mutate: sendRegiData } = useMutation(
+    (data: PostEnrollShopInfo) => postEnrollShopInfo(data),
+    { onError: err => console.log(err) },
+  );
 
   // onClick
   const onClickShopAddress = () => {
@@ -163,7 +150,7 @@ export default function EnrollShop() {
       const categoryId = CATEGORY.filter(cate => cate.name === categoryValue)[0]
         .categoryId;
 
-      const data = {
+      const data: PostEnrollShopInfo = {
         storeName: shopName,
         address: shopAddress,
         phone: shopNumber,
@@ -174,7 +161,7 @@ export default function EnrollShop() {
         categoryId: categoryId,
       };
 
-      const response = await postEnrollShopInfo(data);
+      sendRegiData(data);
       // navigate('/enrollshop/contents', {
       //   state: {
       //     shopName: shopName,
