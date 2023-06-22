@@ -84,7 +84,7 @@ const UserNameInputBox = styled.div<{ valid: boolean }>`
           border-color: #ff3a3a;
         }
         &::after {
-          content: "영어,숫자 10자 이내로 입력해주세요.";
+          content: "영어or한글 10자 이내로 입력해주세요.";
           position: absolute;
           top: calc(100% + 3px);
           left: 0;
