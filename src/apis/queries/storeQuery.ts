@@ -12,7 +12,16 @@ export const postEnrollShopInfo = async (storeInfo: any) => {
   console.log(storeInfo);
   const res = await api.post(
     `/api/stores`,
-    { storeInfo },
+    {
+      storeName: storeInfo.storeName,
+      address: storeInfo.address,
+      phone: storeInfo.phone,
+      businessNumber: storeInfo.businessNumber,
+      businessName: storeInfo.businessName,
+      businessStartDate: storeInfo.businessStartDate,
+      keywordIdList: storeInfo.keywordIdList,
+      categoryId: storeInfo.categoryId,
+    },
     {
       headers: {
         "Content-Type": "application/json",
