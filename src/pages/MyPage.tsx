@@ -4,7 +4,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { Email, Id, Name } from "../store/userInfoAtom";
 import { getConsumerInfo, getOwnerInfo } from "../apis/queries/myPageQuery";
-import { useMutation } from "react-query";
+import { useMutation } from '@tanstack/react-query';
 import { role } from "../apis/types/common.type";
 
 const MyPage = () => {

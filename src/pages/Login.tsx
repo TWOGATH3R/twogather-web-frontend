@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { loginProps } from '../apis/types/login.type';
 import { loginMutaionPostInfo } from '../apis/queries/LoginQuery';
 

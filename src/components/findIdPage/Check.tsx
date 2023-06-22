@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { locationType } from "./type";
 import { Link } from "react-router-dom";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { getMyId } from "../../apis/queries/findIdQuery";
 import { getMyIdProps } from "../../apis/types/findId.type";
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Pagination from 'react-js-pagination';
 import { Link, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { getStoreList } from '../../apis/queries/mainQuery';
 import { searchProps } from '../../apis/types/main.type';
 

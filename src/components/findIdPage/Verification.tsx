@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { emailCheckMutaionPostEmail } from "../../apis/queries/signUpQuery";
-import { useMutation } from "react-query";
+import { useMutation } from '@tanstack/react-query';
 
 const Verification = () => {
   const navigate = useNavigate();

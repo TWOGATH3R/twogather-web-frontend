@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import TodayDate from './TodayDate';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getKeyWordList } from '../../apis/queries/mainQuery';
 import { cityType } from './type';
 

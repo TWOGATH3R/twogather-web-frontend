@@ -24,7 +24,6 @@ const Info = () => {
   const [name, setName] = useState<string>('');
   const [code, setCode] = useState<string>('');
 
-  const [codeAnswer, setCodeAnswer] = useState<string>('');
   useEffect(() => {
     setId(IdDate);
     setName(nameDate);
