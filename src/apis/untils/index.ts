@@ -19,6 +19,8 @@ api.interceptors.response.use(
     if (status === 401) {
       removeCookie();
       window.location.replace("/login");
+      window.location.reload();
     }
+    return Promise.reject(error);
   }
 );

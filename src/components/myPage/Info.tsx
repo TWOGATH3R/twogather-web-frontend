@@ -82,7 +82,7 @@ const Info = () => {
       onError: (err:AxiosError) => {
         console.log(err);
         console.log('사업자 정보 업데이트')
-      },
+      }
     }
   );
 
