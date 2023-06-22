@@ -47,14 +47,23 @@ const DateBox = styled.div`
   justify-content: center;
   align-items: center;
   flex: 1;
+  @media (max-width: 1080px) {
+    padding-bottom: 15px;
+  }
 `;
 const DaysBox = styled.div`
   padding-right: 15px;
   font-size: 4rem;
   font-weight: bold;
+  @media (max-width: 1080px) {
+    font-size: 5rem;
+  }
 `;
 const DayWeekYearMonthBox = styled.div`
   font-size: 1.5rem;
+  @media (max-width: 1080px) {
+    font-size: 2.2rem;
+  }
 `;
 const DayWeekBox = styled.div`
   text-align: center;
