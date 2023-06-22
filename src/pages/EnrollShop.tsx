@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react";
 import styled, { css } from "styled-components";
 import { ReactComponent as RightArrow } from "../assets/right-arrow.svg";
-import AddressModal from "../components/address/AddressModal";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { address, visibleAddress } from "../store/addressAtom";
 import { IShopAddressVisible } from "../apis/api";
@@ -111,10 +110,10 @@ export default function EnrollShop() {
     (data: PostEnrollShopInfo) => postEnrollShopInfo(data),
     {
       onSuccess: (res) => {
-        console.log(res);
+        navigate("/enrollshop/contents");
       },
-      onError: (err) => {
-        console.log(err);
+      onError: (err: any) => {
+        alert(err.response.data.message);
       },
     }
   );
