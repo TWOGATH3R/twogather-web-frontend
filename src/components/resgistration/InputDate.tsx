@@ -23,7 +23,6 @@ export default function InputDate({
   placeholder,
   style,
 }: InputDateProps) {
-  console.log(inputTxt);
   return (
     <ShopInnerWrapper>
       <InputLabel>{title}</InputLabel>

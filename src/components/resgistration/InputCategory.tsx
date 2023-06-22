@@ -24,7 +24,6 @@ export default function InputCategory({
   placeholder,
   style,
 }: InputCategoryProps) {
-  console.log(inputTxt);
   return (
     <ShopInnerWrapper>
       <InputLabel>{title}</InputLabel>

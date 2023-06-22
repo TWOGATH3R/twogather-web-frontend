@@ -1,111 +1,121 @@
-import React, { useCallback, useState } from 'react';
-import styled, { css } from 'styled-components';
-import { ReactComponent as RightArrow } from '../assets/right-arrow.svg';
-import AddressModal from '../components/address/AddressModal';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { address, visibleAddress } from '../store/addressAtom';
-import { IShopAddressVisible } from '../apis/api';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import InputText from '../components/resgistration/InputText';
-import InputAddress from '../components/resgistration/InputAddress';
-import InputCategory from '../components/resgistration/InputCategory';
-import InputKeyword from '../components/resgistration/InputKeyword';
-import InputDate from '../components/resgistration/InputDate';
-import ShopSubTitle from '../components/resgistration/ShopSubTitle';
-import { postEnrollShopInfo } from '../apis/queries/storeQuery';
-import { useMutation } from '@tanstack/react-query';
-import { PostEnrollShopInfo } from '../apis/queries/type';
+import React, { useCallback, useState } from "react";
+import styled, { css } from "styled-components";
+import { ReactComponent as RightArrow } from "../assets/right-arrow.svg";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { address, visibleAddress } from "../store/addressAtom";
+import { IShopAddressVisible } from "../apis/api";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import InputText from "../components/resgistration/InputText";
+import InputAddress from "../components/resgistration/InputAddress";
+import InputCategory from "../components/resgistration/InputCategory";
+import InputKeyword from "../components/resgistration/InputKeyword";
+import InputDate from "../components/resgistration/InputDate";
+import ShopSubTitle from "../components/resgistration/ShopSubTitle";
+import { postEnrollShopInfo } from "../apis/queries/storeQuery";
+import { useMutation } from "@tanstack/react-query";
+import { PostEnrollShopInfo } from "../apis/queries/type";
 
 export default function EnrollShop() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [shopName, setShopName] = useState<string>('');
+  const [shopName, setShopName] = useState<string>("");
   const shopAddress = useRecoilValue(address);
   const [visibleShopAddress, setVisibleShopAddress] =
     useRecoilState(visibleAddress);
-  const [shopNumber, setShopNumber] = useState<string>('');
-  const [shopCategory, setShopCategory] = useState<string>('');
+  const [shopNumber, setShopNumber] = useState<string>("");
+  const [shopCategory, setShopCategory] = useState<string>("");
 
   const [visibleCategory, setVisibleCategory] = useState<boolean>(false);
-  const [categoryValue, setCategoryValue] = useState<string>('');
+  const [categoryValue, setCategoryValue] = useState<string>("");
   type CATEGORY_TYPE = {
     categoryId: number;
+    name: string;
+  };
+  type KEYWORD_TYPE = {
+    keywordId: number;
     name: string;
   };
 
   const CATEGORY: CATEGORY_TYPE[] = [
     {
       categoryId: 1,
-      name: '양식',
+      name: "양식",
     },
     {
       categoryId: 2,
-      name: '일식',
+      name: "일식",
     },
     {
       categoryId: 3,
-      name: '중식',
+      name: "중식",
     },
     {
       categoryId: 4,
-      name: '카페',
+      name: "카페",
     },
     {
       categoryId: 5,
-      name: '한식',
+      name: "한식",
     },
     {
       categoryId: 6,
-      name: '패스트푸드',
+      name: "패스트푸드",
     },
     {
       categoryId: 7,
-      name: '분식',
+      name: "분식",
     },
     {
       categoryId: 8,
-      name: '기타',
+      name: "기타",
     },
   ];
 
-  const KEYWORD = [
-    '분위기 좋은',
-    '저렴한 가격',
-    '아이들과 오기 좋은',
-    '사진찍기 좋은',
-    '친절한',
-    '고급스러운',
-    '조용한',
-    '모임하기 좋은',
-    '특별한 날',
-    '단체 회식',
-    '데이트하기 좋은',
-    '뷰가 좋은',
-    '특별한 메뉴',
-    '멋진 인테리어',
-    '디저트가 맛있는',
-    '청결한 매장',
-    '방송에 나온 맛집',
+  const KEYWORD: KEYWORD_TYPE[] = [
+    { keywordId: 1, name: "분위기 좋은" },
+    { keywordId: 2, name: "저렴한 가격" },
+    { keywordId: 3, name: "아이들과 오기 좋은" },
+    { keywordId: 4, name: "사진찍기 좋은" },
+    { keywordId: 5, name: "친절한" },
+    { keywordId: 6, name: "고급스러운" },
+    { keywordId: 7, name: "조용한" },
+    { keywordId: 8, name: "모임하기 좋은" },
+    { keywordId: 9, name: "특별한 날" },
+    { keywordId: 10, name: "단체 회식" },
+    { keywordId: 11, name: "데이트하기 좋은" },
+    { keywordId: 12, name: "뷰가 좋은" },
+    { keywordId: 13, name: "특별한 메뉴" },
+    { keywordId: 14, name: "멋진 인테리어" },
+    { keywordId: 15, name: "디저트가 맛있는" },
+    { keywordId: 16, name: "청결한 매장" },
+    { keywordId: 17, name: "방송에 나온 맛집" },
   ];
-  const [shopNameMessage, setShopNameMessage] = useState<string>('');
-  const [shopNumberMessage, setShopNumberMessage] = useState<string>('');
-  const [shopCategoryMessage, setShopCategoryMessage] = useState<string>('');
+  const [shopNameMessage, setShopNameMessage] = useState<string>("");
+  const [shopNumberMessage, setShopNumberMessage] = useState<string>("");
+  const [shopCategoryMessage, setShopCategoryMessage] = useState<string>("");
   const [visibleKeyword, setVisibleKeyword] = useState<boolean>(false);
   const [keywordList, setKeywordList] = useState<Array<string>>([]);
 
   // 사업자정보
-  const [businessName, setBusinessName] = useState('');
-  const [businessNumber, setBusinessNumber] = useState('');
-  const [startBusiness, setStartBusiness] = useState('');
+  const [businessName, setBusinessName] = useState("");
+  const [businessNumber, setBusinessNumber] = useState("");
+  const [startBusiness, setStartBusiness] = useState("");
 
-  const [businessNameMessage, setBusinessNameMessage] = useState('');
-  const [businessNumberMessage, setBusinessNumberMessage] = useState('');
-  const [startBusinessMessage, setStartBusinessMessage] = useState('');
+  const [businessNameMessage, setBusinessNameMessage] = useState("");
+  const [businessNumberMessage, setBusinessNumberMessage] = useState("");
+  const [startBusinessMessage, setStartBusinessMessage] = useState("");
 
   const { mutate: sendRegiData } = useMutation(
     (data: PostEnrollShopInfo) => postEnrollShopInfo(data),
-    { onError: err => console.log(err) },
+    {
+      onSuccess: (res) => {
+        navigate("/enrollshop/contents");
+      },
+      onError: (err: any) => {
+        alert(err.response.data.message);
+      },
+    }
   );
 
   // onClick
@@ -113,18 +123,17 @@ export default function EnrollShop() {
     setVisibleShopAddress(true);
   };
   const onClickVisibleCategory = () => {
-    setVisibleCategory(prev => !prev);
+    setVisibleCategory((prev) => !prev);
   };
   const onClickCategory = (item: string) => {
     setCategoryValue(item);
     setVisibleCategory(false);
   };
   const onClickVisibleKeyword = () => {
-    setVisibleKeyword(prev => !prev);
+    setVisibleKeyword((prev) => !prev);
     setKeywordList([]);
   };
   const nextBtnOnClick = async () => {
-    console.log(keywordList);
     if (
       !shopName ||
       !shopAddress ||
@@ -135,26 +144,28 @@ export default function EnrollShop() {
       !businessNumber ||
       !startBusiness
     )
-      alert('모든 정보를 입력해주세요');
-    else if (!regShopName.test(shopName)) alert('가게명이 옳바르지 않습니다.');
+      alert("모든 정보를 입력해주세요");
+    else if (!regShopName.test(shopName)) alert("가게명이 옳바르지 않습니다.");
     else if (!regShopNumber.test(shopNumber))
-      alert('번호가 옳바르지 않습니다 (- 포함시켜 주세요.)');
+      alert("번호가 옳바르지 않습니다 (- 포함시켜 주세요.)");
     else if (!regBusinessName.test(businessName))
-      alert('사업자명이 옳바르지 않습니다.');
+      alert("사업자명이 옳바르지 않습니다.");
     else if (!regBusinessNumber.test(businessNumber))
-      alert('사업자번호가 옳바르지 않습니다');
+      alert("사업자번호가 옳바르지 않습니다");
     else {
       const keywordIdlist = keywordList.map(
-        kword => KEYWORD.indexOf(kword) + 1,
+        (kword) =>
+          KEYWORD[KEYWORD.map((value) => value.name).indexOf(kword)].keywordId
       );
-      const categoryId = CATEGORY.filter(cate => cate.name === categoryValue)[0]
-        .categoryId;
+      const categoryId = CATEGORY.filter(
+        (cate) => cate.name === categoryValue
+      )[0].categoryId;
 
       const data: PostEnrollShopInfo = {
         storeName: shopName,
         address: shopAddress,
         phone: shopNumber,
-        businessNumber: businessNumber.split('-').join(''),
+        businessNumber: businessNumber.split("-").join(""),
         businessName: businessName,
         businessStartDate: startBusiness,
         keywordIdList: keywordIdlist,
@@ -187,20 +198,20 @@ export default function EnrollShop() {
     const shopNameCurrent = e.target.value;
     setShopName(e.target.value);
     if (!regShopName.test(shopNameCurrent)) {
-      setShopNameMessage('가게명이 옳바르지 않습니다.');
+      setShopNameMessage("가게명이 옳바르지 않습니다.");
       return;
     } else {
-      setShopNameMessage('');
+      setShopNameMessage("");
     }
   };
   const onChangeShopNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     const shopNumberCurrent = e.target.value;
     setShopNumber(e.target.value);
     if (!regShopNumber.test(shopNumberCurrent)) {
-      setShopNumberMessage('번호가 옳바르지 않습니다 (- 포함시켜 주세요.)');
+      setShopNumberMessage("번호가 옳바르지 않습니다 (- 포함시켜 주세요.)");
       return;
     } else {
-      setShopNumberMessage('');
+      setShopNumberMessage("");
     }
   };
   const onChangeShopCategory = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -208,9 +219,9 @@ export default function EnrollShop() {
     setShopCategory(e.target.value);
     console.log(shopCategory);
     if (shopCategory.length >= 0) {
-      setShopCategoryMessage('카테고리를 선택해주세요.');
+      setShopCategoryMessage("카테고리를 선택해주세요.");
     } else {
-      setShopCategory('');
+      setShopCategory("");
     }
   };
   const keyWordListLengthIs3 = (keywordList: string[]) => {
@@ -221,24 +232,24 @@ export default function EnrollShop() {
   const onChangeKeyword = useCallback(
     (checked: boolean, item: string) => {
       if (checked) {
-        setKeywordList(prev => [...prev, item]);
+        setKeywordList((prev) => [...prev, item]);
         const newKeywordList = [...keywordList, item];
         keyWordListLengthIs3(newKeywordList);
       } else if (!checked) {
-        const newKeywordList = keywordList.filter(el => el !== item);
+        const newKeywordList = keywordList.filter((el) => el !== item);
         setKeywordList(newKeywordList);
       }
     },
-    [keywordList],
+    [keywordList]
   );
   const onChangeBusinessName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const businessNameCurrent = e.target.value;
     setBusinessName(e.target.value);
     if (!regBusinessName.test(businessNameCurrent)) {
-      setBusinessNameMessage('사업자명이 옳바르지 않습니다.');
+      setBusinessNameMessage("사업자명이 옳바르지 않습니다.");
       return;
     } else {
-      setBusinessNameMessage('');
+      setBusinessNameMessage("");
     }
   };
   const onChangeBusinessNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -246,20 +257,20 @@ export default function EnrollShop() {
     setBusinessNumber(e.target.value);
     if (!regBusinessNumber.test(businessNumberCurrent)) {
       setBusinessNumberMessage(
-        '사업자번호가 옳바르지 않습니다 (- 포함시켜 주세요.)',
+        "사업자번호가 옳바르지 않습니다 (- 포함시켜 주세요.)"
       );
       return;
     } else {
-      setBusinessNumberMessage('');
+      setBusinessNumberMessage("");
     }
   };
   const onChangeStartBusiness = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStartBusiness(e.target.value);
     if (startBusiness.length >= 0) {
-      setStartBusinessMessage('');
+      setStartBusinessMessage("");
       return;
     } else {
-      setStartBusinessMessage('선택해주세요.');
+      setStartBusinessMessage("선택해주세요.");
     }
   };
 
@@ -277,40 +288,40 @@ export default function EnrollShop() {
 
             {/* 가게명 */}
             <InputText
-              title={'가게명'}
+              title={"가게명"}
               inputTxt={shopName}
               onChangeHandler={onChangeShopName}
-              placeholder='입력해주세요'
+              placeholder="입력해주세요"
               guideMsg={shopNameMessage}
               pathName={location.pathname}
             />
             {/* 가게 주소 */}
             <InputAddress
-              title={'가게 주소'}
+              title={"가게 주소"}
               inputTxt={shopAddress}
               onClickHandler={onClickShopAddress}
-              placeholder={'기본주소'}
-              style={{ cursor: 'pointer' }}
+              placeholder={"기본주소"}
+              style={{ cursor: "pointer" }}
               pathName={location.pathname}
               visiblePopup={visibleShopAddress}
             />
 
             {/* 가게 전화번호 */}
             <InputText
-              title='가게 전화번호'
+              title="가게 전화번호"
               inputTxt={shopNumber}
-              type='tel'
+              type="tel"
               onChangeHandler={onChangeShopNumber}
-              placeholder='입력해주세요'
+              placeholder="입력해주세요"
               guideMsg={shopNumberMessage}
               pathName={location.pathname}
             />
 
             <InputCategory
-              title='카테고리'
+              title="카테고리"
               inputTxt={categoryValue}
-              style={{ cursor: 'pointer' }}
-              placeholder={'카테고리를 정해주세요'}
+              style={{ cursor: "pointer" }}
+              placeholder={"카테고리를 정해주세요"}
               onChangeHandler={onChangeShopCategory}
               onClickHandler={() => onClickVisibleCategory()}
               pathName={location.pathname}
@@ -319,10 +330,10 @@ export default function EnrollShop() {
             {visibleCategory === true ? (
               <>
                 <CategoryWrapper>
-                  {CATEGORY.map(item => (
+                  {CATEGORY.map((item) => (
                     <CategoryList>
                       <span
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: "pointer" }}
                         onClick={() => onClickCategory(item.name)}
                       >
                         {item.name}
@@ -334,29 +345,29 @@ export default function EnrollShop() {
               </>
             ) : null}
             <InputKeyword
-              title='가게 대표 키워드'
+              title="가게 대표 키워드"
               visiblePopup={visibleKeyword}
               inputTxt={keywordList}
               onClickHandler={() => onClickVisibleKeyword()}
-              placeholder='선택해주세요 (최대 3개까지 가능합니다.)'
-              style={{ cursor: 'pointer' }}
+              placeholder="선택해주세요 (최대 3개까지 가능합니다.)"
+              style={{ cursor: "pointer" }}
               pathName={location.pathname}
             ></InputKeyword>
 
             {visibleKeyword && (
               <ShopKeywordWrapper>
-                {KEYWORD.map(item => (
+                {KEYWORD.map((item) => (
                   <>
                     <ShopKeywordList>
                       <ShopKeywordLabelWrapper>
-                        <ShopKeywordLabel htmlFor={item}>
-                          {item}
+                        <ShopKeywordLabel htmlFor={item.name}>
+                          {item.name}
                         </ShopKeywordLabel>
                       </ShopKeywordLabelWrapper>
                       <ShopKeywordCheckBox
-                        type='checkbox'
-                        id={item}
-                        onChange={e => {
+                        type="checkbox"
+                        id={item.name}
+                        onChange={(e) => {
                           onChangeKeyword(e.target.checked, e.target.id);
                         }}
                       />
@@ -367,29 +378,29 @@ export default function EnrollShop() {
             )}
           </ShopInnerOutlineWrapper>
         </ShopWrapper>
-        <ShopWrapper style={{ marginTop: '5%' }}>
+        <ShopWrapper style={{ marginTop: "5%" }}>
           <ShopInnerOutlineWrapper>
             <ShopSubTitle>사업자정보</ShopSubTitle>
 
             <InputText
-              title='사업자명'
+              title="사업자명"
               inputTxt={businessName}
               onChangeHandler={onChangeBusinessName}
-              placeholder='입력해주세요'
+              placeholder="입력해주세요"
               guideMsg={businessNameMessage}
               pathName={location.pathname}
             />
             <InputText
-              title='사업자등록번호'
+              title="사업자등록번호"
               inputTxt={businessNumber}
               onChangeHandler={onChangeBusinessNumber}
-              placeholder='입력해주세요'
+              placeholder="입력해주세요"
               guideMsg={businessNumberMessage}
               pathName={location.pathname}
             />
             <InputDate
-              title='사업시작일'
-              placeholder='입력해주세요'
+              title="사업시작일"
+              placeholder="입력해주세요"
               onChangeHandler={onChangeStartBusiness}
               pathName={location.pathname}
               inputTxt={startBusiness}
@@ -399,7 +410,7 @@ export default function EnrollShop() {
         </ShopWrapper>
         <Outlet />
       </EnrollShopWrapper>
-      {location.pathname !== '/enrollshop/contents' ? (
+      {location.pathname !== "/enrollshop/contents" ? (
         <EnrollButtonContainer>
           <EnrollButton onClick={() => nextBtnOnClick()}>다음</EnrollButton>
         </EnrollButtonContainer>
@@ -420,7 +431,7 @@ const Overlay = styled.div<IShopAddressVisible>`
   width: 100%;
   height: 100%;
   position: absolute;
-  ${props =>
+  ${(props) =>
     props.visible === true
       ? css`
           background-color: rgba(0, 0, 0, 0.9);
