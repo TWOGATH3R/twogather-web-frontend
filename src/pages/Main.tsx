@@ -18,6 +18,9 @@ const MainContainer = styled.div`
   margin: 0 auto;
   padding-bottom: 6vh;
   width: 1080px;
+  @media (max-width: 1080px) {
+    width: 85%;
+  }
 `;
 
 export default Main;
