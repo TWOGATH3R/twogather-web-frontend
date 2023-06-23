@@ -5,7 +5,7 @@ import {
   userPwCheck,
   deleteConsumer,
   deleteOwner,
-} from '../../apis/queries/myPageQuery';
+} from '../../apis/queries/MyPageQuery';
 import Swal from 'sweetalert2';
 import { removeCookie } from '../cookie/cookie';
 import { role } from '../../apis/types/common.type';

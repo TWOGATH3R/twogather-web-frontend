@@ -4,7 +4,7 @@ import styled, { css } from "styled-components";
 import {
   putConsumerInfoChange,
   putOwnerInfoChange,
-} from "../../apis/queries/myPageQuery";
+} from "../../apis/queries/MyPageQuery";
 
 import sendMailImg from "../../assets/sendmail.svg";
 import { emailCheckMutaionPostEmail } from "../../apis/queries/signUpQuery";
