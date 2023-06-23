@@ -13,7 +13,8 @@ import InputDate from "../components/resgistration/InputDate";
 import ShopSubTitle from "../components/resgistration/ShopSubTitle";
 import { postEnrollShopInfo } from "../apis/queries/storeQuery";
 import { useMutation } from "@tanstack/react-query";
-import { PostEnrollShopInfo } from "../apis/queries/type";
+import { StoreId } from "../store/userInfoAtom";
+import { postEnrollShopInfoProps } from "../apis/types/store.type";
 
 export default function EnrollShop() {
   const navigate = useNavigate();
@@ -106,10 +107,13 @@ export default function EnrollShop() {
   const [businessNumberMessage, setBusinessNumberMessage] = useState("");
   const [startBusinessMessage, setStartBusinessMessage] = useState("");
 
+  const [storeId, setStoreId] = useRecoilState(StoreId);
+
   const { mutate: sendRegiData } = useMutation(
-    (data: PostEnrollShopInfo) => postEnrollShopInfo(data),
+    (data: postEnrollShopInfoProps) => postEnrollShopInfo(data),
     {
       onSuccess: (res) => {
+        setStoreId(res.data.storeId);
         navigate("/enrollshop/contents");
       },
       onError: (err: any) => {
@@ -161,7 +165,7 @@ export default function EnrollShop() {
         (cate) => cate.name === categoryValue
       )[0].categoryId;
 
-      const data: PostEnrollShopInfo = {
+      const data: postEnrollShopInfoProps = {
         storeName: shopName,
         address: shopAddress,
         phone: shopNumber,
@@ -217,7 +221,6 @@ export default function EnrollShop() {
   const onChangeShopCategory = (e: React.ChangeEvent<HTMLInputElement>) => {
     // const shopCategoryCurrent = e.target.value;
     setShopCategory(e.target.value);
-    console.log(shopCategory);
     if (shopCategory.length >= 0) {
       setShopCategoryMessage("카테고리를 선택해주세요.");
     } else {
@@ -225,7 +228,6 @@ export default function EnrollShop() {
     }
   };
   const keyWordListLengthIs3 = (keywordList: string[]) => {
-    console.log(keywordList);
     setVisibleKeyword(keywordList.length >= 3 ? false : true);
   };
 

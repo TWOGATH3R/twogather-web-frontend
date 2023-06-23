@@ -7,11 +7,17 @@ export const Name = atom({
 });
 
 export const Id = atom({
-  key: `name/${v1()}`,
+  key: `id/${v1()}`,
   default: "",
 });
 
 export const Email = atom({
-  key: `name/${v1()}`,
+  key: `email/${v1()}`,
   default: "",
 });
+
+export const StoreId = atom({
+  key: `storeid/${v1()}`,
+  default: 2,
+});
+

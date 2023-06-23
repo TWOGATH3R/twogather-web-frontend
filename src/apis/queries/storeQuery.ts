@@ -6,13 +6,28 @@ import {
   GetStoreInfoResponse,
   PutBusinessHourListResponse,
 } from "./type";
+import {
+  postEnrollShopInfoProps,
+  postEnrollShopInfoResponse,
+  postMenuListProps,
+} from "../types/store.type";
 
 //Post  /api/stores
-export const postEnrollShopInfo = async (storeInfo: any) => {
-  console.log(storeInfo);
-  const res = await api.post(
+export const postEnrollShopInfo = async (
+  storeInfo: postEnrollShopInfoProps
+): Promise<postEnrollShopInfoResponse> => {
+  const { data } = await api.post(
     `/api/stores`,
-    { storeInfo },
+    {
+      storeName: storeInfo.storeName,
+      address: storeInfo.address,
+      phone: storeInfo.phone,
+      businessNumber: storeInfo.businessNumber,
+      businessName: storeInfo.businessName,
+      businessStartDate: storeInfo.businessStartDate,
+      keywordIdList: storeInfo.keywordIdList,
+      categoryId: storeInfo.categoryId,
+    },
     {
       headers: {
         "Content-Type": "application/json",
@@ -21,7 +36,7 @@ export const postEnrollShopInfo = async (storeInfo: any) => {
       },
     }
   );
-  return res;
+  return data;
 };
 
 export const getEnrollShopCategory = async () => {
@@ -103,5 +118,63 @@ export const putBusinessHourtList = async ({
   });
 
   console.log(data);
+  return data;
+};
+
+//가게등록시 사진 등록 api
+export const postStoreImg = async (shopImages: any, storeId: string) => {
+  console.log(shopImages);
+  const URL = `/api/stores/${storeId}/images`;
+
+  const { data } = await api.post(URL, {
+    headers: {
+      "Content-Type": "application/json",
+      accept: "application/json,",
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+  });
+  return data;
+};
+
+//가게등록시 메뉴 등록 api
+export const postMenuList = async (
+  shopMenuList: postMenuListProps[],
+  storeId: string
+) => {
+  const list = shopMenuList.map((value) => {
+    return {
+      name: value.shopMenuName,
+      price: value.shopMenuPrice,
+    };
+  });
+  const URL = `/api/stores/${storeId}/menus`;
+
+  const { data } = await api.post(
+    URL,
+    {
+      menuSaveList: list,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json,",
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+      },
+    }
+  );
+  return data;
+};
+
+//가게등록시 영업시간 등록 api
+export const postOpenHour = async () => {
+  const URL = `/api/stores/1/images`;
+
+  const { data } = await api.post(URL, {
+    headers: {
+      "Content-Type": "application/json",
+      accept: "application/json,",
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+  });
   return data;
 };
