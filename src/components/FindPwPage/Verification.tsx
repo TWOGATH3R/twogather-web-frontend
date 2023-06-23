@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import { emailCheckMutaionPostEmail } from '../../apis/queries/SignUpQuery';
+import { emailCheckMutaionPostEmail } from '../../apis/queries/signUpQuery';
 import { useMutation } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
 import sendMailImg from '../../assets/sendmail.svg';

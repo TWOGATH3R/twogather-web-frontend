@@ -4,10 +4,10 @@ import styled, { css } from "styled-components";
 import {
   putConsumerInfoChange,
   putOwnerInfoChange,
-} from "../../apis/queries/MyPageQuery";
+} from "../../apis/queries/myPageQuery";
 
 import sendMailImg from "../../assets/sendmail.svg";
-import { emailCheckMutaionPostEmail } from "../../apis/queries/SignUpQuery";
+import { emailCheckMutaionPostEmail } from "../../apis/queries/signUpQuery";
 import Swal from "sweetalert2";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Email, Id, Name } from "../../store/userInfoAtom";

@@ -6,7 +6,7 @@ import styled, { css } from "styled-components";
 import {
   consumersMutaionPostInfo,
   storeOwnerMutaionPostInfo,
-} from "../../apis/queries/SignUpQuery";
+} from "../../apis/queries/signUpQuery";
 import { userSignUpProps } from "../../apis/types/signup.type";
 
 const InfoInput = () => {

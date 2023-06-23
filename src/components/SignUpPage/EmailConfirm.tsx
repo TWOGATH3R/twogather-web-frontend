@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import sendMailImg from '../../assets/sendmail.svg';
 
-import { emailCheckMutaionPostEmail } from '../../apis/queries/SignUpQuery';
+import { emailCheckMutaionPostEmail } from '../../apis/queries/signUpQuery';
 import Swal from 'sweetalert2';
 
 const EmailConfirm = () => {
