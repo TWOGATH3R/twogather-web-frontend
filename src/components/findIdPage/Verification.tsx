@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { emailCheckMutaionPostEmail } from "../../apis/queries/signUpQuery";
+import { emailCheckMutaionPostEmail } from "../../apis/queries/SignUpQuery";
 import { useMutation } from '@tanstack/react-query';
 
 const Verification = () => {

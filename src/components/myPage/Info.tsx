@@ -7,7 +7,7 @@ import {
 } from "../../apis/queries/MyPageQuery";
 
 import sendMailImg from "../../assets/sendmail.svg";
-import { emailCheckMutaionPostEmail } from "../../apis/queries/signUpQuery";
+import { emailCheckMutaionPostEmail } from "../../apis/queries/SignUpQuery";
 import Swal from "sweetalert2";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Email, Id, Name } from "../../store/userInfoAtom";
