@@ -444,31 +444,35 @@ const Search = () => {
         <DateAndSearchBox>
           <TodayDate />
           <SearchBox onSubmit={(e) => searchOnSubmit(e)}>
-            <CategoriesBtn
-              htmlFor="categories"
-              onClick={() => categoriesBtnOnClick()}
-            >
-              {categories}
-              <p></p>
-            </CategoriesBtn>
-            <LocalBtn htmlFor="categories" onClick={() => localBtnOnClick()}>
-              <span>
-                {city.replace(/ /g, "").length >= 5
-                  ? city
-                      .replace("특별", "")
-                      .replace("광역", "")
-                      .replace("자치", "")
-                  : city}
-              </span>
-              {si}
-              <p></p>
-            </LocalBtn>
-            <SearchInput
-              value={searchText}
-              placeholder="검색어를 입력해주세요."
-              onChange={(e) => searchOnChange(e.target.value)}
-            />
-            <SearchBtn type="submit">Search</SearchBtn>
+            <LocalCategoryBtnBox>
+              <CategoriesBtn
+                htmlFor="categories"
+                onClick={() => categoriesBtnOnClick()}
+              >
+                {categories}
+                <p></p>
+              </CategoriesBtn>
+              <LocalBtn htmlFor="categories" onClick={() => localBtnOnClick()}>
+                <span>
+                  {city.replace(/ /g, "").length >= 5
+                    ? city
+                        .replace("특별", "")
+                        .replace("광역", "")
+                        .replace("자치", "")
+                    : city}
+                </span>
+                {si}
+                <p></p>
+              </LocalBtn>
+            </LocalCategoryBtnBox>
+            <SearchInputBtnBox>
+              <SearchInput
+                value={searchText}
+                placeholder="검색어를 입력해주세요."
+                onChange={(e) => searchOnChange(e.target.value)}
+              />
+              <SearchBtn type="submit">Search</SearchBtn>
+            </SearchInputBtnBox>
           </SearchBox>
         </DateAndSearchBox>
         <KeyWordBox>
@@ -491,6 +495,22 @@ const Search = () => {
   );
 };
 
+const LocalCategoryBtnBox = styled.div`
+  width: fit-content;
+  @media (max-width: 680px) {
+    width: 100%;
+    label {
+      width: 50%;
+    }
+  }
+`;
+const SearchInputBtnBox = styled.div`
+  width: calc(100% - 260px);
+  @media (max-width: 680px) {
+    width: 100%;
+  }
+`;
+
 const SearchContainer = styled.div`
   padding-top: 60px;
   width: 100%;
@@ -511,11 +531,14 @@ const DateAndSearchBox = styled.div`
 `;
 
 const SearchBox = styled.form`
+  display: flex;
   flex: 2.8;
   height: 55px;
   @media (max-width: 1080px) {
-    display: flex;
     width: 100%;
+  }
+  @media (max-width: 680px) {
+    flex-direction: column;
   }
 `;
 const CategoriesInput = styled.input`
@@ -732,20 +755,21 @@ const LocalBtn = styled(CategoriesBtn)`
 const SearchInput = styled.input`
   outline: none;
   padding: 5px 10px;
-  width: calc(100% - 370px);
+  width: calc(100% - 100px);
   height: 55px;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-left: none;
+  /* border-left: none; */
   border-right: none;
   border-radius: 2px;
   box-sizing: border-box;
   font-size: ${({ theme }) => theme.fontSizes.base};
 `;
 const SearchBtn = styled.button`
+  margin-left: -3px;
   width: 100px;
   height: 55px;
   background: #0075ff;
-  border: 1px solid #ffffff;
+  border: 1px solid #0075ff;
   border-radius: 2px;
   color: ${({ theme }) => theme.colors.white};
   font-size: 1rem;
