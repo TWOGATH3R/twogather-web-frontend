@@ -122,8 +122,9 @@ export const putBusinessHourtList = async ({
 };
 
 //가게등록시 사진 등록 api
-export const postStoreImg = async () => {
-  const URL = `/api/stores/1/images`;
+export const postStoreImg = async (shopImages: any, storeId: string) => {
+  console.log(shopImages);
+  const URL = `/api/stores/${storeId}/images`;
 
   const { data } = await api.post(URL, {
     headers: {

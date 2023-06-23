@@ -5,9 +5,7 @@ import { ReactComponent as DeleteIcon } from "../../assets/delete-icon.svg";
 import Swal from "sweetalert2";
 import { IShopInputItem } from "../../apis/api";
 import { useMutation } from "@tanstack/react-query";
-import {
-  postMenuList,
-} from "../../apis/queries/storeQuery";
+import { postMenuList, postStoreImg } from "../../apis/queries/storeQuery";
 import { IShopMenuList } from "../../apis/api";
 import { useLocation, useNavigate } from "react-router-dom";
 import Day from "./Day";
@@ -21,6 +19,18 @@ const ContentsEnroll = () => {
 
   const [storeId, setStoreId] = useRecoilState(StoreId);
 
+  //가게등록시 영업시간 등록 query
+  const { mutate: saveImg } = useMutation(
+    () => postStoreImg(shopImages, String(storeId)),
+    {
+      onSuccess: (res) => {
+        console.log(res);
+      },
+      onError: (err: any) => {
+        alert(err);
+      },
+    }
+  );
   //가게등록시 영업시간 등록 query
   const { mutate: saveOpenHour } = useMutation(
     () => postMenuList(shopMenuList, String(storeId)),
@@ -292,6 +302,7 @@ const ContentsEnroll = () => {
           }
         }
       }
+      saveImg();
       saveOpenHour();
     }
     // shopInfo();

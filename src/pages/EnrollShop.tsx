@@ -221,7 +221,6 @@ export default function EnrollShop() {
   const onChangeShopCategory = (e: React.ChangeEvent<HTMLInputElement>) => {
     // const shopCategoryCurrent = e.target.value;
     setShopCategory(e.target.value);
-    console.log(shopCategory);
     if (shopCategory.length >= 0) {
       setShopCategoryMessage("카테고리를 선택해주세요.");
     } else {
@@ -229,7 +228,6 @@ export default function EnrollShop() {
     }
   };
   const keyWordListLengthIs3 = (keywordList: string[]) => {
-    console.log(keywordList);
     setVisibleKeyword(keywordList.length >= 3 ? false : true);
   };
 
