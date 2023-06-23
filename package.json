@@ -52,7 +52,6 @@
     ]
   },
   "devDependencies": {
-    "@tanstack/react-query-devtools": "^4.29.14",
     "@types/react": "^18.2.0",
     "@types/react-js-pagination": "^3.0.4",
     "@types/react-slick": "^0.23.10",
