@@ -20,8 +20,8 @@ const ContentsEnroll = () => {
   const [storeId, setStoreId] = useRecoilState(StoreId);
 
   //가게등록시 영업시간 등록 query
-  const { mutate: saveImg } = useMutation(
-    () => postStoreImg(shopImages, String(storeId)),
+  const { mutate: saveOpenHour } = useMutation(
+    () => postStoreImg(imgList, String(storeId)),
     {
       onSuccess: (res) => {
         console.log(res);
@@ -31,8 +31,20 @@ const ContentsEnroll = () => {
       },
     }
   );
-  //가게등록시 영업시간 등록 query
-  const { mutate: saveOpenHour } = useMutation(
+  //가게등록시 이미지 등록 query
+  const { mutate: saveImg } = useMutation(
+    () => postStoreImg(imgList, String(storeId)),
+    {
+      onSuccess: (res) => {
+        console.log(res);
+      },
+      onError: (err: any) => {
+        alert(err);
+      },
+    }
+  );
+  //가게등록시 메뉴 등록 query
+  const { mutate: saveMenuList } = useMutation(
     () => postMenuList(shopMenuList, String(storeId)),
     {
       onSuccess: (res) => {
@@ -108,6 +120,10 @@ const ContentsEnroll = () => {
           ...shopImages.slice(0, idx),
           ...shopImages.slice(idx + 1, shopImages.length),
         ]);
+        setImgList([
+          ...imgList.slice(0, idx),
+          ...imgList.slice(idx + 1, shopImages.length),
+        ]);
         Swal.fire("삭제되었습니다!", "", "success");
       }
     });
@@ -155,6 +171,10 @@ const ContentsEnroll = () => {
     }
   };
 
+  const [imgList, setImgList] = useState<any[]>([]);
+  useEffect(() => {
+    console.log(imgList);
+  }, [imgList]);
   //onChange
   const onChangeShopImage = (e: React.ChangeEvent) => {
     const targetFiles = (e.target as HTMLInputElement).files as FileList;
@@ -163,6 +183,11 @@ const ContentsEnroll = () => {
       return URL.createObjectURL(file);
     });
     setShopImages((prev) => prev.concat(selectedFiles));
+    setImgList((value: any) => [
+      ...value,
+      ((e.target as HTMLInputElement).files as FileList)[0],
+    ]);
+
     inputPhotoFile.current?.click();
   };
   function addInputItem() {
@@ -302,8 +327,8 @@ const ContentsEnroll = () => {
           }
         }
       }
-      saveImg();
-      saveOpenHour();
+      // saveImg();
+      // saveMenuList();
     }
     // shopInfo();
   };
@@ -329,7 +354,7 @@ const ContentsEnroll = () => {
                 />
               </React.Fragment>
             ))}
-            <ShopPhotoForm>
+            <ShopPhotoForm encType="multipart/form-data">
               <ShopInput
                 style={{ width: "204px", height: "100%" }}
                 ref={inputPhotoFile}
@@ -337,7 +362,7 @@ const ContentsEnroll = () => {
                 className="input-file"
                 type="file"
                 id="file"
-                accept="image/*"
+                accept="image/*,jpg/*"
                 onChange={onChangeShopImage}
               />
               <PhotoIcon
@@ -606,7 +631,7 @@ const PreViewImage = styled.img`
   height: 204px;
   cursor: pointer;
 `;
-const ShopPhotoForm = styled.div`
+const ShopPhotoForm = styled.form`
   width: 228px;
   height: 204px;
   position: relative;

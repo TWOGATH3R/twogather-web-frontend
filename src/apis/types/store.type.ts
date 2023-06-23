@@ -43,20 +43,3 @@ export type postMenuListResponse = {
   ];
 };
 
-//이미지등록 api props type정의
-export type postStoreImgProps = {
-  id: number;
-  shopMenuName: string;
-  shopMenuPrice: string;
-};
-
-//이미지등록 api response type정의
-export type postStoreImgResponse = {
-  data: [
-    {
-      menuId: number;
-      name: string;
-      price: number;
-    }
-  ];
-};
