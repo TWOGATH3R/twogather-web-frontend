@@ -22,9 +22,7 @@ export default function Header() {
       padding: "3em",
     }).then((result) => {
       if (result.isConfirmed) {
-        navigate("/login");
         removeCookie();
-        localStorage.clear();
         window.location.reload();
       }
     });
@@ -36,7 +34,9 @@ export default function Header() {
       <MenuCheckList>
         <MenuCheckListXBtn htmlFor="menu">X</MenuCheckListXBtn>
         {getCookie("accessToken") === undefined ? (
-          <Link to="/login">Login</Link>
+          <MenuCheckItem>
+            <Link to="/login">Login</Link>
+          </MenuCheckItem>
         ) : (
           <>
             <MenuCheckListMypageIcon>

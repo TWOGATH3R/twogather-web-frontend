@@ -10,6 +10,10 @@ import {
   postEnrollShopInfoProps,
   postEnrollShopInfoResponse,
   postMenuListProps,
+  postMenuListResponse,
+  postOpenHourProps,
+  postOpenHourResponse,
+  postStoreImgResponse,
 } from "../types/store.type";
 
 //Post  /api/stores
@@ -122,17 +126,22 @@ export const putBusinessHourtList = async ({
 };
 
 //가게등록시 사진 등록 api
-export const postStoreImg = async (shopImages: any, storeId: string) => {
-  console.log(shopImages);
-  const URL = `/api/stores/${storeId}/images`;
+export const postStoreImg = async (
+  shopImages: any[],
+  storeId: string
+): Promise<postStoreImgResponse> => {
+  const form = new FormData();
+  shopImages.forEach((value, index) => {
+    form.append("storeImageList", shopImages[index]);
+  });
 
-  const { data } = await api.post(URL, {
+  const { data } = await api.post(`/api/stores/${storeId}/images`, form, {
     headers: {
-      "Content-Type": "application/json",
-      accept: "application/json,",
+      "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
+
   return data;
 };
 
@@ -140,7 +149,7 @@ export const postStoreImg = async (shopImages: any, storeId: string) => {
 export const postMenuList = async (
   shopMenuList: postMenuListProps[],
   storeId: string
-) => {
+): Promise<postMenuListResponse> => {
   const list = shopMenuList.map((value) => {
     return {
       name: value.shopMenuName,
@@ -166,15 +175,25 @@ export const postMenuList = async (
 };
 
 //가게등록시 영업시간 등록 api
-export const postOpenHour = async () => {
-  const URL = `/api/stores/1/images`;
+export const postOpenHour = async (
+  dayOfWeek: postOpenHourProps[],
+  storeId: string
+): Promise<postOpenHourResponse> => {
+  console.log(dayOfWeek);
+  const URL = `/api/stores/${storeId}/business-hours`;
 
-  const { data } = await api.post(URL, {
-    headers: {
-      "Content-Type": "application/json",
-      accept: "application/json,",
-      Authorization: `Bearer ${getCookie("accessToken")}`,
+  const { data } = await api.post(
+    URL,
+    {
+      businessHourList: dayOfWeek,
     },
-  });
+    {
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json,",
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+      },
+    }
+  );
   return data;
 };
