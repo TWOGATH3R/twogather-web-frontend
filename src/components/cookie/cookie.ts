@@ -10,5 +10,7 @@ export const getCookie = (name: string) => {
 };
 
 export const removeCookie = () => {
+  window.location.replace("/login");
+  localStorage.clear();
   return cookies.remove("accessToken");
 };
