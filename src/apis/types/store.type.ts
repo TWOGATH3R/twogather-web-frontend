@@ -43,3 +43,30 @@ export type postMenuListResponse = {
   ];
 };
 
+//영업시간 api props type정의
+export type postOpenHourProps = {
+  startTime: string;
+  endTime: string;
+  dayOfWeek: string;
+  isOpen: boolean;
+  hasBreakTime: boolean;
+  breakStartTime: string | null;
+  breakEndTime: string | null;
+};
+
+//영업시간 api response type정의
+export type postOpenHourResponse = {
+  data: [
+    {
+      breakEndTime: string | null;
+      breakStartTime: string | null;
+      businessHourId: number;
+      dayOfWeek: string;
+      endTime: string | null;
+      hasBreakTime: boolean;
+      isOpen: boolean;
+      startTime: string | null;
+      storeId: number;
+    }
+  ];
+};
