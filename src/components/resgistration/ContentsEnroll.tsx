@@ -5,56 +5,57 @@ import { ReactComponent as DeleteIcon } from "../../assets/delete-icon.svg";
 import Swal from "sweetalert2";
 import { IShopInputItem } from "../../apis/api";
 import { useMutation } from "@tanstack/react-query";
-import { postMenuList, postStoreImg } from "../../apis/queries/storeQuery";
+import {
+  postMenuList,
+  postOpenHour,
+  postStoreImg,
+} from "../../apis/queries/storeQuery";
 import { IShopMenuList } from "../../apis/api";
 import { useLocation, useNavigate } from "react-router-dom";
 import Day from "./Day";
 import ShopTimePicker from "./ShopTimePicker";
 import { useRecoilState } from "recoil";
 import { StoreId } from "../../store/userInfoAtom";
+import { postOpenHourProps } from "../../apis/types/store.type";
 
 const ContentsEnroll = () => {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [storeId, setStoreId] = useRecoilState(StoreId);
 
   //가게등록시 영업시간 등록 query
-  const { mutate: saveOpenHour } = useMutation(
-    () => postStoreImg(imgList, String(storeId)),
+  const { mutate: saveOpenHour, isLoading: saveOpenHourLoding } = useMutation(
+    () => postOpenHour(dayOfWeek && dayOfWeek, String(storeId)),
     {
-      onSuccess: (res) => {
-        console.log(res);
-      },
       onError: (err: any) => {
-        alert(err);
+        alert(err.response.data.message);
       },
     }
   );
   //가게등록시 이미지 등록 query
-  const { mutate: saveImg } = useMutation(
+  const { mutate: saveImg, isLoading: saveImgLoding } = useMutation(
     () => postStoreImg(imgList, String(storeId)),
     {
-      onSuccess: (res) => {
-        console.log(res);
-      },
       onError: (err: any) => {
-        alert(err);
+        alert(err.response.data.message);
       },
     }
   );
   //가게등록시 메뉴 등록 query
-  const { mutate: saveMenuList } = useMutation(
+  const { mutate: saveMenuList, isLoading: saveMenuListLoding } = useMutation(
     () => postMenuList(shopMenuList, String(storeId)),
     {
-      onSuccess: (res) => {
-        console.log(res);
-      },
       onError: (err: any) => {
-        alert(err);
+        alert(err.response.data.message);
       },
     }
   );
+
+  useEffect(() => {
+    if (saveImgLoding && saveMenuListLoding && saveOpenHourLoding) {
+      navigate("/");
+    }
+  }, [saveImgLoding, saveMenuListLoding, saveOpenHourLoding]);
 
   //가게 메뉴
   const shopMenuID = useRef<number>(1);
@@ -94,7 +95,7 @@ const ContentsEnroll = () => {
       ],
     },
   ]);
-  const [dayOfWeek, setDayOfWeek] = useState();
+  const [dayOfWeek, setDayOfWeek] = useState<postOpenHourProps[]>([]);
   type checkWeekListType = {
     day: string[];
   };
@@ -172,9 +173,6 @@ const ContentsEnroll = () => {
   };
 
   const [imgList, setImgList] = useState<any[]>([]);
-  useEffect(() => {
-    console.log(imgList);
-  }, [imgList]);
   //onChange
   const onChangeShopImage = (e: React.ChangeEvent) => {
     const targetFiles = (e.target as HTMLInputElement).files as FileList;
@@ -187,7 +185,6 @@ const ContentsEnroll = () => {
       ...value,
       ((e.target as HTMLInputElement).files as FileList)[0],
     ]);
-
     inputPhotoFile.current?.click();
   };
   function addInputItem() {
@@ -319,18 +316,26 @@ const ContentsEnroll = () => {
         for (let j = 0; j < 7; j++) {
           if (inputItems[i].week[j].status === true) {
             addDay.push({
+              startTime: inputItems[i].startTime,
+              endTime: inputItems[i].endTime,
               dayOfWeek: inputItems[i].week[j].dayOfWeek,
-              day: inputItems[i].week[j].day,
-              status: inputItems[i].week[j].status,
+              isOpen: inputItems[i].week[j].status,
+              hasBreakTime: inputItems[i].breakTimeCheckBox,
+              breakStartTime: inputItems[i].breakTimeCheckBox
+                ? inputItems[i].startBreakTime
+                : null,
+              breakEndTime: inputItems[i].breakTimeCheckBox
+                ? inputItems[i].endBreakTime
+                : null,
             });
             setDayOfWeek(addDay);
           }
         }
       }
-      // saveImg();
-      // saveMenuList();
+      saveOpenHour();
+      saveImg();
+      saveMenuList();
     }
-    // shopInfo();
   };
 
   return (
