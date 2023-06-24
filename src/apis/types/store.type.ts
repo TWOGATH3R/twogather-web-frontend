@@ -80,3 +80,14 @@ export type postStoreImgResponse = {
     }
   ];
 };
+
+//영업시간 api props type정의
+export type getOpenHourProps = {
+  startTime: string;
+  endTime: string;
+  dayOfWeek: string;
+  isOpen: boolean;
+  hasBreakTime: boolean;
+  breakStartTime: string | null;
+  breakEndTime: string | null;
+};

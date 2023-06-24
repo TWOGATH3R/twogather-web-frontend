@@ -16,7 +16,7 @@ import {
   postStoreImgResponse,
 } from "../types/store.type";
 
-//Post  /api/stores
+//가게 등록 api
 export const postEnrollShopInfo = async (
   storeInfo: postEnrollShopInfoProps
 ): Promise<postEnrollShopInfoResponse> => {
@@ -62,23 +62,20 @@ export const postEnrollShopImageList = async (storeInfo: any) => {
   return res.data;
 };
 
-// Get / api / stores / { storeId };
-export const geStoreOne = async ({
-  storeId,
-}: {
-  storeId: string;
-}): Promise<GetStoreInfoResponse> => {
-  //todo 임시로 reviewCounts 추후 변경할 것
-  const URL = `api/stores/${storeId}
-  }`;
-  const { data } = await api.get(URL, {
-    headers: {
-      "Content-Type": "application/json",
-      accept: "application/json,",
-      Authorization: `Bearer ${getCookie("accessToken")}`,
-    },
-  });
+//가게정보 가져오기 api
+export const getStoreOne = async (
+  storeId: number
+): Promise<GetStoreInfoResponse> => {
+  const URL = `api/stores/${storeId}`;
+  const { data } = await api.get(URL);
+  return data;
+};
 
+//가게 영업시간 가져오기 api
+export const getOpenHour = async (storeId: number) => {
+  console.log(storeId);
+  const URL = `/api/stores/${storeId}/business-hours`;
+  const { data } = await api.get(URL);
   return data;
 };
 
@@ -179,7 +176,6 @@ export const postOpenHour = async (
   dayOfWeek: postOpenHourProps[],
   storeId: string
 ): Promise<postOpenHourResponse> => {
-  console.log(dayOfWeek);
   const URL = `/api/stores/${storeId}/business-hours`;
 
   const { data } = await api.post(

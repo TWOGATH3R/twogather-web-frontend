@@ -1,11 +1,58 @@
-import React, { useState } from 'react';
-import styled, { css } from 'styled-components';
-import Slick from '../../components/common/Slick';
-import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
-import { MdOutlineRateReview } from 'react-icons/md';
+import React, { useEffect, useState } from "react";
+import styled, { css } from "styled-components";
+import Slick from "../../components/common/Slick";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { MdOutlineRateReview } from "react-icons/md";
+import { useRecoilValue } from "recoil";
+import {
+  Address,
+  KeywordList,
+  LikeCount,
+  Phone,
+  StoreId,
+  StoreName,
+} from "../../store/storeDetailAtom";
+import { useMutation } from "@tanstack/react-query";
+import { getOpenHour } from "../../apis/queries/storeQuery";
+import { openHourType } from "./type";
 
 const ShopImgInfo = () => {
-  const [checkDay, setCheckDay] = useState<string>('월');
+  const storeId = useRecoilValue(StoreId);
+  const address = useRecoilValue(Address);
+  const keywordList = useRecoilValue(KeywordList);
+  const likeCount = useRecoilValue(LikeCount);
+  const phone = useRecoilValue(Phone);
+  const storeName = useRecoilValue(StoreName);
+
+  const [checkDay, setCheckDay] = useState({ ko: "월", en: "MONDAY" });
+
+  const [openHour, setOpenHour] = useState([]);
+
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [breakStartTime, setBreakStartTime] = useState("");
+  const [breakEndTime, setBreakEndTime] = useState("");
+
+  //query
+  //가게의 영업시간 정보 가져오기
+  const { mutate: getOpenHourList } = useMutation(() => getOpenHour(storeId), {
+    onSuccess: (res) => {
+      console.log(res)
+      setOpenHour(res.data);
+      const data: openHourType = res.data[0];
+      setStartTime(data.startTime);
+      setEndTime(data.endTime);
+      setBreakStartTime(data.breakStartTime);
+      setBreakEndTime(data.breakEndTime);
+    },
+    onError: (err: any) => {
+      console.log(err.response.data.message);
+    },
+  });
+
+  useEffect(() => {
+    getOpenHourList();
+  }, []);
 
   interface itemsProps {
     item: string;
@@ -13,28 +60,47 @@ const ShopImgInfo = () => {
   }
   const items: itemsProps[] = [
     {
-      item: 'http://placehold.it/1200x400',
-      name: '이미지01',
+      item: "http://placehold.it/1200x400",
+      name: "이미지01",
     },
     {
-      item: 'http://placehold.it/1200x400/ff0000',
-      name: '이미지02',
+      item: "http://placehold.it/1200x400/ff0000",
+      name: "이미지02",
     },
     {
-      item: 'http://placehold.it/1200x400/00ffff',
-      name: '이미지03',
+      item: "http://placehold.it/1200x400/00ffff",
+      name: "이미지03",
     },
   ];
 
-  const dayList = ['월', '화', '수', '목', '금', '토', '일'];
+  const dayList = [
+    { ko: "월", en: "MONDAY" },
+    { ko: "화", en: "TUESDAY" },
+    { ko: "수", en: "WEDNESDAY" },
+    { ko: "목", en: "THURSDAY" },
+    { ko: "금", en: "FRIDAY" },
+    { ko: "토", en: "SATURDAY" },
+    { ko: "일", en: "SUNDAY" },
+  ];
 
   const menuList = [
-    { name: '아메리카노', price: 3000 },
-    { name: '아이스크림', price: 3000 },
-    { name: '오늘의 티', price: 4000 },
-    { name: '누텔라 바나나 와플', price: 13000 },
-    { name: '초코 와플', price: 4500 },
+    { name: "아메리카노", price: 3000 },
+    { name: "아이스크림", price: 3000 },
+    { name: "오늘의 티", price: 4000 },
+    { name: "누텔라 바나나 와플", price: 13000 },
+    { name: "초코 와플", price: 4500 },
   ];
+
+  //onClick
+  const dayOnClick = (ko: string, en: string) => {
+    setCheckDay({ ko: ko, en: en });
+    const index = openHour.map((value: any) => value.dayOfWeek).indexOf(en);
+    const data: openHourType = openHour[index];
+    setStartTime(data.startTime);
+    setEndTime(data.endTime);
+    setBreakStartTime(data.breakStartTime);
+    setBreakEndTime(data.breakEndTime);
+  };
 
   return (
     <DetailShopWrapper>
@@ -51,7 +117,7 @@ const ShopImgInfo = () => {
       </ImageSlicer>
       <DetailShopInfoWrapper>
         <DetailShopInfoTitleWrapper>
-          <DetailShopInfoTitle>서울다이닝</DetailShopInfoTitle>
+          <DetailShopInfoTitle>{storeName}</DetailShopInfoTitle>
           <DetailShopInfoRating>4.2</DetailShopInfoRating>
           <OutlineHeart />
           <FillHeart />
@@ -63,38 +129,46 @@ const ShopImgInfo = () => {
           </ReviewCountBox>
           <HeartCountBox>
             <HeartCount />
-            <span>127</span>
+            <span>{likeCount}</span>
           </HeartCountBox>
         </ReviewHeartCountBox>
         <DetailInfoBox>
           <AddressBox>
             <span>주소</span>
-            <p>서울특별시 강남구 도산대로45길 10-4 삼경빌딩 1F</p>
+            <p>{address}</p>
           </AddressBox>
           <PhoneBox>
             <span>전화</span>
-            <p>02-1234-1234</p>
+            <p>{phone}</p>
           </PhoneBox>
           <DayList>
-            {dayList.map(value => (
-              <DayItem key={value} active={checkDay === value}>
-                {value}
+            {dayList.map((value) => (
+              <DayItem
+                key={value.ko}
+                active={checkDay.ko === value.ko}
+                onClick={() => dayOnClick(value.ko, value.en)}
+              >
+                {value.ko}
               </DayItem>
             ))}
           </DayList>
           <OpenTimeBox>
             <span>영업시간</span>
-            <p>09:00 ~ 16:00</p>
+            <p>
+              {startTime} ~ {endTime}
+            </p>
           </OpenTimeBox>
           <BreakTimeBox>
             <span>브레이크 타임</span>
-            <p>11:00 ~ 12:00</p>
+            <p>
+              {breakStartTime} ~ {breakEndTime}
+            </p>
           </BreakTimeBox>
           <MenuBox>
             <span>메뉴</span>
             <MenuList>
               {menuList &&
-                menuList.map(value => (
+                menuList.map((value) => (
                   <MenuItem key={value.name}>
                     <span>{value.name}</span>
                     <span>{value.price}원</span>
@@ -228,7 +302,7 @@ const DayItem = styled.li<{ active: boolean }>`
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 3px;
   cursor: pointer;
-  ${props =>
+  ${(props) =>
     props.active &&
     css`
       background-color: #0a3fff;
