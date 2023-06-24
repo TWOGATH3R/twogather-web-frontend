@@ -13,7 +13,7 @@ import {
   StoreName,
 } from "../../store/storeDetailAtom";
 import { useMutation } from "@tanstack/react-query";
-import { getOpenHour } from "../../apis/queries/storeQuery";
+import { getMenuList, getOpenHour } from "../../apis/queries/storeQuery";
 import { openHourType } from "./type";
 
 const ShopImgInfo = () => {
@@ -33,11 +33,17 @@ const ShopImgInfo = () => {
   const [breakStartTime, setBreakStartTime] = useState("");
   const [breakEndTime, setBreakEndTime] = useState("");
 
+  type menuListStateType = {
+    menuId: number;
+    name: string;
+    price: number;
+  };
+  const [menuList, setMenuList] = useState<menuListStateType[]>([]);
+
   //query
   //가게의 영업시간 정보 가져오기
   const { mutate: getOpenHourList } = useMutation(() => getOpenHour(storeId), {
     onSuccess: (res) => {
-      console.log(res)
       setOpenHour(res.data);
       const data: openHourType = res.data[0];
       setStartTime(data.startTime);
@@ -49,9 +55,19 @@ const ShopImgInfo = () => {
       console.log(err.response.data.message);
     },
   });
+  //가게의 메뉴 정보 가져오기
+  const { mutate: getMenu } = useMutation(() => getMenuList(storeId), {
+    onSuccess: (res) => {
+      setMenuList(res.data);
+    },
+    onError: (err: any) => {
+      console.log(err.response.data.message);
+    },
+  });
 
   useEffect(() => {
     getOpenHourList();
+    getMenu();
   }, []);
 
   interface itemsProps {
@@ -81,14 +97,6 @@ const ShopImgInfo = () => {
     { ko: "금", en: "FRIDAY" },
     { ko: "토", en: "SATURDAY" },
     { ko: "일", en: "SUNDAY" },
-  ];
-
-  const menuList = [
-    { name: "아메리카노", price: 3000 },
-    { name: "아이스크림", price: 3000 },
-    { name: "오늘의 티", price: 4000 },
-    { name: "누텔라 바나나 와플", price: 13000 },
-    { name: "초코 와플", price: 4500 },
   ];
 
   //onClick
@@ -174,9 +182,11 @@ const ShopImgInfo = () => {
                     <span>{value.price}원</span>
                   </MenuItem>
                 ))}
-              <SeeMoreBtnBox>
-                <SeeMoreBtn>더보기</SeeMoreBtn>
-              </SeeMoreBtnBox>
+              {menuList.length > 5 ? (
+                <SeeMoreBtnBox>
+                  <SeeMoreBtn>더보기</SeeMoreBtn>
+                </SeeMoreBtnBox>
+              ) : null}
             </MenuList>
           </MenuBox>
         </DetailInfoBox>

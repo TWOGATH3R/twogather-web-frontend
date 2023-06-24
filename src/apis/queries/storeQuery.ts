@@ -7,6 +7,7 @@ import {
   PutBusinessHourListResponse,
 } from "./type";
 import {
+  getMenuListResponse,
   postEnrollShopInfoProps,
   postEnrollShopInfoResponse,
   postMenuListProps,
@@ -73,8 +74,14 @@ export const getStoreOne = async (
 
 //가게 영업시간 가져오기 api
 export const getOpenHour = async (storeId: number) => {
-  console.log(storeId);
   const URL = `/api/stores/${storeId}/business-hours`;
+  const { data } = await api.get(URL);
+  return data;
+};
+
+//가게 메뉴리스트 가져오기 api
+export const getMenuList = async (storeId: number):Promise<getMenuListResponse> => {
+  const URL = `/api/stores/${storeId}/menus`;
   const { data } = await api.get(URL);
   return data;
 };

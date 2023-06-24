@@ -91,3 +91,14 @@ export type getOpenHourProps = {
   breakStartTime: string | null;
   breakEndTime: string | null;
 };
+
+//메뉴리스트 가져오기 api response type정의
+export type getMenuListResponse = {
+  data: [
+    {
+      menuId: number;
+      name: string;
+      price: number;
+    }
+  ];
+};
