@@ -1,10 +1,24 @@
-import React from 'react';
-import styled from 'styled-components';
-import StarClick from './StarClick';
-import InputBtnBox from './InputBtnBox';
+import React from "react";
+import styled from "styled-components";
+import StarClick from "./StarClick";
 
 const ReviewEnroll = () => {
-  return <InputBtnBox />;
+  return (
+    <Container>
+      <TitleBox>
+        <NameStarBox>
+          <Name>우리동네 맛집대장</Name>
+          <StarClick />
+        </NameStarBox>
+        <Score>평균 평점: 1.2</Score>
+      </TitleBox>
+      <Input rows={4} placeholder="리뷰를 작성해 주세요" />
+      <SubmitBtnBox>
+        <Date>2023-06-17</Date>
+        <SubmitButton>리뷰 작성</SubmitButton>
+      </SubmitBtnBox>
+    </Container>
+  );
 };
 
 const Container = styled.div`
@@ -24,10 +38,34 @@ const Score = styled.div`
   font-size: 0.75rem;
 `;
 
-// const SubmitBox = styled.div`
-//   display: flex;
-//   flex-direction: column;
-// `;
+const SubmitBtnBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+const SubmitButton = styled.button`
+  width: 105px;
+  background-color: #0038ff;
+  color: white;
+  height: 40px;
+  outline: none;
+  border: none;
+  border-width: 0px;
+  border-radius: 2px;
+  :hover {
+    cursor: pointer;
+  }
+`;
+const Input = styled.textarea`
+  outline: none;
+  margin-top: 5px;
+  padding: 10px 5px;
+  width: 100%;
+  border: 2px solid gray;
+  border-radius: 5px;
+  margin-right: 10px;
+  overflow: hidden;
+  resize: none;
+`;
 
 const Date = styled.div`
   font-size: 0.75rem;

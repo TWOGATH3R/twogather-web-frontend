@@ -1,21 +1,17 @@
-import React from 'react';
-import Review from '../components/detailShop/Review';
-import styled from 'styled-components';
-import ShopImgInfo from '../components/detailShop/ShopImgInfo';
+import React from "react";
+import styled from "styled-components";
+import ShopImgInfo from "../components/detailShop/ShopImgInfo";
+import ReviewEnroll from "../components/detailShop/ReviewEnroll";
+import Reviews from "../components/detailShop/Reviews";
 
 export default function DetailShop() {
   return (
     <DetailShopContainer>
       <ShopImgInfo />
-      <Title>리뷰작성하기</Title>
-      <Review option={'enroll'} />
-      {/* //todo 인자 넘기기 */}
-      <OtherReviewList>
-        <Title>리뷰 (54)</Title>
-        <Review option={'road'} />
-        {/* //todo 인자 넘기기 */}
-        <PageNation> 1 2 3 4 5</PageNation>
-      </OtherReviewList>
+      <Title>리뷰 작성하기</Title>
+      <ReviewEnroll />
+      <Title>리뷰 (54)</Title>
+      <Reviews />
     </DetailShopContainer>
   );
 }
@@ -26,12 +22,6 @@ const DetailShopContainer = styled.div`
   padding: 5%;
 `;
 const Title = styled.h2`
-  color: #606060;
-`;
-const OtherReviewList = styled.div`
-  margin: 100px auto;
-`;
-const PageNation = styled.div`
   margin-top: 20px;
-  text-align: center;
+  color: #606060;
 `;
