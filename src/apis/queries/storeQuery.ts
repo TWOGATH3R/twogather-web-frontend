@@ -13,6 +13,7 @@ import {
   postMenuListResponse,
   postOpenHourProps,
   postOpenHourResponse,
+  postStoreImgResponse,
 } from "../types/store.type";
 
 //Post  /api/stores
@@ -125,20 +126,23 @@ export const putBusinessHourtList = async ({
 };
 
 //가게등록시 사진 등록 api
-export const postStoreImg = async (shopImages: any[], storeId: string) => {
+export const postStoreImg = async (
+  shopImages: any[],
+  storeId: string
+): Promise<postStoreImgResponse> => {
   const form = new FormData();
   shopImages.forEach((value, index) => {
     form.append("storeImageList", shopImages[index]);
   });
 
-  const res = await api.post(`/api/stores/${storeId}/images`, form, {
+  const { data } = await api.post(`/api/stores/${storeId}/images`, form, {
     headers: {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
 
-  return res;
+  return data;
 };
 
 //가게등록시 메뉴 등록 api

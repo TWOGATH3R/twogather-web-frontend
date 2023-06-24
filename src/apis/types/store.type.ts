@@ -70,3 +70,13 @@ export type postOpenHourResponse = {
     }
   ];
 };
+
+//이미지 등록 api response type정의
+export type postStoreImgResponse = {
+  data: [
+    {
+      imageId: number;
+      url: string;
+    }
+  ];
+};
