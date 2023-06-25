@@ -7,6 +7,7 @@ import {
   PutBusinessHourListResponse,
 } from "./type";
 import {
+  getImgResponse,
   getMenuListResponse,
   postEnrollShopInfoProps,
   postEnrollShopInfoResponse,
@@ -214,6 +215,7 @@ export const postLike = async (storeId: number) => {
   );
   return res;
 };
+
 //좋아요 해제
 export const deleteLike = async (storeId: number) => {
   const { data } = await api.delete(`/api/stores/${storeId}/likes`, {
@@ -224,4 +226,11 @@ export const deleteLike = async (storeId: number) => {
     },
   });
   return data;
+};
+
+//가게 사진 List 가져오기 api
+export const getImg = async (storeId: number): Promise<getImgResponse> => {
+  const URL = `/api/stores/${storeId}/images`;
+  const { data } = await api.get(URL);
+  return data.data;
 };

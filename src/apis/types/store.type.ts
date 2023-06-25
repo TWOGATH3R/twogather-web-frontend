@@ -110,3 +110,13 @@ export type postReviewProps = {
   content: string;
   score: number;
 };
+
+//가게 사진 가져오기 api response type정의
+export type getImgResponse = {
+  data: [
+    {
+      imageId: number;
+      url: string;
+    }
+  ];
+};

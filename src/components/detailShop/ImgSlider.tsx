@@ -1,35 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Slick from "../../components/common/Slick";
+import { useQuery } from "@tanstack/react-query";
+import { getImg } from "../../apis/queries/storeQuery";
+import { useRecoilValue } from "recoil";
+import { StoreId } from "../../store/storeDetailAtom";
+import { imgListType } from "./type";
 
 const ImgSlider = () => {
-  interface itemsProps {
-    item: string;
-    name: string;
-  }
-  const items: itemsProps[] = [
-    {
-      item: "http://placehold.it/1200x400",
-      name: "이미지01",
-    },
-    {
-      item: "http://placehold.it/1200x400/ff0000",
-      name: "이미지02",
-    },
-    {
-      item: "http://placehold.it/1200x400/00ffff",
-      name: "이미지03",
-    },
-  ];
+  const storeId = useRecoilValue(StoreId);
+
+  //가게 이미지 리스트 가져오기
+  const { data: imgList } = useQuery(["imgList"], () => getImg(storeId));
+
   return (
     <ImageSlicer>
       <DetailShopImageWrapper>
         <Slick>
-          {items.map((item, index) => (
-            <SliderItem key={index}>
-              <img src={item.item} alt={item.name} />
-            </SliderItem>
-          ))}
+          {Array.isArray(imgList)
+            ? imgList.map((item: imgListType, index: number) => (
+                <SliderItem key={index}>
+                  <img src={item.url} alt={item.url} />
+                </SliderItem>
+              ))
+            : null}
         </Slick>
       </DetailShopImageWrapper>
     </ImageSlicer>
@@ -63,7 +57,8 @@ const SliderItem = styled.div`
   width: 100%;
   aspect-ratio: 16 / 10;
   img {
-    max-width: 100%;
+    margin: 0 auto;
+    max-width: 99%;
     height: 100%;
   }
 `;

@@ -15,3 +15,8 @@ export type menuListStateType = {
   name: string;
   price: number;
 };
+
+export type imgListType = {
+  imageId: number;
+  url: string;
+}
