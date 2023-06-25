@@ -137,6 +137,20 @@ const ShopInfo = () => {
 
   return (
     <DetailShopWrapper>
+      <MenuPopUpInput type="checkbox" id="menuPopUp" />
+      <BackgroundBox htmlFor="menuPopUp">
+        <MenuPopUp>
+          <p>메뉴</p>
+          <MenuPopUpList>
+            {menuList.map((value) => (
+              <MenuPopUpItem key={value.name}>
+                <span>{value.name}</span>
+                <span>{value.price}원</span>
+              </MenuPopUpItem>
+            ))}
+          </MenuPopUpList>
+        </MenuPopUp>
+      </BackgroundBox>
       <ImgSlider />
       <DetailShopInfoWrapper>
         <DetailShopInfoTitleWrapper>
@@ -192,7 +206,7 @@ const ShopInfo = () => {
             <span>메뉴</span>
             <MenuList>
               {menuList &&
-                menuList.map((value) => (
+                menuList.slice(0, 5).map((value) => (
                   <MenuItem key={value.name}>
                     <span>{value.name}</span>
                     <span>{value.price}원</span>
@@ -200,7 +214,7 @@ const ShopInfo = () => {
                 ))}
               {menuList.length > 5 ? (
                 <SeeMoreBtnBox>
-                  <SeeMoreBtn>더보기</SeeMoreBtn>
+                  <SeeMoreBtn htmlFor="menuPopUp">더보기</SeeMoreBtn>
                 </SeeMoreBtnBox>
               ) : null}
             </MenuList>
@@ -284,7 +298,7 @@ const MenuItem = styled.li`
 const SeeMoreBtnBox = styled.div`
   float: right;
 `;
-const SeeMoreBtn = styled.button`
+const SeeMoreBtn = styled.label`
   margin-top: 10px;
   padding: 3px 10px;
   background: #f0f0f0;
@@ -292,6 +306,58 @@ const SeeMoreBtn = styled.button`
   border: 1px solid rgba(96, 96, 96, 0.1);
   border-radius: 2px;
   cursor: pointer;
+`;
+
+const BackgroundBox = styled.label`
+  position: absolute;
+  z-index: 998;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s;
+  width: 100%;
+  min-height: 100vh;
+  height: 100%;
+  background-color: rgb(216 216 216 / 48%);
+`;
+const MenuPopUpInput = styled.input`
+  display: none;
+  &:checked {
+    & + label {
+      opacity: 1;
+      visibility: visible;
+      div {
+        display: block;
+      }
+    }
+  }
+`;
+const MenuPopUp = styled.div`
+  display: none;
+  position: sticky;
+  z-index: 999;
+  top: 50vh;
+  left: 50vw;
+  transform: translate(-50%, -50%);
+  padding: 40px 40px 80px 40px;
+  width: 500px;
+  background-color: white;
+  p {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #cccccc;
+    font-size: ${({ theme }) => theme.fontSizes.xxl};
+  }
+`;
+const MenuPopUpList = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+`;
+const MenuPopUpItem = styled(MenuItem)`
+  width: 45%;
 `;
 
 const DayList = styled.ul`
