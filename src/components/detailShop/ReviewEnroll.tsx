@@ -10,6 +10,7 @@ import { postReview } from "../../apis/queries/storeQuery";
 
 const ReviewEnroll = () => {
   const date = new Date();
+  const today = date.toISOString().split("T")[0];
 
   const storeId = useRecoilValue(StoreId);
 
@@ -61,7 +62,7 @@ const ReviewEnroll = () => {
         onChange={(e) => textOnChange(e.target.value)}
       />
       <SubmitBtnBox>
-        <DateBox>2023-06-17</DateBox>
+        <DateBox>{today}</DateBox>
         <SubmitButton onClick={() => enrollBtnOnClick()}>
           리뷰 작성
         </SubmitButton>
