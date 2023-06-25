@@ -8,7 +8,6 @@ const Reviews = () => {
       <TitleBox>
         <NameStarBox>
           <Name>우리동네 맛집대장</Name>
-          <StarClick />
         </NameStarBox>
         <Score>평균 평점: 1.2</Score>
       </TitleBox>
