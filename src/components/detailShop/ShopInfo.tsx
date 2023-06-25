@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
-import Slick from "../../components/common/Slick";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { MdOutlineRateReview } from "react-icons/md";
 import { useRecoilValue } from "recoil";
@@ -22,8 +21,9 @@ import {
 import { menuListStateType, openHourType } from "./type";
 import { getMyLikeList } from "../../apis/queries/myPageQuery";
 import { getCookie } from "../cookie/cookie";
+import ImgSlider from "./ImgSlider";
 
-const ShopImgInfo = () => {
+const ShopInfo = () => {
   const storeId = useRecoilValue(StoreId);
   const address = useRecoilValue(Address);
   const keywordList = useRecoilValue(KeywordList);
@@ -42,7 +42,6 @@ const ShopImgInfo = () => {
 
   const [likeBoolean, setLikeBoolean] = useState<boolean>(false);
 
-  
   const [menuList, setMenuList] = useState<menuListStateType[]>([]);
 
   const memberId = localStorage.getItem("memberId");
@@ -106,25 +105,6 @@ const ShopImgInfo = () => {
     getMenu();
   }, []);
 
-  interface itemsProps {
-    item: string;
-    name: string;
-  }
-  const items: itemsProps[] = [
-    {
-      item: "http://placehold.it/1200x400",
-      name: "이미지01",
-    },
-    {
-      item: "http://placehold.it/1200x400/ff0000",
-      name: "이미지02",
-    },
-    {
-      item: "http://placehold.it/1200x400/00ffff",
-      name: "이미지03",
-    },
-  ];
-
   const dayList = [
     { ko: "월", en: "MONDAY" },
     { ko: "화", en: "TUESDAY" },
@@ -157,17 +137,7 @@ const ShopImgInfo = () => {
 
   return (
     <DetailShopWrapper>
-      <ImageSlicer>
-        <DetailShopImageWrapper>
-          <Slick>
-            {items.map((item, index) => (
-              <SliderItem key={index}>
-                <img src={item.item} alt={item.name} />
-              </SliderItem>
-            ))}
-          </Slick>
-        </DetailShopImageWrapper>
-      </ImageSlicer>
+      <ImgSlider />
       <DetailShopInfoWrapper>
         <DetailShopInfoTitleWrapper>
           <DetailShopInfoTitle>{storeName}</DetailShopInfoTitle>
@@ -244,29 +214,6 @@ const ShopImgInfo = () => {
 const DetailShopWrapper = styled.div`
   display: flex;
   flex-direction: row;
-`;
-const ImageSlicer = styled.div`
-  display: flex;
-  width: 45%;
-  padding: 0 60px;
-  margin: auto;
-`;
-const DetailShopImageWrapper = styled.div`
-  margin: 0 auto;
-  width: calc(100% - 30px);
-  .slick-prev {
-    left: -40px;
-  }
-  .slick-next {
-    right: -40px;
-  }
-  svg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 16px;
-  }
 `;
 const DetailShopInfoWrapper = styled.div`
   width: 55%;
@@ -366,15 +313,6 @@ const DayItem = styled.li<{ active: boolean }>`
     `}
 `;
 
-const SliderItem = styled.div`
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  img {
-    max-width: 100%;
-    height: 100%;
-  }
-`;
-
 const HeartBox = styled.div`
   display: flex;
   cursor: pointer;
@@ -395,4 +333,4 @@ const HeartCount = styled(OutlineHeart)`
   font-size: 1.3rem;
 `;
 
-export default ShopImgInfo;
+export default ShopInfo;

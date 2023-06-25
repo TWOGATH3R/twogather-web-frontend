@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import ShopImgInfo from "../components/detailShop/ShopImgInfo";
+import ShopImgInfo from "../components/detailShop/ShopInfo";
 import ReviewEnroll from "../components/detailShop/ReviewEnroll";
 import Reviews from "../components/detailShop/Reviews";
 import { useMutation } from "@tanstack/react-query";
