@@ -102,3 +102,11 @@ export type getMenuListResponse = {
     }
   ];
 };
+
+//리뷰 등록 api props type정의
+export type postReviewProps = {
+  consumerId: string | null;
+  storeId: number;
+  content: string;
+  score: number;
+};
