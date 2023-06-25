@@ -198,3 +198,30 @@ export const postReview = async (info: postReviewProps, storeId: number) => {
   });
   return data;
 };
+
+//좋아요 누르기
+export const postLike = async (storeId: number) => {
+  const res = await api.post(
+    `/api/stores/${storeId}/likes`,
+    {},
+    {
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+        accept: "application/json,",
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+      },
+    }
+  );
+  return res;
+};
+//좋아요 해제
+export const deleteLike = async (storeId: number) => {
+  const { data } = await api.delete(`/api/stores/${storeId}/likes`, {
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+      accept: "application/json,",
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+  });
+  return data;
+};

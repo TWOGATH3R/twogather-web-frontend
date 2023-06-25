@@ -1,5 +1,6 @@
 import { getCookie } from "../../components/cookie/cookie";
 import {
+  getMyLikeListResponse,
   userGetInfoResponse,
   userPwCheckProps,
   userUpdateProps,
@@ -118,5 +119,19 @@ export const userPwCheck = async ({ pw, memberId }: userPwCheckProps) => {
       },
     }
   );
+  return data;
+};
+
+//내가 좋아요 누른 list 정보 가져오기
+export const getMyLikeList = async (
+  memberId: string | null
+):Promise<getMyLikeListResponse> => {
+  const { data } = await api.get(`/api/members/${memberId}/likes/?page=0&size=10`, {
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+      accept: "application/json,",
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+  });
   return data;
 };

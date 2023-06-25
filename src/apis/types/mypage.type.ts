@@ -31,3 +31,23 @@ export type userGetInfoResponse = {
     name: string;
   };
 };
+
+//내가 좋아요 누른 list 정보 가져오기 api response type정의
+export type getMyLikeListResponse = {
+  currentPage: number;
+  data: [
+    {
+      address: string;
+      keywordList: string[];
+      phone: string;
+      storeId: number;
+      storeImageUrl: string;
+      storeName: string;
+    }
+  ];
+  isFirst: boolean;
+  isLast: boolean;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+};

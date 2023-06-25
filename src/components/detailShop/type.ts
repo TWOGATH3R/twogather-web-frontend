@@ -9,3 +9,9 @@ export type openHourType = {
   startTime: string;
   storeId: number;
 };
+
+export type menuListStateType = {
+  menuId: number;
+  name: string;
+  price: number;
+};

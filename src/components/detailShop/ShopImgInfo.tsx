@@ -12,9 +12,16 @@ import {
   StoreId,
   StoreName,
 } from "../../store/storeDetailAtom";
-import { useMutation } from "@tanstack/react-query";
-import { getMenuList, getOpenHour } from "../../apis/queries/storeQuery";
-import { openHourType } from "./type";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  deleteLike,
+  getMenuList,
+  getOpenHour,
+  postLike,
+} from "../../apis/queries/storeQuery";
+import { menuListStateType, openHourType } from "./type";
+import { getMyLikeList } from "../../apis/queries/myPageQuery";
+import { getCookie } from "../cookie/cookie";
 
 const ShopImgInfo = () => {
   const storeId = useRecoilValue(StoreId);
@@ -33,14 +40,13 @@ const ShopImgInfo = () => {
   const [breakStartTime, setBreakStartTime] = useState<string | undefined>();
   const [breakEndTime, setBreakEndTime] = useState<string | undefined>();
 
-  type menuListStateType = {
-    menuId: number;
-    name: string;
-    price: number;
-  };
+  const [likeBoolean, setLikeBoolean] = useState<boolean>(false);
+
+  
   const [menuList, setMenuList] = useState<menuListStateType[]>([]);
 
-  //query
+  const memberId = localStorage.getItem("memberId");
+
   //가게의 영업시간 정보 가져오기
   const { mutate: getOpenHourList } = useMutation(() => getOpenHour(storeId), {
     onSuccess: (res) => {
@@ -59,6 +65,36 @@ const ShopImgInfo = () => {
   const { mutate: getMenu } = useMutation(() => getMenuList(storeId), {
     onSuccess: (res) => {
       setMenuList(res.data);
+    },
+    onError: (err: any) => {
+      console.log(err.response.data.message);
+    },
+  });
+  //DB에 저장된 검색가능한 키워드 리스트 가져오기
+  const { data: likeList } = useQuery(
+    ["myLikeList"],
+    () => getMyLikeList(memberId),
+    {
+      onSuccess: (res) => {
+        setLikeBoolean(
+          res.data.map((value) => value.storeId).includes(storeId)
+        );
+      },
+    }
+  );
+  //좋아요 누르기
+  const { mutate: saveLike } = useMutation(() => postLike(storeId), {
+    onSuccess: (res) => {
+      console.log("등록");
+    },
+    onError: (err: any) => {
+      console.log(err.response.data.message);
+    },
+  });
+  //좋아요 해제
+  const { mutate: likeDelete } = useMutation(() => deleteLike(storeId), {
+    onSuccess: (res) => {
+      console.log("삭제");
     },
     onError: (err: any) => {
       console.log(err.response.data.message);
@@ -111,6 +147,13 @@ const ShopImgInfo = () => {
       setBreakEndTime(data.breakEndTime);
     } else alert("등록된 영업시간이 없는 요일 입니다");
   };
+  const heartOnClick = () => {
+    if (getCookie("accessToken") !== undefined) {
+      setLikeBoolean(!likeBoolean);
+      if (!likeBoolean) saveLike();
+      else likeDelete();
+    } else alert("로그인 후 이용해주세요");
+  };
 
   return (
     <DetailShopWrapper>
@@ -129,8 +172,9 @@ const ShopImgInfo = () => {
         <DetailShopInfoTitleWrapper>
           <DetailShopInfoTitle>{storeName}</DetailShopInfoTitle>
           <DetailShopInfoRating>4.2</DetailShopInfoRating>
-          <OutlineHeart />
-          <FillHeart />
+          <HeartBox onClick={() => heartOnClick()}>
+            {likeBoolean ? <FillHeart /> : <OutlineHeart />}
+          </HeartBox>
         </DetailShopInfoTitleWrapper>
         <ReviewHeartCountBox>
           <ReviewCountBox>
@@ -165,7 +209,7 @@ const ShopImgInfo = () => {
           <OpenTimeBox>
             <span>영업시간</span>
             <p>
-              {startTime && startTime} ~ {endTime}
+              {startTime} ~ {endTime}
             </p>
           </OpenTimeBox>
           <BreakTimeBox>
@@ -331,15 +375,17 @@ const SliderItem = styled.div`
   }
 `;
 
+const HeartBox = styled.div`
+  display: flex;
+  cursor: pointer;
+`;
 const FillHeart = styled(AiFillHeart)`
   color: ${({ theme }) => theme.colors.yellow};
   font-size: 1.6rem;
-  cursor: pointer;
 `;
 const OutlineHeart = styled(AiOutlineHeart)`
   color: #bababa;
   font-size: 1.6rem;
-  cursor: pointer;
 `;
 const ReviewCount = styled(MdOutlineRateReview)`
   color: #bababa;
