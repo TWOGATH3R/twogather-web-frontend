@@ -28,10 +28,10 @@ const ShopImgInfo = () => {
 
   const [openHour, setOpenHour] = useState([]);
 
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [breakStartTime, setBreakStartTime] = useState("");
-  const [breakEndTime, setBreakEndTime] = useState("");
+  const [startTime, setStartTime] = useState<string | undefined>();
+  const [endTime, setEndTime] = useState<string | undefined>();
+  const [breakStartTime, setBreakStartTime] = useState<string | undefined>();
+  const [breakEndTime, setBreakEndTime] = useState<string | undefined>();
 
   type menuListStateType = {
     menuId: number;
@@ -101,13 +101,15 @@ const ShopImgInfo = () => {
 
   //onClick
   const dayOnClick = (ko: string, en: string) => {
-    setCheckDay({ ko: ko, en: en });
     const index = openHour.map((value: any) => value.dayOfWeek).indexOf(en);
     const data: openHourType = openHour[index];
-    setStartTime(data.startTime);
-    setEndTime(data.endTime);
-    setBreakStartTime(data.breakStartTime);
-    setBreakEndTime(data.breakEndTime);
+    if (data !== undefined) {
+      setCheckDay({ ko: ko, en: en });
+      setStartTime(data.startTime);
+      setEndTime(data.endTime);
+      setBreakStartTime(data.breakStartTime);
+      setBreakEndTime(data.breakEndTime);
+    } else alert("등록된 영업시간이 없는 요일 입니다");
   };
 
   return (
@@ -163,7 +165,7 @@ const ShopImgInfo = () => {
           <OpenTimeBox>
             <span>영업시간</span>
             <p>
-              {startTime} ~ {endTime}
+              {startTime && startTime} ~ {endTime}
             </p>
           </OpenTimeBox>
           <BreakTimeBox>
