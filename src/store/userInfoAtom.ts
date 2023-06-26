@@ -18,6 +18,6 @@ export const Email = atom({
 
 export const StoreId = atom({
   key: `storeid/${v1()}`,
-  default: 2,
+  default: 0,
 });
 

@@ -1,11 +1,13 @@
-import { isArray } from "lodash";
-import React, { useState } from "react";
+import React from "react";
 import { BsStar, BsStarHalf, BsStarFill } from "react-icons/bs";
 import styled from "styled-components";
 
-const StarClick = () => {
-  const [count, setCount] = useState(0);
+interface childProps {
+  count: number;
+  setCount: React.Dispatch<React.SetStateAction<number>>;
+}
 
+const StarClick = ({ count, setCount }: childProps) => {
   const starOnChange = (e: any) => {
     const num = e.target.defaultValue;
     setCount(num / 2);

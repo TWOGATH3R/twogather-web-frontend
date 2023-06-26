@@ -80,3 +80,43 @@ export type postStoreImgResponse = {
     }
   ];
 };
+
+//영업시간 api props type정의
+export type getOpenHourProps = {
+  startTime: string;
+  endTime: string;
+  dayOfWeek: string;
+  isOpen: boolean;
+  hasBreakTime: boolean;
+  breakStartTime: string | null;
+  breakEndTime: string | null;
+};
+
+//메뉴리스트 가져오기 api response type정의
+export type getMenuListResponse = {
+  data: [
+    {
+      menuId: number;
+      name: string;
+      price: number;
+    }
+  ];
+};
+
+//리뷰 등록 api props type정의
+export type postReviewProps = {
+  consumerId: string | null;
+  storeId: number;
+  content: string;
+  score: number;
+};
+
+//가게 사진 가져오기 api response type정의
+export type getImgResponse = {
+  data: [
+    {
+      imageId: number;
+      url: string;
+    }
+  ];
+};

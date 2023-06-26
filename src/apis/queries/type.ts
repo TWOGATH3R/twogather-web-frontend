@@ -6,8 +6,8 @@ export interface GetMyStoreListProps {
 }
 
 interface SortType {
-  type: 'TOP_RATED' | 'MOST_REVIEWD' | 'MOST_LIKEST_COUNT';
-  order: 'desc' | 'asc';
+  type: "TOP_RATED" | "MOST_REVIEWD" | "MOST_LIKEST_COUNT";
+  order: "desc" | "asc";
 }
 interface StoreResponse {
   storeId: number;
@@ -56,28 +56,29 @@ export interface GetStoreInfoResponse {
     address: string;
     phone: string;
     keywordList: KEYWORD[];
+    likeCount: number;
     categoryName: string;
   };
 }
 
 export type KEYWORD =
-  | '분위기 좋은'
-  | '저렴한 가격'
-  | '아이들과 오기 좋은'
-  | '사진찍기 좋은'
-  | '친절한'
-  | '고급스러운'
-  | '조용한'
-  | '모임하기 좋은'
-  | '특별한 날'
-  | '단체 회식'
-  | '데이트하기 좋은'
-  | '뷰가 좋은'
-  | '특별한 메뉴'
-  | '멋진 인테리어'
-  | '디저트가 맛있는'
-  | '청결한 매장'
-  | '방송에 나온 맛집';
+  | "분위기 좋은"
+  | "저렴한 가격"
+  | "아이들과 오기 좋은"
+  | "사진찍기 좋은"
+  | "친절한"
+  | "고급스러운"
+  | "조용한"
+  | "모임하기 좋은"
+  | "특별한 날"
+  | "단체 회식"
+  | "데이트하기 좋은"
+  | "뷰가 좋은"
+  | "특별한 메뉴"
+  | "멋진 인테리어"
+  | "디저트가 맛있는"
+  | "청결한 매장"
+  | "방송에 나온 맛집";
 
 export interface PutBusinessHoursProps {
   businessHourList: BusinessHourType[];
