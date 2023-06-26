@@ -12,7 +12,6 @@ import InfoInput from './components/SignUpPage/InfoInput';
 import FindId from './pages/FindId';
 import FindPw from './pages/FindPw';
 import VerificationPw from './components/FindPwPage/Verification';
-import PwChange from './components/FindPwPage/PwChange';
 import MyPage from './pages/MyPage';
 import Info from './components/myPage/Info';
 import Review from './components/myPage/Review';
@@ -48,7 +47,6 @@ const Router = () => {
         </Route>
         <Route path='/findPw' element={<FindPw />}>
           <Route path='verification' element={<VerificationPw />} />
-          <Route path='pwChange' element={<PwChange />} />
         </Route>
         <Route path='/stores' element={<Stores />}></Route>
         <Route path='/signUp' element={<SignUp />}>
