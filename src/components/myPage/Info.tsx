@@ -5,15 +5,13 @@ import {
   putConsumerInfoChange,
   putOwnerInfoChange,
 } from "../../apis/queries/myPageQuery";
-
-import sendMailImg from "../../assets/sendmail.svg";
-import { emailCheckMutaionPostEmail } from "../../apis/queries/signUpQuery";
 import Swal from "sweetalert2";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Email, Id, Name } from "../../store/userInfoAtom";
 import { role } from "../../apis/types/common.type";
 import { userUpdateProps } from "../../apis/types/mypage.type";
 import { AxiosError } from "axios";
+import PopUp from "./PopUp";
 
 const Info = () => {
   const nameDate = useRecoilValue(Name);
@@ -24,7 +22,6 @@ const Info = () => {
   const [pw, setPw] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
-  const [code, setCode] = useState<string>("");
 
   useEffect(() => {
     setId(IdDate);
@@ -32,24 +29,11 @@ const Info = () => {
     setEmail(emailDate);
   }, [IdDate, emailDate, nameDate]);
 
-  const [codeAnswer, setCodeAnswer] = useState<string>("");
-  const { mutate: emailCheck, isLoading: emailCheckLoading } = useMutation(
-    () => emailCheckMutaionPostEmail(email),
-    {
-      onSuccess: (res) => {
-        console.log(res);
-        setCodeAnswer(res.data.verificationCode);
-      },
-      onError: (err: any) => {
-        alert(err.response.data.message);
-      },
-    }
-  );
-
   const info: userUpdateProps = {
     email: emailDate,
     username: id,
     name: name,
+    pw: pw,
     memberId: localStorage.getItem("memberId"),
   };
   //고객 정보 업데이트 query
@@ -92,124 +76,61 @@ const Info = () => {
   const idOnChange = (idText: string) => {
     setId(idText);
   };
-  const pwPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/;
-  const pwOnChange = (pwText: string) => {
-    setPw(pwText);
-  };
-  const emailPattern =
-    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
   const emailOnChange = (emailText: string) => {
     setEmail(emailText);
   };
   const nameOnChange = (nameText: string) => {
     setName(nameText);
   };
-  const codeOnChange = (codeText: string) => {
-    setCode(codeText);
-  };
 
   //onClick
-  const emailBtnOnClick = () => {
-    if (!email) alert("이메일을 입력해주세요");
-    else if (!emailPattern.test(email)) alert("이메일이 형식에 맞지 않습니다");
-    else {
-      emailCheck();
-      const emailBtn = document.querySelector(".emailBtn") as HTMLElement;
-      emailBtn.innerText = "재전송";
-      if (sendMailImg) {
-        Swal.fire({
-          text: "이메일로 인증코드를 발송했습니다.",
-          imageUrl: `${sendMailImg}`,
-          confirmButtonColor: "#0075FF",
-        });
-      }
-    }
-  };
   const saveBtnOnClick = () => {
     if (localStorage.getItem("role") === role.ROLE_CONSUMER)
       consumerInfoChange();
     else ownerInfoChange();
   };
-  const codeBtnOnClick = () => {
-    if (!code) alert("인증번호를 입력해주세요");
-    else if (code !== codeAnswer) alert("인증번호가 알맞지 않습니다");
-    else {
-      alert("인증성공");
-      const input = document.querySelector("#email-window") as HTMLInputElement;
-      setEmailDate(email);
-      input.checked = false;
-      setCode("");
-      setEmail("");
-    }
-  };
-  const EmailWinodwXBtnOnClick = () => {
-    setCode("");
-    setEmail("");
-  };
+
+  const [emailPopUp, setEmailPopUpBoolean] = useState<boolean>(true);
 
   return (
     <SignUpContainer>
-      <EmailWindowInput id="email-window" type="checkbox" />
-      <EmailWindow>
-        <EmailWindowXBtnBox>
-          <label
-            htmlFor="email-window"
-            onClick={() => EmailWinodwXBtnOnClick()}
-          >
-            X
-          </label>
-        </EmailWindowXBtnBox>
-        <EmailWindowText>이메일 변경하기</EmailWindowText>
-        <EmailChangeBox
-          valid={email.length > 0 ? emailPattern.test(email) : true}
-        >
-          <EmailChangeText>이메일</EmailChangeText>
-          <EmailChangeInput
-            value={email}
-            placeholder="이메일"
-            onChange={(e) => emailOnChange(e.target.value)}
-          />
-          <EmailSendBtn className="emailBtn" onClick={() => emailBtnOnClick()}>
-            메일 전송
-          </EmailSendBtn>
-        </EmailChangeBox>
-        <ConfirmBox valid={true}>
-          <ConfirmText>인증코드</ConfirmText>
-          <ConfirmInput
-            value={code}
-            placeholder="인증코드"
-            onChange={(e) => codeOnChange(e.target.value)}
-          />
-          <ConfirmBtn onClick={() => codeBtnOnClick()}>인증</ConfirmBtn>
-        </ConfirmBox>
-      </EmailWindow>
+      <PopUp
+        email={email}
+        setEmail={setEmail}
+        emailOnChange={emailOnChange}
+        setEmailDate={setEmailDate}
+        verson={emailPopUp ? "이메일" : "비밀번호"}
+        pw={pw}
+        setPw={setPw}
+      />
       <IdBox valid={id.length > 0 ? idPattern.test(id) : true}>
         <IdText>아이디</IdText>
-        <IdInput value={id} onChange={(e) => idOnChange(e.target.value)} />
+        <IdInput defaultValue={id} onChange={(e) => idOnChange(e.target.value)} />
       </IdBox>
       <NameBox valid={true}>
         <NameText>이름</NameText>
         <NameInput
-          value={name}
+          defaultValue={name}
           onChange={(e) => nameOnChange(e.target.value)}
         />
       </NameBox>
-      <PwBox valid={pw.length > 0 ? pwPattern.test(pw) : true}>
+      <PwBox valid={true}>
         <PwText>비밀번호</PwText>
-        <PwInput
-          type="password"
-          value={pw}
-          onChange={(e) => pwOnChange(e.target.value)}
-        />
+        <PwInput type="password" defaultValue={pw} />
+        <PwBtn htmlFor="popup" onClick={() => setEmailPopUpBoolean(false)}>
+          변경
+        </PwBtn>
       </PwBox>
       <EmailBox valid={true}>
         <EmailText>이메일</EmailText>
         <EmailInput
-          value={emailDate}
+          defaultValue={emailDate}
           onChange={(e) => emailOnChange(e.target.value)}
           disabled
         />
-        <EmailBtn htmlFor="email-window">변경</EmailBtn>
+        <EmailBtn htmlFor="popup" onClick={() => setEmailPopUpBoolean(true)}>
+          변경
+        </EmailBtn>
       </EmailBox>
       <SaveBtn onClick={() => saveBtnOnClick()}>저장</SaveBtn>
     </SignUpContainer>
@@ -227,14 +148,6 @@ const SignUpContainer = styled.div`
   border: 1px solid rgba(0, 0, 0, 0.2);
 `;
 
-const EmailWindowInput = styled.input`
-  display: none;
-  &:checked {
-    & + div {
-      display: block;
-    }
-  }
-`;
 const SaveBtn = styled.button`
   margin-top: 20px;
   box-sizing: border-box;
@@ -287,20 +200,6 @@ const IdInput = styled.input`
   font-size: ${({ theme }) => theme.fontSizes.base};
 `;
 
-const PwBox = styled(IdBox)`
-  ${(props) => {
-    if (!props.valid) {
-      return css`
-        &::after {
-          content: "영어,숫자를 포함 8~20자 이내로 입력해주세요.";
-        }
-      `;
-    }
-  }}
-`;
-const PwText = styled(IdText)``;
-const PwInput = styled(IdInput)``;
-
 const EmailBox = styled(IdBox)`
   ${(props) => {
     if (!props.valid) {
@@ -329,56 +228,20 @@ const EmailBtn = styled.label`
   cursor: pointer;
 `;
 
-const EmailWindow = styled.div`
-  position: absolute;
-  z-index: 3;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: none;
-  padding: 20px 20px 40px 20px;
-  width: 450px;
-  background-color: white;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-`;
-const EmailWindowXBtnBox = styled.p`
-  text-align: right;
-  label {
-    padding-right: 5px;
-    font-size: ${({ theme }) => theme.fontSizes.xxl};
-    cursor: pointer;
-  }
-`;
-const EmailWindowText = styled.p`
-  padding-bottom: 15px;
-  text-decoration: underline;
-  font-size: ${({ theme }) => theme.fontSizes.xxl};
-`;
-const EmailChangeBox = styled(IdBox)`
-  justify-content: space-between;
+const PwBox = styled(EmailBox)`
   ${(props) => {
     if (!props.valid) {
       return css`
         &::after {
-          content: "이메일 형식에 맞게 입력해주세요.";
+          content: "영어,숫자를 포함 8~20자 이내로 입력해주세요.";
         }
       `;
     }
   }}
 `;
-const EmailChangeText = styled(IdText)``;
-const EmailChangeInput = styled(IdInput)`
-  width: calc(80% - 80px);
-`;
-const EmailSendBtn = styled(EmailBtn)`
-  width: 80px;
-  font-size: ${({ theme }) => theme.fontSizes.small};
-`;
-
-const ConfirmBox = styled(EmailChangeBox)``;
-const ConfirmText = styled(IdText)``;
-const ConfirmInput = styled(EmailChangeInput)``;
-const ConfirmBtn = styled(EmailSendBtn)``;
+const PwText = styled(EmailText)``;
+const PwInput = styled(EmailInput)``;
+const PwBtn = styled(EmailBtn)``;
 
 const NameBox = styled(IdBox)``;
 const NameText = styled(IdText)``;
