@@ -21,6 +21,7 @@ const Info = () => {
   const IdDate = useRecoilValue(Id);
 
   const [id, setId] = useState<string>("");
+  const [pw, setPw] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [code, setCode] = useState<string>("");
@@ -72,17 +73,17 @@ const Info = () => {
     () => putOwnerInfoChange(info),
     {
       onSuccess: (res) => {
-        console.log(res.data)
+        console.log(res.data);
         Swal.fire({
           text: "정보수정 성공",
           icon: "success",
           confirmButtonColor: "#0075FF",
         });
       },
-      onError: (err:AxiosError) => {
+      onError: (err: AxiosError) => {
         console.log(err);
-        console.log('사업자 정보 업데이트')
-      }
+        console.log("사업자 정보 업데이트");
+      },
     }
   );
 
@@ -90,6 +91,10 @@ const Info = () => {
   const idPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{4,15}$/;
   const idOnChange = (idText: string) => {
     setId(idText);
+  };
+  const pwPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/;
+  const pwOnChange = (pwText: string) => {
+    setPw(pwText);
   };
   const emailPattern =
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
@@ -189,6 +194,14 @@ const Info = () => {
           onChange={(e) => nameOnChange(e.target.value)}
         />
       </NameBox>
+      <PwBox valid={pw.length > 0 ? pwPattern.test(pw) : true}>
+        <PwText>비밀번호</PwText>
+        <PwInput
+          type="password"
+          value={pw}
+          onChange={(e) => pwOnChange(e.target.value)}
+        />
+      </PwBox>
       <EmailBox valid={true}>
         <EmailText>이메일</EmailText>
         <EmailInput
@@ -273,6 +286,20 @@ const IdInput = styled.input`
   border: 1px solid rgba(0, 0, 0, 0.2);
   font-size: ${({ theme }) => theme.fontSizes.base};
 `;
+
+const PwBox = styled(IdBox)`
+  ${(props) => {
+    if (!props.valid) {
+      return css`
+        &::after {
+          content: "영어,숫자를 포함 8~20자 이내로 입력해주세요.";
+        }
+      `;
+    }
+  }}
+`;
+const PwText = styled(IdText)``;
+const PwInput = styled(IdInput)``;
 
 const EmailBox = styled(IdBox)`
   ${(props) => {
