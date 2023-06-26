@@ -1,5 +1,5 @@
 import DaumPostcode from "react-daum-postcode";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { address } from "../../store/addressAtom";
 import { visibleAddress } from "../../store/addressAtom";

@@ -7,6 +7,7 @@ import { StoreId } from "../../store/storeDetailAtom";
 import { postReviewProps } from "../../apis/types/store.type";
 import { useMutation } from "@tanstack/react-query";
 import { postReview } from "../../apis/queries/storeQuery";
+import { Name } from "../../store/userInfoAtom";
 
 const ReviewEnroll = () => {
   const date = new Date();
@@ -45,12 +46,13 @@ const ReviewEnroll = () => {
     else if (count === 0) alert("별점을 매겨주세요");
     else saveReview();
   };
+  const name = useRecoilValue(Name);
 
   return (
     <Container>
       <TitleBox>
         <NameStarBox>
-          <Name>우리동네 맛집대장</Name>
+          <NameText>{name}</NameText>
           <StarClick count={count} setCount={setCount} />
         </NameStarBox>
         <Score>평균 평점: 1.2</Score>
@@ -125,7 +127,7 @@ const DateBox = styled.div`
 const NameStarBox = styled.div`
   display: flex;
 `;
-const Name = styled.div`
+const NameText = styled.div`
   margin-right: 10px;
   font-size: 1rem;
   text-decoration: underline;
