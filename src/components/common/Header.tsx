@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import LOGO from "../../assets/img/LOGO.png";
 import mypageImg from "../../assets/person-icon.svg";
@@ -27,6 +27,11 @@ export default function Header() {
       }
     });
   };
+
+  useEffect(() => {
+    if (getCookie("accessToken") === undefined && localStorage.getItem("role"))
+      removeCookie();
+  }, []);
 
   return (
     <HeaderContainer>

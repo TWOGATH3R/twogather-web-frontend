@@ -1,37 +1,47 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled, { css } from 'styled-components';
-import { emailCheckMutaionPostEmail } from '../../apis/queries/signUpQuery';
-import { useMutation } from '@tanstack/react-query';
-import Swal from 'sweetalert2';
-import sendMailImg from '../../assets/sendmail.svg';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled, { css } from "styled-components";
+import { emailCheckMutaionPostEmail } from "../../apis/queries/signUpQuery";
+import { useMutation } from "@tanstack/react-query";
+import Swal from "sweetalert2";
+import sendMailImg from "../../assets/sendmail.svg";
+import { postInfo } from "../../apis/queries/findPwQuery";
 
 const Verification = () => {
   const navigate = useNavigate();
 
-  const [id, setId] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [code, setCode] = useState<string>('');
+  const [id, setId] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [code, setCode] = useState<string>("");
 
-  const [codeAnswer, setCodeAnswer] = useState<string>('');
+  const [codeAnswer, setCodeAnswer] = useState<string>("");
   const { mutate: emailCheck, isLoading: emailCheckLoading } = useMutation(
     () => emailCheckMutaionPostEmail(email),
     {
-      onSuccess: res => {
+      onSuccess: (res) => {
         setCodeAnswer(res.data.verificationCode);
         if (sendMailImg) {
           Swal.fire({
-            text: '이메일로 인증코드를 발송했습니다.',
+            text: "이메일로 인증코드를 발송했습니다.",
             imageUrl: `${sendMailImg}`,
-            confirmButtonColor: '#0075FF',
+            confirmButtonColor: "#0075FF",
           });
         }
       },
       onError: (err: any) => {
         alert(err.response.data.message);
       },
-    },
+    }
   );
+  const { mutate: getTemporaryPw } = useMutation(() => postInfo(email, id), {
+    onSuccess: (res) => {
+      alert("임시 비밀번호가 이메일로 전송됬습니다");
+      navigate("/login");
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
 
   //onChange
   const idPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{4,15}$/;
@@ -49,23 +59,23 @@ const Verification = () => {
 
   //onClick
   const emailBtnOnClick = () => {
-    if (!email) alert('이메일을 입력해주세요');
-    else if (!emailPattern.test(email)) alert('이메일이 형식에 맞지 않습니다');
+    if (!email) alert("이메일을 입력해주세요");
+    else if (!emailPattern.test(email)) alert("이메일이 형식에 맞지 않습니다");
     else {
       emailCheck();
-      const emailBtn = document.querySelector('.emailBtn') as HTMLElement;
-      emailBtn.innerText = '재전송';
+      const emailBtn = document.querySelector(".emailBtn") as HTMLElement;
+      emailBtn.innerText = "재전송";
     }
   };
   const codeBtnOnClick = () => {
-    if (!id) alert('아이디를 입력해주세요');
-    else if (!email) alert('이메일을 입력해주세요');
-    else if (!code) alert('인증번호를 입력해주세요');
-    else if (!idPattern.test(id)) alert('아이디 양식에 맞게 입력해주세요.');
-    else if (code !== codeAnswer) alert('인증번호가 알맞지 않습니다');
+    if (!id) alert("아이디를 입력해주세요");
+    else if (!email) alert("이메일을 입력해주세요");
+    else if (!code) alert("인증번호를 입력해주세요");
+    else if (!idPattern.test(id)) alert("아이디 양식에 맞게 입력해주세요.");
+    else if (code !== codeAnswer) alert("인증번호가 알맞지 않습니다");
     else {
-      alert('인증완료');
-      navigate('/findPw/pwChange');
+      alert("인증완료");
+      getTemporaryPw();
     }
   };
 
@@ -74,25 +84,25 @@ const Verification = () => {
       <IdBox valid={id.length > 0 ? idPattern.test(id) : true}>
         <IdInput
           value={id}
-          placeholder='아이디'
-          onChange={e => IdOnChange(e.target.value)}
+          placeholder="아이디"
+          onChange={(e) => IdOnChange(e.target.value)}
         />
       </IdBox>
       <EmailBox valid={email.length > 0 ? emailPattern.test(email) : true}>
         <EmailInput
           value={email}
-          placeholder='이메일'
-          onChange={e => emailOnChange(e.target.value)}
+          placeholder="이메일"
+          onChange={(e) => emailOnChange(e.target.value)}
         />
-        <EmailSendBtn className='emailBtn' onClick={() => emailBtnOnClick()}>
+        <EmailSendBtn className="emailBtn" onClick={() => emailBtnOnClick()}>
           인증 메일 전송
         </EmailSendBtn>
       </EmailBox>
       <ConfirmBox valid={true}>
         <ConfirmInput
           value={code}
-          placeholder='인증코드'
-          onChange={e => codeOnChange(e.target.value)}
+          placeholder="인증코드"
+          onChange={(e) => codeOnChange(e.target.value)}
         />
       </ConfirmBox>
       <ConfirmBtn onClick={() => codeBtnOnClick()}>인증</ConfirmBtn>
@@ -106,14 +116,14 @@ const EmailBox = styled.div<{ valid: boolean }>`
   justify-content: center;
   margin-bottom: 45px;
   width: 100%;
-  ${props => {
+  ${(props) => {
     if (!props.valid) {
       return css`
         input {
           border-color: #ff3a3a;
         }
         &::after {
-          content: '이메일 형식에 맞게 입력해주세요.';
+          content: "이메일 형식에 맞게 입력해주세요.";
           position: absolute;
           top: calc(100% + 2px);
           left: 10%;
@@ -157,11 +167,11 @@ const ConfirmBtn = styled(EmailSendBtn)`
 `;
 
 const IdBox = styled(ConfirmBox)`
-  ${props => {
+  ${(props) => {
     if (!props.valid) {
       return css`
         &::after {
-          content: '영어,숫자를 포함 4~15자 이내로 입력해주세요.';
+          content: "영어,숫자를 포함 4~15자 이내로 입력해주세요.";
         }
       `;
     }
