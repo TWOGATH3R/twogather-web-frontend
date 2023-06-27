@@ -94,9 +94,11 @@ const MyPage = () => {
               <NavLink to={`/mypage/mystore`}>내가게</NavLink>
             </MenuItem>
           )}
-          <MenuItem>
-            <NavLink to={`/mypage/withdraw`}>탈퇴</NavLink>
-          </MenuItem>
+          {localStorage.getItem("role") === role.ROLE_ADMIN ? null : (
+            <MenuItem>
+              <NavLink to={`/mypage/withdraw`}>탈퇴</NavLink>
+            </MenuItem>
+          )}
         </MenuList>
         <Outlet />
       </MyPageWrraper>
