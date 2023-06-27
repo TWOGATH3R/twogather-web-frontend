@@ -83,18 +83,12 @@ const ShopInfo = () => {
   );
   //좋아요 누르기
   const { mutate: saveLike } = useMutation(() => postLike(storeId), {
-    onSuccess: (res) => {
-      console.log("등록");
-    },
     onError: (err: any) => {
       console.log(err.response.data.message);
     },
   });
   //좋아요 해제
   const { mutate: likeDelete } = useMutation(() => deleteLike(storeId), {
-    onSuccess: (res) => {
-      console.log("삭제");
-    },
     onError: (err: any) => {
       console.log(err.response.data.message);
     },
