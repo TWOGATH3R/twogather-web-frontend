@@ -3,8 +3,12 @@ import { NavLink, Outlet } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { Email, Id, Name } from "../store/userInfoAtom";
-import { getConsumerInfo, getOwnerInfo } from "../apis/queries/myPageQuery";
-import { useMutation } from '@tanstack/react-query';
+import {
+  getAdminInfo,
+  getConsumerInfo,
+  getOwnerInfo,
+} from "../apis/queries/myPageQuery";
+import { useMutation } from "@tanstack/react-query";
 import { role } from "../apis/types/common.type";
 
 const MyPage = () => {
@@ -40,9 +44,22 @@ const MyPage = () => {
       alert(err.response.data.message);
     },
   });
+  //사업자 정보 가져오기 query
+  const { mutate: adminInfoGet } = useMutation(() => getAdminInfo(memberId), {
+    onSuccess: (res) => {
+      setNameDate(res.data.name);
+      setEmailDate(res.data.email);
+      setIdDate(res.data.username);
+    },
+    onError: (err: any) => {
+      alert(err.response.data.message);
+    },
+  });
 
   useEffect(() => {
-    if (localStorage.getItem("role") === role.ROLE_CONSUMER) consumerInfoGet();
+    if (localStorage.getItem("role") === role.ROLE_ADMIN) adminInfoGet();
+    else if (localStorage.getItem("role") === role.ROLE_CONSUMER)
+      consumerInfoGet();
     else ownerInfoGet();
   }, []);
 
