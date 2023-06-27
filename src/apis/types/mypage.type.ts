@@ -4,7 +4,6 @@ export type userUpdateProps = {
   username: string;
   name: string;
   memberId: string | null;
-  pw: string;
 };
 
 //고객,사업자 정보 업데이트 api response type정의

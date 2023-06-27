@@ -33,7 +33,6 @@ const Info = () => {
     email: emailDate,
     username: id,
     name: name,
-    pw: pw,
     memberId: localStorage.getItem("memberId"),
   };
   //고객 정보 업데이트 query
