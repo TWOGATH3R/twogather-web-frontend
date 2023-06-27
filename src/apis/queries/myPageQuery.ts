@@ -53,6 +53,28 @@ export const putOwnerInfoChange = async (
   return data;
 };
 
+//관리자 정보 업데이트하기
+export const putAdminInfoChange = async (
+  info: userUpdateProps
+): Promise<userUpdateResponse> => {
+  const { data } = await api.put(
+    `/api/admin/${info.memberId}`,
+    {
+      email: info.email,
+      username: info.username,
+      name: info.name,
+    },
+    {
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+        accept: "application/json,",
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+      },
+    }
+  );
+  return data;
+};
+
 //고객 정보 가져오기
 export const getConsumerInfo = async (
   memberId: string | null
@@ -72,6 +94,20 @@ export const getOwnerInfo = async (
   memberId: string | null
 ): Promise<userGetInfoResponse> => {
   const { data } = await api.get(`/api/owners/${memberId}`, {
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+      accept: "application/json,",
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+  });
+  return data;
+};
+
+//관리자 정보 가져오기
+export const getAdminInfo = async (
+  memberId: string | null
+): Promise<userGetInfoResponse> => {
+  const { data } = await api.get(`/api/admin/${memberId}`, {
     headers: {
       "Content-type": "application/json; charset=UTF-8",
       accept: "application/json,",

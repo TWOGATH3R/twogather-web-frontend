@@ -7,28 +7,18 @@ import sendMailImg from "../../assets/sendmail.svg";
 import { putUserPw, userPwCheck } from "../../apis/queries/myPageQuery";
 
 interface info {
-  email: any;
-  setEmail: any;
-  emailOnChange: any;
   setEmailDate: any;
   verson: "비밀번호" | "이메일";
   pw: any;
   setPw: any;
 }
-const PopUp = ({
-  email,
-  emailOnChange,
-  setEmail,
-  setEmailDate,
-  verson,
-  pw,
-  setPw,
-}: info) => {
+const PopUp = ({ setEmailDate, verson, pw, setPw }: info) => {
   //email 인증,변경 state
   const emailPattern =
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
   const [code, setCode] = useState<string>("");
   const [codeAnswer, setCodeAnswer] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
 
   //pw 변경 state
   const pwPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/;
@@ -85,14 +75,17 @@ const PopUp = ({
   const codeOnChange = (codeText: string) => {
     setCode(codeText);
   };
-  const pwOnChange = (pwText: string) => {
-    setPw(pwText);
+  const pwOnChange = (value: string) => {
+    setPw(value);
   };
-  const pwChangeOnChange = (pwText: string) => {
-    setChangePw(pwText);
+  const pwChangeOnChange = (value: string) => {
+    setChangePw(value);
   };
-  const pwCheckOnChange = (pwText: string) => {
-    setCheckPw(pwText);
+  const pwCheckOnChange = (value: string) => {
+    setCheckPw(value);
+  };
+  const emailOnChange = (value: string) => {
+    setEmail(value);
   };
 
   //onClick

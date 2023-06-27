@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import styled, { css } from "styled-components";
 import {
+  putAdminInfoChange,
   putConsumerInfoChange,
   putOwnerInfoChange,
 } from "../../apis/queries/myPageQuery";
@@ -56,16 +57,30 @@ const Info = () => {
     () => putOwnerInfoChange(info),
     {
       onSuccess: (res) => {
-        console.log(res.data);
         Swal.fire({
           text: "정보수정 성공",
           icon: "success",
           confirmButtonColor: "#0075FF",
         });
       },
-      onError: (err: AxiosError) => {
-        console.log(err);
-        console.log("사업자 정보 업데이트");
+      onError: (err: any) => {
+        alert(err.response.data.message);
+      },
+    }
+  );
+  //관리자 정보 업데이트 query
+  const { mutate: adminInfoChange } = useMutation(
+    () => putAdminInfoChange(info),
+    {
+      onSuccess: (res) => {
+        Swal.fire({
+          text: "정보수정 성공",
+          icon: "success",
+          confirmButtonColor: "#0075FF",
+        });
+      },
+      onError: (err: any) => {
+        alert(err.response.data.message);
       },
     }
   );
@@ -90,7 +105,8 @@ const Info = () => {
     else if (!idPattern.test(id)) alert("아이디가 형식에 맞지 않습니다");
     else if (!userNamePattern.test(name)) alert("이름이 형식에 맞지 않습니다");
     else {
-      if (localStorage.getItem("role") === role.ROLE_CONSUMER)
+      if (localStorage.getItem("role") === role.ROLE_ADMIN) adminInfoChange();
+      else if (localStorage.getItem("role") === role.ROLE_CONSUMER)
         consumerInfoChange();
       else ownerInfoChange();
     }
@@ -101,9 +117,6 @@ const Info = () => {
   return (
     <SignUpContainer>
       <PopUp
-        email={email}
-        setEmail={setEmail}
-        emailOnChange={emailOnChange}
         setEmailDate={setEmailDate}
         verson={emailPopUp ? "이메일" : "비밀번호"}
         pw={pw}
