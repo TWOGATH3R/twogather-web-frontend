@@ -201,9 +201,9 @@ export const postReview = async (info: postReviewProps, storeId: number) => {
 };
 
 //좋아요 누르기
-export const postLike = async (storeId: number) => {
+export const postLike = async (storeId: number, memberId: string | null) => {
   const res = await api.post(
-    `/api/stores/${storeId}/likes`,
+    `/api/stores/${storeId}/members/${memberId}/likes`,
     {},
     {
       headers: {
@@ -217,14 +217,17 @@ export const postLike = async (storeId: number) => {
 };
 
 //좋아요 해제
-export const deleteLike = async (storeId: number) => {
-  const { data } = await api.delete(`/api/stores/${storeId}/likes`, {
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-      accept: "application/json,",
-      Authorization: `Bearer ${getCookie("accessToken")}`,
-    },
-  });
+export const deleteLike = async (storeId: number, memberId: string | null) => {
+  const { data } = await api.delete(
+    `/api/stores/${storeId}/members/${memberId}/likes`,
+    {
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+        accept: "application/json,",
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+      },
+    }
+  );
   return data;
 };
 

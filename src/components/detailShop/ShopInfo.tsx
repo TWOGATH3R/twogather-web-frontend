@@ -82,17 +82,20 @@ const ShopInfo = () => {
     }
   );
   //좋아요 누르기
-  const { mutate: saveLike } = useMutation(() => postLike(storeId), {
+  const { mutate: saveLike } = useMutation(() => postLike(storeId, memberId), {
     onError: (err: any) => {
       console.log(err.response.data.message);
     },
   });
   //좋아요 해제
-  const { mutate: likeDelete } = useMutation(() => deleteLike(storeId), {
-    onError: (err: any) => {
-      console.log(err.response.data.message);
-    },
-  });
+  const { mutate: likeDelete } = useMutation(
+    () => deleteLike(storeId, memberId),
+    {
+      onError: (err: any) => {
+        console.log(err.response.data.message);
+      },
+    }
+  );
 
   useEffect(() => {
     getOpenHourList();

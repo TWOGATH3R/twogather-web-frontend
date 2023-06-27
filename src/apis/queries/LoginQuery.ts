@@ -16,6 +16,7 @@ export const loginMutaionPostInfo = async ({
   setCookie('accessToken', accessToken);
   console.log(accessToken);
   const jwt: any = jwt_decode(accessToken);
+  console.log(jwt)
   const { role } = jwt;
   //아직 리프레쉬 토큰 추출 미완
   localStorage.setItem('refreshToken', role);
