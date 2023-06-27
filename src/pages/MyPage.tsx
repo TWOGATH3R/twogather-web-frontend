@@ -78,7 +78,9 @@ const MyPage = () => {
               정보
             </NavLink>
           </MenuItem>
-          {localStorage.getItem("role") === role.ROLE_CONSUMER ? (
+          {localStorage.getItem("role") ===
+          role.ROLE_ADMIN ? null : localStorage.getItem("role") ===
+            role.ROLE_CONSUMER ? (
             <>
               <MenuItem>
                 <NavLink to={`/mypage/review`}>리뷰</NavLink>
