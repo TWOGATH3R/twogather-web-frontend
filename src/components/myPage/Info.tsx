@@ -79,15 +79,22 @@ const Info = () => {
   const emailOnChange = (emailText: string) => {
     setEmail(emailText);
   };
+  const userNamePattern = /^[ㄱ-ㅎ가-힣a-zA-Z]{1,10}$/;
   const nameOnChange = (nameText: string) => {
     setName(nameText);
   };
 
   //onClick
   const saveBtnOnClick = () => {
-    if (localStorage.getItem("role") === role.ROLE_CONSUMER)
-      consumerInfoChange();
-    else ownerInfoChange();
+    if (!id) alert("아이디를 입력해주세요");
+    else if (!id) alert("이름을 입력해주세요");
+    else if (!idPattern.test(id)) alert("아이디가 형식에 맞지 않습니다");
+    else if (!userNamePattern.test(name)) alert("이름이 형식에 맞지 않습니다");
+    else {
+      if (localStorage.getItem("role") === role.ROLE_CONSUMER)
+        consumerInfoChange();
+      else ownerInfoChange();
+    }
   };
 
   const [emailPopUp, setEmailPopUpBoolean] = useState<boolean>(true);
@@ -105,9 +112,12 @@ const Info = () => {
       />
       <IdBox valid={id.length > 0 ? idPattern.test(id) : true}>
         <IdText>아이디</IdText>
-        <IdInput defaultValue={id} onChange={(e) => idOnChange(e.target.value)} />
+        <IdInput
+          defaultValue={id}
+          onChange={(e) => idOnChange(e.target.value)}
+        />
       </IdBox>
-      <NameBox valid={true}>
+      <NameBox valid={name.length > 0 ? userNamePattern.test(name) : true}>
         <NameText>이름</NameText>
         <NameInput
           defaultValue={name}
