@@ -2,12 +2,11 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import LOGO from "../../assets/img/LOGO.png";
 import mypageImg from "../../assets/person-icon.svg";
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getCookie, removeCookie } from "../cookie/cookie";
 import Swal from "sweetalert2";
-import { role } from "../../apis/types/common.type";
 import { GiHamburgerMenu } from "react-icons/gi";
-import SideMenu from "./SideMenu";
+import Nav from "./Nav";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -35,46 +34,19 @@ export default function Header() {
 
   return (
     <HeaderContainer>
-      <SideMenu logoutOnClick={logoutOnClick} />
       <HeaderWrapper>
         <LogoBox>
           <LogoImg src={LOGO} />
         </LogoBox>
         <NavContainer>
-          <MenuList>
-            <MenuTwoGatherTitle>TwoGather</MenuTwoGatherTitle>
-            <MenuItem>
-              <NavLink to="/">Home</NavLink>
-            </MenuItem>
-            {localStorage.getItem("role") === role.ROLE_STORE_OWNER ? (
-              <>
-                <MenuItem>
-                  <NavLink to="/enrollshop">Resgistration</NavLink>
-                </MenuItem>
-                <MenuItem>
-                  <NavLink to="/">Stores</NavLink>
-                </MenuItem>
-              </>
-            ) : null}
-          </MenuList>
-          <LoginBox>
-            {getCookie("accessToken") === undefined ? (
-              <Link to="/login">Login</Link>
-            ) : (
-              <>
-                <span onClick={() => logoutOnClick()}>logout</span>
-                <Link to="/mypage/info">
-                  <img src={mypageImg} alt="mypage" />
-                </Link>
-              </>
-            )}
-            <MenuBox>
-              <MenuBtn htmlFor="menu">
-                <MenuBtnIcon />
-              </MenuBtn>
-            </MenuBox>
-          </LoginBox>
+          <MenuTwoGatherTitle>TwoGather</MenuTwoGatherTitle>
+          <Nav logoutOnClick={logoutOnClick} />
         </NavContainer>
+        <MenuBox>
+          <MenuBtn htmlFor="menu">
+            <MenuBtnIcon />
+          </MenuBtn>
+        </MenuBox>
       </HeaderWrapper>
     </HeaderContainer>
   );
@@ -125,54 +97,9 @@ const NavContainer = styled.nav`
     width: 80%;
   }
 `;
-const MenuList = styled.ul`
-  list-style: none;
-  display: flex;
-  align-items: flex-start;
-  width: 100%;
-  height: 100%;
-  @media (max-width: 880px) {
-    display: inline;
-    width: fit-content;
-    span {
-      margin: 0;
-    }
-    a {
-      display: none;
-    }
-  }
-`;
 const MenuTwoGatherTitle = styled.span`
   margin-right: 55px;
   font-weight: bold;
 `;
-const MenuItem = styled.li`
-  margin-right: 35px;
-  a {
-    color: #707070;
-    &:hover {
-      color: #ff6262;
-    }
-  }
-`;
 
-const LoginBox = styled.div`
-  display: flex;
-  align-items: flex-start;
-  a {
-    margin-right: 10px;
-    color: #000000;
-  }
-  span {
-    margin-right: 10px;
-    cursor: pointer;
-  }
-  @media (max-width: 880px) {
-    a {
-      display: none;
-    }
-    span {
-      display: none;
-    }
-  }
-`;
+
