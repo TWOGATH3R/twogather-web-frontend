@@ -22,6 +22,7 @@ import { menuListStateType, openHourType } from "./type";
 import { getMyLikeList } from "../../apis/queries/myPageQuery";
 import { getCookie } from "../cookie/cookie";
 import ImgSlider from "./ImgSlider";
+import { role } from "../../apis/types/common.type";
 
 const ShopInfo = () => {
   const storeId = useRecoilValue(StoreId);
@@ -125,11 +126,13 @@ const ShopInfo = () => {
     } else alert("등록된 영업시간이 없는 요일 입니다");
   };
   const heartOnClick = () => {
-    if (getCookie("accessToken") !== undefined) {
-      setLikeBoolean(!likeBoolean);
-      if (!likeBoolean) saveLike();
-      else likeDelete();
-    } else alert("로그인 후 이용해주세요");
+    if (localStorage.getItem("role") === role.ROLE_CONSUMER) {
+      if (getCookie("accessToken") !== undefined) {
+        setLikeBoolean(!likeBoolean);
+        if (!likeBoolean) saveLike();
+        else likeDelete();
+      } else alert("로그인 후 이용해주세요");
+    } else alert("일반 고객만 좋아요가 가능합니다");
   };
 
   return (

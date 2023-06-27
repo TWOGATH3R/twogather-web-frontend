@@ -46,7 +46,7 @@ const ReviewEnroll = () => {
     else if (count === 0) alert("별점을 매겨주세요");
     else saveReview();
   };
-  const name = useRecoilValue(Name);
+  const name = localStorage.getItem("name");
 
   return (
     <Container>
