@@ -1,41 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import StarClick from "./StarClick";
+import Pagenation from "../common/Pagenation";
+import { useQuery } from "@tanstack/react-query";
+import { getStoreReview } from "../../apis/queries/storeQuery";
+import { useSearchParams } from "react-router-dom";
 
 const Reviews = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [page, setPage] = useState(1);
+
+  const storeId = searchParams.get("storeId");
+  const { data: list } = useQuery(["storeReviewList"], () =>
+    getStoreReview(storeId, page)
+  );
+
+  const pageOnChange = (page: any) => {
+    setPage(page);
+    console.log(page);
+  };
+
   return (
-    <Container>
-      <TitleBox>
-        <NameStarBox>
-          <Name>우리동네 맛집대장</Name>
-        </NameStarBox>
-        <Score>평균 평점: 1.2</Score>
-      </TitleBox>
-      <ReivewContent>
-        "당근케이크 평가는 이쯤 하고 커피에 대한 평가를 해보자면 커피의 가격도
-        일반적인 프랜차이즈나 개인 카페에서 책정한 가격에 비해 훨씬
-        비쌌다.가격표를 보니 그저 황당한 마음에 금가루라도 뿌렸나 싶은 생각이
-        들더라. 그래도 아메리카노는 만들기 쉬우니까… 얼추 가격값은 하겠지
-        싶었는데 아뿔싸, 나의 오만방자함이었다… 핵노맛.나는 산미가 나는 커피를
-        싫어하는 편인데, 세시셀라 커피는 산미가 너무 심해서 먹는 내내 ‘이게
-        7,000원이라고?’하는 생각을 했던 것 같다. 또 먹고 싶진 않다." "당근케이크
-        평가는 이쯤 하고 커피에 대한 평가를 해보자면 커피의 가격도 일반적인
-        프랜차이즈나 개인 카페에서 책정한 가격에 비해 훨씬 비쌌다.가격표를 보니
-        그저 황당한 마음에 금가루라도 뿌렸나 싶은 생각이 들더라. 그래도
-        아메리카노는 만들기 쉬우니까… 얼추 가격값은 하겠지 싶었는데 아뿔싸, 나의
-        오만방자함이었다… 핵노맛.나는 산미가 나는 커피를 싫어하는 편인데,
-        세시셀라 커피는 산미가 너무 심해서 먹는 내내 ‘이게 7,000원이라고?’하는
-        생각을 했던 것 같다. 또 먹고 싶진 않다." "당근케이크 평가는 이쯤 하고
-        커피에 대한 평가를 해보자면 커피의 가격도 일반적인 프랜차이즈나 개인
-        카페에서 책정한 가격에 비해 훨씬 비쌌다.가격표를 보니 그저 황당한 마음에
-        금가루라도 뿌렸나 싶은 생각이 들더라. 그래도 아메리카노는 만들기
-        쉬우니까… 얼추 가격값은 하겠지 싶었는데 아뿔싸, 나의 오만방자함이었다…
-        핵노맛.나는 산미가 나는 커피를 싫어하는 편인데, 세시셀라 커피는 산미가
-        너무 심해서 먹는 내내 ‘이게 7,000원이라고?’하는 생각을 했던 것 같다. 또
-        먹고 싶진 않다."
-      </ReivewContent>
-      <Date>2022-03-01</Date>
-    </Container>
+    <>
+      {Array.isArray(list)
+        ? list.map((value: any, index) => (
+            <Container key={index}>
+              <TitleBox>
+                <NameStarBox>
+                  <Name>{value.consumerName}</Name>
+                </NameStarBox>
+                <Score>평균 평점: {value.consumerAvgScore}</Score>
+              </TitleBox>
+              <ReivewContent>{value.content}</ReivewContent>
+              <DateReviewBtnBox>
+                <Date>{value.createdDate}</Date>
+                <span>답글</span>
+              </DateReviewBtnBox>
+            </Container>
+          ))
+        : null}
+      <Pagenation page={page} pageOnChange={pageOnChange} />
+    </>
   );
 };
 
@@ -65,6 +70,7 @@ const Name = styled.div`
 `;
 
 const Container = styled.div`
+  margin-bottom: 15px;
   width: 100%;
   padding: 20px 40px;
   border: 1px solid rgba(35, 35, 35, 0.1);
@@ -81,6 +87,17 @@ const ReivewContent = styled.div`
   resize: none;
   :focus-visible {
     outline: none;
+  }
+`;
+
+const DateReviewBtnBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  span {
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;
 
