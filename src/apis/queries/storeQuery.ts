@@ -233,7 +233,9 @@ export const deleteLike = async (storeId: number, memberId: string | null) => {
 };
 
 //가게 사진 List 가져오기 api
-export const getImg = async (storeId: number): Promise<getImgResponse> => {
+export const getImg = async (
+  storeId: string | null
+): Promise<getImgResponse> => {
   const URL = `/api/stores/${storeId}/images`;
   const { data } = await api.get(URL);
   return data.data;
@@ -248,5 +250,5 @@ export const getStoreReview = async (
     pageNum - 1
   }&size=5`;
   const { data } = await api.get(URL);
-  return data.data;
+  return data;
 };

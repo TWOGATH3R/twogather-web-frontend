@@ -168,6 +168,7 @@ const LoginBox = styled.div`
   display: flex;
   p {
     margin-right: 10px;
+    cursor: pointer;
   }
 `;
 
