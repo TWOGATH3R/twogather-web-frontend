@@ -13,9 +13,10 @@ api.interceptors.response.use(
   },
   function (error) {
     // 응답 오류가 있는 작업 수행
-    if (error.response.data.message === "토큰이 유효하지 않습니다") {
-      alert("로그인 유효시간이 지났습니다");
-      removeCookie();
+    if (error.response.status === 401) {
+      if (error.response.data.message === "토큰이 유효하지 않습니다") {
+        removeCookie();
+      }
     }
     return Promise.reject(error);
   }
