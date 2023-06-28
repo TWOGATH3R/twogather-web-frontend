@@ -4,15 +4,25 @@ import Pagenation from "../common/Pagenation";
 import { useQuery } from "@tanstack/react-query";
 import { getStoreReview } from "../../apis/queries/storeQuery";
 import { useSearchParams } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { TotalReviewCount } from "../../store/storeDetailAtom";
 
 const Reviews = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const setTotalCount = useSetRecoilState(TotalReviewCount);
+
   const [page, setPage] = useState(1);
 
   const storeId = searchParams.get("storeId");
-  const { data: list } = useQuery(["storeReviewList"], () =>
-    getStoreReview(storeId, page)
+  const { data: list } = useQuery(
+    ["storeReviewList"],
+    () => getStoreReview(storeId, page),
+    {
+      onSuccess: (res) => {
+        setTotalCount(res.totalElements);
+      },
+    }
   );
 
   const pageOnChange = (page: any) => {
@@ -22,27 +32,38 @@ const Reviews = () => {
 
   return (
     <>
-      {Array.isArray(list)
-        ? list.map((value: any, index) => (
-            <Container key={index}>
-              <TitleBox>
-                <NameStarBox>
-                  <Name>{value.consumerName}</Name>
-                </NameStarBox>
-                <Score>평균 평점: {value.consumerAvgScore}</Score>
-              </TitleBox>
-              <ReivewContent>{value.content}</ReivewContent>
-              <DateReviewBtnBox>
-                <Date>{value.createdDate}</Date>
-                <span>답글</span>
-              </DateReviewBtnBox>
-            </Container>
-          ))
-        : null}
-      <Pagenation page={page} pageOnChange={pageOnChange} />
+      <Title>리뷰 ({list?.totalElements})</Title>
+      {list &&
+        list.data.map((value: any, index) => (
+          <Container key={index}>
+            <TitleBox>
+              <NameStarBox>
+                <Name>{value.consumerName}</Name>
+              </NameStarBox>
+              <Score>평균 평점: {value.consumerAvgScore}</Score>
+            </TitleBox>
+            <ReivewContent>{value.content}</ReivewContent>
+            <DateReviewBtnBox>
+              <Date>{value.createdDate}</Date>
+              <span>답글</span>
+            </DateReviewBtnBox>
+          </Container>
+        ))}
+      {list && (
+        <Pagenation
+          page={page}
+          pageOnChange={pageOnChange}
+          totalCount={list.totalElements}
+        />
+      )}
     </>
   );
 };
+
+const Title = styled.h2`
+  margin-top: 20px;
+  color: #606060;
+`;
 
 const TitleBox = styled.div`
   display: flex;

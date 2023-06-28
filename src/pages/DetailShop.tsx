@@ -30,7 +30,7 @@ export default function DetailShop() {
 
   useEffect(()=>{
     setStoreId(Number(searchParams.get("storeId")));
-  },[])
+  },[searchParams, setStoreId])
 
   const { mutate: getStoreInfo } = useMutation(() => getStoreOne(storeId), {
     onSuccess: (res) => {
@@ -58,7 +58,7 @@ export default function DetailShop() {
       <ShopImgInfo />
       <Title>리뷰 작성하기</Title>
       <ReviewEnroll />
-      <Title>리뷰 (54)</Title>
+      
       <Reviews />
     </DetailShopContainer>
   );

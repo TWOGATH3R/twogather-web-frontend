@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { AiOutlineHeart } from "react-icons/ai";
 import { useQuery } from "@tanstack/react-query";
 import { getMyLikeList } from "../../apis/queries/myPageQuery";
+import Pagenation from "../common/Pagenation";
 
 const Like = () => {
   const [page, setPage] = useState(1);
@@ -18,7 +19,7 @@ const Like = () => {
     setPage(page);
     console.log(page);
   };
-
+  
   return (
     <ReviewContainer>
       <ReviewList>
@@ -35,11 +36,9 @@ const Like = () => {
                   </StoreName>
                   <StoreAddress>{value.address}</StoreAddress>
                   <KeyWordList>
-                    {Array.isArray(value.keywordList)
-                      ? value.keywordList.map((value: any) => (
-                          <KeyWordItem key={value}># {value}</KeyWordItem>
-                        ))
-                      : null}
+                    {value.keywordList.map((value: any) => (
+                      <KeyWordItem key={value}># {value}</KeyWordItem>
+                    ))}
                   </KeyWordList>
                 </StoreInfoBox>
               </StoreInfoReviewBox>
@@ -47,17 +46,13 @@ const Like = () => {
           </ReviewItem>
         ))}
       </ReviewList>
-      <PaginationBox>
-        <Pagination
-          activePage={page}
-          itemsCountPerPage={10}
-          totalItemsCount={60}
-          pageRangeDisplayed={5}
-          prevPageText="‹"
-          nextPageText="›"
-          onChange={(page) => pageOnChange(page)}
+      {LikeList && (
+        <Pagenation
+          page={page}
+          pageOnChange={pageOnChange}
+          totalCount={LikeList.totalElements}
         />
-      </PaginationBox>
+      )}
     </ReviewContainer>
   );
 };
