@@ -1,29 +1,35 @@
-import React, { useState } from "react";
-import Pagination from "react-js-pagination";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { AiOutlineHeart } from "react-icons/ai";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { getMyLikeList } from "../../apis/queries/myPageQuery";
 import Pagenation from "../common/Pagenation";
+import { getMyLikeListResponse } from "../../apis/types/mypage.type";
 
 const Like = () => {
   const [page, setPage] = useState(1);
 
+  const [likeList, setLikeList] = useState<getMyLikeListResponse>();
   const memberId = localStorage.getItem("memberId");
-  const { data: LikeList } = useQuery(["getLikeList"], () =>
-    getMyLikeList(memberId)
-  );
+  const { mutate: getLikeList } = useMutation(() => getMyLikeList(memberId), {
+    onSuccess: (res) => {
+      setLikeList(res);
+    },
+  });
 
   const pageOnChange = (page: any) => {
     setPage(page);
-    console.log(page);
   };
-  
+
+  useEffect(() => {
+    getLikeList();
+  }, [page]);
+
   return (
     <ReviewContainer>
       <ReviewList>
-        {LikeList?.data.map((value, index) => (
+        {likeList?.data.map((value, index) => (
           <ReviewItem key={index}>
             <Link to={`/detailShop/?storeId=${value.storeId}`}>
               <StoreImgBox>
@@ -46,11 +52,11 @@ const Like = () => {
           </ReviewItem>
         ))}
       </ReviewList>
-      {LikeList && (
+      {likeList && (
         <Pagenation
           page={page}
           pageOnChange={pageOnChange}
-          totalCount={LikeList.totalElements}
+          totalCount={likeList.totalElements}
         />
       )}
     </ReviewContainer>

@@ -1,25 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Pagenation from "../common/Pagenation";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { getStoreReview } from "../../apis/queries/storeQuery";
 import { useSearchParams } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { TotalReviewCount } from "../../store/storeDetailAtom";
+import { getStoreReviewResponse } from "../../apis/types/store.type";
 
 const Reviews = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const setTotalCount = useSetRecoilState(TotalReviewCount);
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
 
+  const [list, setList] = useState<getStoreReviewResponse>();
   const storeId = searchParams.get("storeId");
-  const { data: list } = useQuery(
-    ["storeReviewList"],
+  const { mutate: getReviewList } = useMutation(
     () => getStoreReview(storeId, page),
     {
       onSuccess: (res) => {
+        setList(res);
         setTotalCount(res.totalElements);
       },
     }
@@ -27,8 +29,11 @@ const Reviews = () => {
 
   const pageOnChange = (page: any) => {
     setPage(page);
-    console.log(page);
   };
+
+  useEffect(() => {
+    getReviewList();
+  }, [page]);
 
   return (
     <>
