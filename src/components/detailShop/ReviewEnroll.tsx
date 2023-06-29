@@ -7,7 +7,6 @@ import { StoreId } from "../../store/storeDetailAtom";
 import { postReviewProps } from "../../apis/types/store.type";
 import { useMutation } from "@tanstack/react-query";
 import { postReview } from "../../apis/queries/storeQuery";
-import { Name } from "../../store/userInfoAtom";
 import Swal from "sweetalert2";
 import { role } from "../../apis/types/common.type";
 
@@ -85,7 +84,7 @@ const ReviewEnroll = () => {
 };
 
 const Container = styled.div`
-  width: 100%;
+  width: calc(100% - 80px);
   padding: 20px 40px;
   border: 1px solid rgba(35, 35, 35, 0.1);
   border-radius: 2px;
