@@ -245,9 +245,10 @@ export const getImg = async (
 //가게 리뷰 List 가져오기 api
 export const getStoreReview = async (
   storeId: string | null,
-  pageNum: number
+  pageNum: number,
+  sort: string
 ): Promise<getStoreReviewResponse> => {
-  const URL = `/api/stores/${storeId}/reviews?sort=createdDate%2Cdesc&page=${
+  const URL = `/api/stores/${storeId}/reviews?sort=${sort}&page=${
     pageNum - 1
   }&size=5`;
   const { data } = await api.get(URL);

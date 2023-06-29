@@ -9,6 +9,7 @@ import { TotalReviewCount } from "../../store/storeDetailAtom";
 import { getStoreReviewResponse } from "../../apis/types/store.type";
 import ReveiwReplyEnroll from "./ReveiwReplyEnroll";
 import Star from "./Star";
+import Filter from "../common/Filter";
 
 const Reviews = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -20,9 +21,10 @@ const Reviews = () => {
   const [targetReviewNum, setTargetReviewNum] = useState<number>();
 
   const [list, setList] = useState<getStoreReviewResponse>();
+  const [sort, setSort] = useState<string>("createdDate,desc");
   const storeId = searchParams.get("storeId");
   const { mutate: getReviewList } = useMutation(
-    () => getStoreReview(storeId, page),
+    () => getStoreReview(storeId, page, sort),
     {
       onSuccess: (res) => {
         setList(res);
@@ -37,15 +39,25 @@ const Reviews = () => {
 
   useEffect(() => {
     getReviewList();
-  }, [page]);
+  }, [page, sort]);
 
   const replyBtnOnClick = (index: number) => {
     setTargetReviewNum(index);
   };
 
+  const filter = [
+    { text: "최신순", sort: "createdDate,desc" },
+    { text: "오래된순", sort: "createdDate" },
+    { text: "별점 높은순", sort: "score,desc" },
+    { text: "별점 낮은순", sort: "score" },
+  ];
+
   return (
     <>
-      <Title>리뷰 ({list?.totalElements})</Title>
+      <Title>
+        리뷰 ({list?.totalElements})
+        <Filter filterList={filter} setSort={setSort} />
+      </Title>
       {list &&
         list.data.map((value: any, index) => (
           <div key={index}>
@@ -80,6 +92,9 @@ const Reviews = () => {
 };
 
 const Title = styled.h2`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 20px;
   color: #606060;
 `;
