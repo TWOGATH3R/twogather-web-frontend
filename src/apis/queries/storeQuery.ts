@@ -18,6 +18,7 @@ import {
   postOpenHourResponse,
   postReviewProps,
   postStoreImgResponse,
+  postStoreReviewReplyResponse,
 } from "../types/store.type";
 
 //가게 등록 api
@@ -250,5 +251,29 @@ export const getStoreReview = async (
     pageNum - 1
   }&size=5`;
   const { data } = await api.get(URL);
+  return data;
+};
+
+//가게 리뷰 대댓글 달기 api
+export const postStoreReviewReply = async (
+  storeId: string | null,
+  reviewId: number,
+  text: string
+): Promise<postStoreReviewReplyResponse> => {
+  const URL = `/api/stores/${storeId}/reviews/${reviewId}/comments`;
+
+  const { data } = await api.post(
+    URL,
+    {
+      content: text,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json,",
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+      },
+    }
+  );
   return data;
 };

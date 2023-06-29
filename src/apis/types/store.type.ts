@@ -141,3 +141,13 @@ export type getStoreReviewResponse = {
   isFirst: boolean;
   isLast: boolean;
 };
+
+//가게 댓글 대댓글 달기 api response type정의
+export type postStoreReviewReplyResponse = {
+  data: {
+    commentId: number;
+    content: string;
+    isOwner: boolean;
+    createDate: string;
+  };
+};

@@ -7,6 +7,8 @@ import { useSearchParams } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { TotalReviewCount } from "../../store/storeDetailAtom";
 import { getStoreReviewResponse } from "../../apis/types/store.type";
+import ReveiwReplyEnroll from "./ReveiwReplyEnroll";
+import Star from "./Star";
 
 const Reviews = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,6 +16,8 @@ const Reviews = () => {
   const setTotalCount = useSetRecoilState(TotalReviewCount);
 
   const [page, setPage] = useState(0);
+
+  const [targetReviewNum, setTargetReviewNum] = useState<number>();
 
   const [list, setList] = useState<getStoreReviewResponse>();
   const storeId = searchParams.get("storeId");
@@ -35,24 +39,34 @@ const Reviews = () => {
     getReviewList();
   }, [page]);
 
+  const replyBtnOnClick = (index: number) => {
+    setTargetReviewNum(index);
+  };
+
   return (
     <>
       <Title>리뷰 ({list?.totalElements})</Title>
       {list &&
         list.data.map((value: any, index) => (
-          <Container key={index}>
-            <TitleBox>
-              <NameStarBox>
-                <Name>{value.consumerName}</Name>
-              </NameStarBox>
-              <Score>평균 평점: {value.consumerAvgScore}</Score>
-            </TitleBox>
-            <ReivewContent>{value.content}</ReivewContent>
-            <DateReviewBtnBox>
-              <Date>{value.createdDate}</Date>
-              <span>답글</span>
-            </DateReviewBtnBox>
-          </Container>
+          <div key={index}>
+            <Container>
+              <TitleBox>
+                <NameStarBox>
+                  <Name>{value.consumerName}</Name>
+                  <Star count={value.score} />
+                </NameStarBox>
+                <Score>평균 평점: {value.consumerAvgScore}</Score>
+              </TitleBox>
+              <ReivewContent>{value.content}</ReivewContent>
+              <DateReviewBtnBox>
+                <Date>{value.createdDate}</Date>
+                <span onClick={() => replyBtnOnClick(index)}>답글</span>
+              </DateReviewBtnBox>
+            </Container>
+            {targetReviewNum === index ? (
+              <ReveiwReplyEnroll reviewId={value.reviewId} />
+            ) : null}
+          </div>
         ))}
       {list && (
         <Pagenation
@@ -97,7 +111,7 @@ const Name = styled.div`
 
 const Container = styled.div`
   margin-bottom: 15px;
-  width: 100%;
+  width: calc(100% - 80px);
   padding: 20px 40px;
   border: 1px solid rgba(35, 35, 35, 0.1);
   border-radius: 2px;
