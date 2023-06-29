@@ -16,6 +16,7 @@ import {
   StoreName,
 } from "../store/storeDetailAtom";
 import { useSearchParams } from "react-router-dom";
+import { role } from "../apis/types/common.type";
 
 export default function DetailShop() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -28,9 +29,9 @@ export default function DetailShop() {
   const [storeName, setStoreName] = useRecoilState(StoreName);
   const [category, setCategory] = useRecoilState(CategoryName);
 
-  useEffect(()=>{
+  useEffect(() => {
     setStoreId(Number(searchParams.get("storeId")));
-  },[])
+  }, [searchParams, setStoreId]);
 
   const { mutate: getStoreInfo } = useMutation(() => getStoreOne(storeId), {
     onSuccess: (res) => {
@@ -44,7 +45,6 @@ export default function DetailShop() {
       setStoreName(data.storeName);
     },
     onError: (err) => {
-      console.log(err)
       alert("존재하지 않거나 허용되지 않은 가게입니다.");
     },
   });
@@ -56,9 +56,12 @@ export default function DetailShop() {
   return (
     <DetailShopContainer>
       <ShopImgInfo />
-      <Title>리뷰 작성하기</Title>
-      <ReviewEnroll />
-      <Title>리뷰 (54)</Title>
+      {localStorage.getItem("role") === role.ROLE_CONSUMER ? (
+        <>
+          <Title>리뷰 작성하기</Title>
+          <ReviewEnroll />
+        </>
+      ) : null}
       <Reviews />
     </DetailShopContainer>
   );

@@ -9,6 +9,7 @@ import {
 import {
   getImgResponse,
   getMenuListResponse,
+  getStoreReviewResponse,
   postEnrollShopInfoProps,
   postEnrollShopInfoResponse,
   postMenuListProps,
@@ -17,6 +18,7 @@ import {
   postOpenHourResponse,
   postReviewProps,
   postStoreImgResponse,
+  postStoreReviewReplyResponse,
 } from "../types/store.type";
 
 //가게 등록 api
@@ -201,9 +203,9 @@ export const postReview = async (info: postReviewProps, storeId: number) => {
 };
 
 //좋아요 누르기
-export const postLike = async (storeId: number) => {
+export const postLike = async (storeId: number, memberId: string | null) => {
   const res = await api.post(
-    `/api/stores/${storeId}/likes`,
+    `/api/stores/${storeId}/members/${memberId}/likes`,
     {},
     {
       headers: {
@@ -217,20 +219,62 @@ export const postLike = async (storeId: number) => {
 };
 
 //좋아요 해제
-export const deleteLike = async (storeId: number) => {
-  const { data } = await api.delete(`/api/stores/${storeId}/likes`, {
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-      accept: "application/json,",
-      Authorization: `Bearer ${getCookie("accessToken")}`,
-    },
-  });
+export const deleteLike = async (storeId: number, memberId: string | null) => {
+  const { data } = await api.delete(
+    `/api/stores/${storeId}/members/${memberId}/likes`,
+    {
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+        accept: "application/json,",
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+      },
+    }
+  );
   return data;
 };
 
 //가게 사진 List 가져오기 api
-export const getImg = async (storeId: number): Promise<getImgResponse> => {
+export const getImg = async (
+  storeId: string | null
+): Promise<getImgResponse> => {
   const URL = `/api/stores/${storeId}/images`;
   const { data } = await api.get(URL);
   return data.data;
+};
+
+//가게 리뷰 List 가져오기 api
+export const getStoreReview = async (
+  storeId: string | null,
+  pageNum: number,
+  sort: string
+): Promise<getStoreReviewResponse> => {
+  const URL = `/api/stores/${storeId}/reviews?sort=${sort}&page=${
+    pageNum - 1
+  }&size=5`;
+  const { data } = await api.get(URL);
+  return data;
+};
+
+//가게 리뷰 대댓글 달기 api
+export const postStoreReviewReply = async (
+  storeId: string | null,
+  reviewId: number,
+  text: string
+): Promise<postStoreReviewReplyResponse> => {
+  const URL = `/api/stores/${storeId}/reviews/${reviewId}/comments`;
+
+  const { data } = await api.post(
+    URL,
+    {
+      content: text,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json,",
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+      },
+    }
+  );
+  return data;
 };

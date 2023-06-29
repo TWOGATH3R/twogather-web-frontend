@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import Slick from "../../components/common/Slick";
 import { useQuery } from "@tanstack/react-query";
 import { getImg } from "../../apis/queries/storeQuery";
-import { useRecoilValue } from "recoil";
-import { StoreId } from "../../store/storeDetailAtom";
 import { imgListType } from "./type";
+import { useSearchParams } from "react-router-dom";
 
 const ImgSlider = () => {
-  const storeId = useRecoilValue(StoreId);
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  const storeId = searchParams.get("storeId");
   //가게 이미지 리스트 가져오기
   const { data: imgList } = useQuery(["imgList"], () => getImg(storeId));
 

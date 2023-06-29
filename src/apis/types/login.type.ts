@@ -8,5 +8,6 @@ export type loginProps = {
 export type loginResponse = {
   data: {
     memberId: string;
+    name: string;
   };
 };

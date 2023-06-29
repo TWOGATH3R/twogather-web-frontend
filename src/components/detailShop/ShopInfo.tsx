@@ -10,6 +10,7 @@ import {
   Phone,
   StoreId,
   StoreName,
+  TotalReviewCount,
 } from "../../store/storeDetailAtom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
@@ -22,6 +23,7 @@ import { menuListStateType, openHourType } from "./type";
 import { getMyLikeList } from "../../apis/queries/myPageQuery";
 import { getCookie } from "../cookie/cookie";
 import ImgSlider from "./ImgSlider";
+import { role } from "../../apis/types/common.type";
 
 const ShopInfo = () => {
   const storeId = useRecoilValue(StoreId);
@@ -30,6 +32,8 @@ const ShopInfo = () => {
   const likeCount = useRecoilValue(LikeCount);
   const phone = useRecoilValue(Phone);
   const storeName = useRecoilValue(StoreName);
+
+  const totalReviewCount = useRecoilValue(TotalReviewCount);
 
   const [checkDay, setCheckDay] = useState({ ko: "월", en: "MONDAY" });
 
@@ -69,34 +73,32 @@ const ShopInfo = () => {
       console.log(err.response.data.message);
     },
   });
-  //DB에 저장된 검색가능한 키워드 리스트 가져오기
-  const { data: likeList } = useQuery(
-    ["myLikeList"],
-    () => getMyLikeList(memberId),
-    {
-      onSuccess: (res) => {
-        setLikeBoolean(
-          res.data.map((value) => value.storeId).includes(storeId)
-        );
-      },
-    }
-  );
+  //고객이 좋아요 누른 가게 리스트 가져오기
+  const { mutate: getLikeList } = useMutation(() => getMyLikeList(memberId), {
+    onSuccess: (res) => {
+      setLikeBoolean(res.data.map((value) => value.storeId).includes(storeId));
+    },
+  });
   //좋아요 누르기
-  const { mutate: saveLike } = useMutation(() => postLike(storeId), {
+  const { mutate: saveLike } = useMutation(() => postLike(storeId, memberId), {
     onError: (err: any) => {
       console.log(err.response.data.message);
     },
   });
   //좋아요 해제
-  const { mutate: likeDelete } = useMutation(() => deleteLike(storeId), {
-    onError: (err: any) => {
-      console.log(err.response.data.message);
-    },
-  });
+  const { mutate: likeDelete } = useMutation(
+    () => deleteLike(storeId, memberId),
+    {
+      onError: (err: any) => {
+        console.log(err.response.data.message);
+      },
+    }
+  );
 
   useEffect(() => {
     getOpenHourList();
     getMenu();
+    if (getCookie("accessToken") !== undefined) getLikeList();
   }, []);
 
   const dayList = [
@@ -122,11 +124,13 @@ const ShopInfo = () => {
     } else alert("등록된 영업시간이 없는 요일 입니다");
   };
   const heartOnClick = () => {
-    if (getCookie("accessToken") !== undefined) {
-      setLikeBoolean(!likeBoolean);
-      if (!likeBoolean) saveLike();
-      else likeDelete();
-    } else alert("로그인 후 이용해주세요");
+    if (localStorage.getItem("role") === role.ROLE_CONSUMER) {
+      if (getCookie("accessToken") !== undefined) {
+        setLikeBoolean(!likeBoolean);
+        if (!likeBoolean) saveLike();
+        else likeDelete();
+      } else alert("일반 고객 로그인 후 좋아요가 가능합니다");
+    } else alert("일반 고객 로그인 후 좋아요가 가능합니다");
   };
 
   return (
@@ -157,7 +161,7 @@ const ShopInfo = () => {
         <ReviewHeartCountBox>
           <ReviewCountBox>
             <ReviewCount />
-            <span>54</span>
+            <span>{totalReviewCount}</span>
           </ReviewCountBox>
           <HeartCountBox>
             <HeartCount />
@@ -248,11 +252,11 @@ const ReviewHeartCountBox = styled.div`
 `;
 const ReviewCountBox = styled.div`
   display: flex;
-  justify-content: space-between;
   margin-right: 20px;
   min-width: 50px;
   span {
     margin-top: -3px;
+    margin-left: 3px;
     color: #a5a5a5;
   }
 `;

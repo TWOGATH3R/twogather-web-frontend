@@ -20,4 +20,3 @@ export const StoreId = atom({
   key: `storeid/${v1()}`,
   default: 0,
 });
-

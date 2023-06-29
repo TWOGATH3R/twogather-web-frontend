@@ -36,3 +36,8 @@ export const StoreName = atom({
   key: `storeName/${v1()}`,
   default: "",
 });
+
+export const TotalReviewCount = atom({
+  key: `totalReviewCount/${v1()}`,
+  default: 0,
+});

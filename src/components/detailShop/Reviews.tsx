@@ -1,43 +1,103 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import StarClick from "./StarClick";
+import Pagenation from "../common/Pagenation";
+import { useMutation } from "@tanstack/react-query";
+import { getStoreReview } from "../../apis/queries/storeQuery";
+import { useSearchParams } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { TotalReviewCount } from "../../store/storeDetailAtom";
+import { getStoreReviewResponse } from "../../apis/types/store.type";
+import ReveiwReplyEnroll from "./ReveiwReplyEnroll";
+import Star from "./Star";
+import Filter from "../common/Filter";
 
 const Reviews = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const setTotalCount = useSetRecoilState(TotalReviewCount);
+
+  const [page, setPage] = useState(0);
+
+  const [targetReviewNum, setTargetReviewNum] = useState<number>();
+
+  const [list, setList] = useState<getStoreReviewResponse>();
+  const [sort, setSort] = useState<string>("createdDate,desc");
+  const storeId = searchParams.get("storeId");
+  const { mutate: getReviewList } = useMutation(
+    () => getStoreReview(storeId, page, sort),
+    {
+      onSuccess: (res) => {
+        setList(res);
+        setTotalCount(res.totalElements);
+      },
+    }
+  );
+
+  const pageOnChange = (page: any) => {
+    setPage(page);
+  };
+
+  useEffect(() => {
+    getReviewList();
+  }, [page, sort]);
+
+  const replyBtnOnClick = (index: number) => {
+    setTargetReviewNum(index);
+  };
+
+  const filter = [
+    { text: "최신순", sort: "createdDate,desc" },
+    { text: "오래된순", sort: "createdDate" },
+    { text: "별점 높은순", sort: "score,desc" },
+    { text: "별점 낮은순", sort: "score" },
+  ];
+
   return (
-    <Container>
-      <TitleBox>
-        <NameStarBox>
-          <Name>우리동네 맛집대장</Name>
-        </NameStarBox>
-        <Score>평균 평점: 1.2</Score>
-      </TitleBox>
-      <ReivewContent>
-        "당근케이크 평가는 이쯤 하고 커피에 대한 평가를 해보자면 커피의 가격도
-        일반적인 프랜차이즈나 개인 카페에서 책정한 가격에 비해 훨씬
-        비쌌다.가격표를 보니 그저 황당한 마음에 금가루라도 뿌렸나 싶은 생각이
-        들더라. 그래도 아메리카노는 만들기 쉬우니까… 얼추 가격값은 하겠지
-        싶었는데 아뿔싸, 나의 오만방자함이었다… 핵노맛.나는 산미가 나는 커피를
-        싫어하는 편인데, 세시셀라 커피는 산미가 너무 심해서 먹는 내내 ‘이게
-        7,000원이라고?’하는 생각을 했던 것 같다. 또 먹고 싶진 않다." "당근케이크
-        평가는 이쯤 하고 커피에 대한 평가를 해보자면 커피의 가격도 일반적인
-        프랜차이즈나 개인 카페에서 책정한 가격에 비해 훨씬 비쌌다.가격표를 보니
-        그저 황당한 마음에 금가루라도 뿌렸나 싶은 생각이 들더라. 그래도
-        아메리카노는 만들기 쉬우니까… 얼추 가격값은 하겠지 싶었는데 아뿔싸, 나의
-        오만방자함이었다… 핵노맛.나는 산미가 나는 커피를 싫어하는 편인데,
-        세시셀라 커피는 산미가 너무 심해서 먹는 내내 ‘이게 7,000원이라고?’하는
-        생각을 했던 것 같다. 또 먹고 싶진 않다." "당근케이크 평가는 이쯤 하고
-        커피에 대한 평가를 해보자면 커피의 가격도 일반적인 프랜차이즈나 개인
-        카페에서 책정한 가격에 비해 훨씬 비쌌다.가격표를 보니 그저 황당한 마음에
-        금가루라도 뿌렸나 싶은 생각이 들더라. 그래도 아메리카노는 만들기
-        쉬우니까… 얼추 가격값은 하겠지 싶었는데 아뿔싸, 나의 오만방자함이었다…
-        핵노맛.나는 산미가 나는 커피를 싫어하는 편인데, 세시셀라 커피는 산미가
-        너무 심해서 먹는 내내 ‘이게 7,000원이라고?’하는 생각을 했던 것 같다. 또
-        먹고 싶진 않다."
-      </ReivewContent>
-      <Date>2022-03-01</Date>
-    </Container>
+    <>
+      <Title>
+        리뷰 ({list?.totalElements})
+        <Filter filterList={filter} setSort={setSort} />
+      </Title>
+      {list &&
+        list.data.map((value: any, index) => (
+          <div key={index}>
+            <Container>
+              <TitleBox>
+                <NameStarBox>
+                  <Name>{value.consumerName}</Name>
+                  <Star count={value.score} />
+                </NameStarBox>
+                <Score>평균 평점: {value.consumerAvgScore}</Score>
+              </TitleBox>
+              <ReivewContent>{value.content}</ReivewContent>
+              <DateReviewBtnBox>
+                <Date>{value.createdDate}</Date>
+                <span onClick={() => replyBtnOnClick(index)}>답글</span>
+              </DateReviewBtnBox>
+            </Container>
+            {targetReviewNum === index ? (
+              <ReveiwReplyEnroll reviewId={value.reviewId} />
+            ) : null}
+          </div>
+        ))}
+      {list && (
+        <Pagenation
+          page={page}
+          pageOnChange={pageOnChange}
+          totalCount={list.totalElements}
+        />
+      )}
+    </>
   );
 };
+
+const Title = styled.h2`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  color: #606060;
+`;
 
 const TitleBox = styled.div`
   display: flex;
@@ -65,7 +125,8 @@ const Name = styled.div`
 `;
 
 const Container = styled.div`
-  width: 100%;
+  margin-bottom: 15px;
+  width: calc(100% - 80px);
   padding: 20px 40px;
   border: 1px solid rgba(35, 35, 35, 0.1);
   border-radius: 2px;
@@ -81,6 +142,17 @@ const ReivewContent = styled.div`
   resize: none;
   :focus-visible {
     outline: none;
+  }
+`;
+
+const DateReviewBtnBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  span {
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;
 
