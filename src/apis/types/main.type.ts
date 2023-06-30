@@ -33,6 +33,7 @@ type getStoreListType = {
   avgScore: number;
   keywordList: string[];
   storeImageUrl: string;
+  likeCount: number;
 };
 export type getStoreListResponse = {
   data: [getStoreListType];
@@ -49,6 +50,7 @@ export type searchProps = {
   category: string | null;
   search: string | null;
   location: string | null;
-  pagenum: string | null;
+  pagenum: number;
   sort: string | null;
+  storeName: string | null;
 };

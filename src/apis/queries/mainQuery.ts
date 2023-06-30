@@ -24,10 +24,19 @@ export const getKeyWordList = async (): Promise<getKeyWordListResponse> => {
 
 //가게 검색 기능 api
 export const getStoreList = async (
-  searchInfo: searchProps
+  info: searchProps
 ): Promise<getStoreListResponse> => {
-  const { data } = await api.get(
-    `/api/stores/search?category=${searchInfo.category}&search=${searchInfo.search}&location=${searchInfo.location}&page=${searchInfo.pagenum}&size=10&sort=${searchInfo.sort}`
-  );
-  return data.data;
+  console.log(info);
+  const URL = `/api/stores/search?${
+    info.category && `category=${info.category}&`
+  }${info.search && `search=${info.search}&`}${
+    info.storeName && `storeName=${info.storeName}&`
+  }${info.location && `location=${info.location}&`}page=${
+    info.pagenum - 1
+  }&size=16&sort=${info.sort}`.replaceAll("null", "");
+
+  const { data } = await api.get(URL);
+  console.log(data.data.length);
+  console.log(data);
+  return data;
 };
