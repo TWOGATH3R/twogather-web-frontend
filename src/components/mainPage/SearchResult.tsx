@@ -1,31 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import Pagination from 'react-js-pagination';
-import { Link, useSearchParams } from 'react-router-dom';
-import styled from 'styled-components';
-import { useMutation } from '@tanstack/react-query';
-import { getStoreList } from '../../apis/queries/mainQuery';
-import { searchProps } from '../../apis/types/main.type';
+import React, { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import styled from "styled-components";
+import { useMutation } from "@tanstack/react-query";
+import { getStoreList } from "../../apis/queries/mainQuery";
+import { getStoreListResponse, searchProps } from "../../apis/types/main.type";
+import Filter from "../common/Filter";
+import Pagenation from "../common/Pagenation";
+import { AiFillHeart } from "react-icons/ai";
+import SearchException from "./SearchException";
 
 const SearchResult = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(Number(searchParams.get("pagenum")));
 
-  const storeList = [1, 2, 3, 4, 5, 6];
+  const [list, setList] = useState<getStoreListResponse>();
+
+  const [sort, setSort] = useState<string>("MOST_REVIEWED,desc");
 
   const searchInfo: searchProps = {
-    category: searchParams.get('category'),
-    search: searchParams.get('search'),
-    location: searchParams.get('location'),
-    pagenum: searchParams.get('pagenum'),
-    sort: searchParams.get('sort'),
+    category:
+      searchParams.get("category") === "" ? null : searchParams.get("category"),
+    search:
+      searchParams.get("search") === "" ? null : searchParams.get("search"),
+    location:
+      searchParams.get("location") === "" ? null : searchParams.get("location"),
+    pagenum: page,
+    sort: sort,
+    storeName:
+      searchParams.get("storeName") === ""
+        ? null
+        : searchParams.get("storeName"),
   };
   //가게 검색 결과 리스트 query
   const { mutate: storeSearch } = useMutation(() => getStoreList(searchInfo), {
-    onSuccess: res => {
-      console.log(res);
+    onSuccess: (res) => {
+      setList(res);
     },
-    onError: err => {
+    onError: (err) => {
       console.log(err);
     },
   });
@@ -36,58 +48,71 @@ const SearchResult = () => {
 
   useEffect(() => {
     storeSearch();
-  }, [storeSearch]);
+  }, [page, sort, searchParams]);
+
+  const filter = [
+    { text: "평점 높은순", sort: "TOP_RATED,desc" },
+    { text: "평점 낮은순", sort: "TOP_RATED" },
+    { text: "리뷰 많은순", sort: "MOST_REVIEWED,desc" },
+    { text: "리뷰 적은순", sort: "MOST_REVIEWED" },
+    { text: "좋아요 많은순", sort: "MOST_LIKES_COUNT,desc" },
+    { text: "좋아요 적은순", sort: "MOST_LIKES_COUNT" },
+  ];
 
   return (
     <SearchResultContainer>
       <Header>
         <LocalAndKeyWordBox>
-          <LocalText>서울시 강남구 맛집</LocalText>
+          <LocalText>
+            {searchParams.get("location") && searchParams.get("location")} 맛집
+          </LocalText>
           <KeyWordList>
-            <KeyWord># 분위기 좋은</KeyWord>
-            <Category>양식</Category>
+            {searchParams.get("search") && (
+              <KeyWord># {searchParams.get("search")}</KeyWord>
+            )}
+            {searchParams.get("category") && (
+              <Category>{searchParams.get("category")}</Category>
+            )}
           </KeyWordList>
         </LocalAndKeyWordBox>
-        <FilterBox>
-          <FilterSelect>
-            <option>리뷰 많은순</option>
-            <option>평점 높은순</option>
-            <option>찜 많은순</option>
-          </FilterSelect>
-        </FilterBox>
+        <Filter filterList={filter} setSort={setSort} />
       </Header>
-      <StoreList>
-        {storeList &&
-          storeList.map(value => (
-            <StoreItem key={value}>
-              <Link to={'/'}>
-                <StoreImgBox>
-                  <StoreImg src='https://modo-phinf.pstatic.net/20190613_180/1560397211791mWzQc_JPEG/mosaUJSQm4.jpeg?type=w1100' />
-                </StoreImgBox>
-                <StoreNameAndGrade>
-                  <StoreName>서초 고깃간</StoreName>
-                  <StoreGrade>4.5</StoreGrade>
-                </StoreNameAndGrade>
-                <StoreKeyWordList>
-                  <StoreKeyWordItem># 데이트 하기 좋은</StoreKeyWordItem>
-                  <StoreKeyWordItem># 저렴한</StoreKeyWordItem>
-                  <StoreKeyWordItem># 분위기 좋은</StoreKeyWordItem>
-                </StoreKeyWordList>
-              </Link>
-            </StoreItem>
-          ))}
-      </StoreList>
-      <PaginationBox>
-        <Pagination
-          activePage={page}
-          itemsCountPerPage={10}
-          totalItemsCount={60}
-          pageRangeDisplayed={5}
-          prevPageText='‹'
-          nextPageText='›'
-          onChange={page => pageOnChange(page)}
-        />
-      </PaginationBox>
+      {list && list?.data.length >= 1 ? (
+        <>
+          <StoreList>
+            {list &&
+              list.data.map((value, index) => (
+                <StoreItem key={index}>
+                  <Link to={`/detailShop/?storeId=${value.storeId}`}>
+                    <StoreImgBox>
+                      <StoreImg src={value.storeImageUrl} />
+                    </StoreImgBox>
+                    <StoreNameAndGrade>
+                      <StoreName>{value.storeName}</StoreName>
+                      <StoreGrade>4.5</StoreGrade>
+                    </StoreNameAndGrade>
+                    <LikeCount>
+                      <AiFillHeart />
+                      {value.likeCount}
+                    </LikeCount>
+                    <StoreKeyWordList>
+                      {value.keywordList.map((v, i) => (
+                        <StoreKeyWordItem key={i}># {v}</StoreKeyWordItem>
+                      ))}
+                    </StoreKeyWordList>
+                  </Link>
+                </StoreItem>
+              ))}
+          </StoreList>
+          <Pagenation
+            page={page}
+            pageOnChange={pageOnChange}
+            totalCount={list.data.length}
+          />
+        </>
+      ) : (
+        <SearchException />
+      )}
     </SearchResultContainer>
   );
 };
@@ -100,6 +125,7 @@ const SearchResultContainer = styled.div`
 const Header = styled.header`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
 `;
 
@@ -115,27 +141,18 @@ const KeyWordList = styled.ul`
   list-style: none;
   display: flex;
   justify-content: center;
+  overflow-x: scroll;
 `;
 const KeyWord = styled.li`
   margin: 0 5px;
   padding: 5px 10px;
+  width: fit-content;
   background-color: #d9d9d9;
   border-radius: 10px;
   font-size: 0.7rem;
   cursor: pointer;
 `;
 const Category = styled(KeyWord)``;
-
-const FilterBox = styled.div``;
-const FilterSelect = styled.select`
-  outline: none;
-  padding: 5px;
-  background: #0075ff;
-  border: none;
-  border-radius: 10px;
-  font-size: 12px;
-  color: ${({ theme }) => theme.colors.white};
-`;
 
 const StoreList = styled.ul`
   list-style: none;
@@ -168,7 +185,7 @@ const StoreImg = styled.img`
 `;
 const StoreNameAndGrade = styled.div`
   display: flex;
-  padding: 15px 0 10px 0;
+  padding: 15px 0 0 0;
 `;
 const StoreName = styled.span`
   padding-right: 10px;
@@ -185,21 +202,13 @@ const StoreKeyWordItem = styled(KeyWord)`
   margin: 0 5px 0 0;
 `;
 
-const PaginationBox = styled.div`
-  margin-top: 10px;
-  a {
-    color: black;
-  }
-  ul {
-    display: flex;
-    justify-content: center;
-    list-style: none;
-    li {
-      padding: 3px 10px;
-    }
-  }
-  ul.pagination li.active a {
-    color: red;
+const LikeCount = styled.p`
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+  svg {
+    margin-right: 5px;
+    color: ${({ theme }) => theme.colors.yellow};
   }
 `;
 
