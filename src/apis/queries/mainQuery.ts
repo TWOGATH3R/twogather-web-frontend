@@ -33,7 +33,7 @@ export const getStoreList = async (
     info.storeName && `storeName=${info.storeName}&`
   }${info.location && `location=${info.location}&`}page=${
     info.pagenum - 1
-  }&size=16&sort=${info.sort}`.replaceAll("null", "");
+  }&size=6&sort=${info.sort}`.replaceAll("null", "");
 
   const { data } = await api.get(URL);
   console.log(data.data.length);
