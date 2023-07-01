@@ -40,7 +40,7 @@ const Search = () => {
   ];
   const cityList = [
     {
-      city: "서울특별시",
+      city: "서울",
       si: [
         "종로구",
         "중구",
@@ -66,7 +66,7 @@ const Search = () => {
       ],
     },
     {
-      city: "부산광역시",
+      city: "부산",
       si: [
         "중구",
         "서구",
@@ -87,7 +87,7 @@ const Search = () => {
       ],
     },
     {
-      city: "대구광역시",
+      city: "대구",
       si: [
         "중구",
         "동구",
@@ -100,23 +100,23 @@ const Search = () => {
       ],
     },
     {
-      city: "인천광역시",
+      city: "인천",
       si: ["중구", "동구", "남동구", "서구", "강화군", "옹진군"],
     },
     {
-      city: "광주광역시",
+      city: "광주",
       si: ["동구", "서구", "북구", "광산구"],
     },
     {
-      city: "대전광역시",
+      city: "대전",
       si: ["동구", "중구", "서구", "유성구", "대덕구"],
     },
     {
-      city: "울산광역시",
+      city: "울산",
       si: ["중구", "남구", "동구", "북구", "울주군"],
     },
     {
-      city: "경기도",
+      city: "경기",
       si: [
         "수원시",
         "성남시",
@@ -152,7 +152,7 @@ const Search = () => {
       ],
     },
     {
-      city: "강원도",
+      city: "강원특별차치도",
       si: [
         "춘천시",
         "원주시",
@@ -175,7 +175,7 @@ const Search = () => {
       ],
     },
     {
-      city: "충청북도",
+      city: "충북",
       si: [
         "청주시",
         "충주시",
@@ -190,7 +190,7 @@ const Search = () => {
       ],
     },
     {
-      city: "충청남도",
+      city: "충남",
       si: [
         "천안시",
         "공주시",
@@ -209,7 +209,7 @@ const Search = () => {
       ],
     },
     {
-      city: "전라북도",
+      city: "전북",
       si: [
         "전주시",
         "군산시",
@@ -228,7 +228,7 @@ const Search = () => {
       ],
     },
     {
-      city: "전라남도",
+      city: "전남",
       si: [
         "목포시",
         "여수시",
@@ -255,7 +255,7 @@ const Search = () => {
       ],
     },
     {
-      city: "경상북도",
+      city: "경북",
       si: [
         "포항시",
         "경주시",
@@ -283,7 +283,7 @@ const Search = () => {
       ],
     },
     {
-      city: "경상남도",
+      city: "경남",
       si: [
         "창원시",
         "진주시",
@@ -355,12 +355,13 @@ const Search = () => {
   //onSubmit
   const searchOnSubmit = (e: any) => {
     e.preventDefault();
+    console.log("나나")
     navigate(
       `/search?category=${
         categories === "모든 카테고리" ? "" : categories
-      }&search=${searchText}&location=${
+      }&search=${keyWord}&storeName=${searchText}&location=${
         city === "전체 지역" ? "" : city + " " + si
-      }&pagenum=1&sort=TOP_RATED,desc`
+      }&pagenum=0&sort=TOP_RATED,desc`
     );
   };
 

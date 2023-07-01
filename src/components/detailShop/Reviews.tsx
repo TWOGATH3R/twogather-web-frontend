@@ -10,6 +10,8 @@ import { getStoreReviewResponse } from "../../apis/types/store.type";
 import ReveiwReplyEnroll from "./ReveiwReplyEnroll";
 import Star from "./Star";
 import Filter from "../common/Filter";
+import Exception from "../common/Exception";
+import LodingSpinner from "../common/LodingSpinner";
 
 const Reviews = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -23,7 +25,7 @@ const Reviews = () => {
   const [list, setList] = useState<getStoreReviewResponse>();
   const [sort, setSort] = useState<string>("createdDate,desc");
   const storeId = searchParams.get("storeId");
-  const { mutate: getReviewList } = useMutation(
+  const { mutate: getReviewList, isLoading: loding } = useMutation(
     () => getStoreReview(storeId, page, sort),
     {
       onSuccess: (res) => {
@@ -58,7 +60,9 @@ const Reviews = () => {
         리뷰 ({list?.totalElements})
         <Filter filterList={filter} setSort={setSort} />
       </Title>
-      {list &&
+      {loding ? (
+        <LodingSpinner />
+      ) : list && list?.data.length >= 1 ? (
         list.data.map((value: any, index) => (
           <div key={index}>
             <Container>
@@ -79,7 +83,11 @@ const Reviews = () => {
               <ReveiwReplyEnroll reviewId={value.reviewId} />
             ) : null}
           </div>
-        ))}
+        ))
+      ) : (
+        <Exception verson={"리뷰"} />
+      )}
+
       {list && (
         <Pagenation
           page={page}
