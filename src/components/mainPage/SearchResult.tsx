@@ -7,7 +7,7 @@ import { getStoreListResponse, searchProps } from "../../apis/types/main.type";
 import Filter from "../common/Filter";
 import Pagenation from "../common/Pagenation";
 import { AiFillHeart } from "react-icons/ai";
-import SearchException from "./SearchException";
+import Exception from "../common/Exception";
 
 const SearchResult = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -111,7 +111,7 @@ const SearchResult = () => {
           />
         </>
       ) : (
-        <SearchException />
+        <Exception verson={"가게검색"} />
       )}
     </SearchResultContainer>
   );
@@ -142,11 +142,23 @@ const KeyWordList = styled.ul`
   display: flex;
   justify-content: center;
   overflow-x: scroll;
+  &::-webkit-scrollbar {
+    width: 3px;
+    height: 7px;
+  }
+  &::-webkit-scrollbar-thumb {
+    width: 3px;
+    border-radius: 5px;
+    background-color: #b1b1b1;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #ffffff;
+  }
 `;
 const KeyWord = styled.li`
   margin: 0 5px;
   padding: 5px 10px;
-  width: fit-content;
+  min-width: fit-content;
   background-color: #d9d9d9;
   border-radius: 10px;
   font-size: 0.7rem;
