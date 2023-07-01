@@ -8,6 +8,7 @@ import Filter from "../common/Filter";
 import Pagenation from "../common/Pagenation";
 import { AiFillHeart } from "react-icons/ai";
 import Exception from "../common/Exception";
+import LodingSpinner from "../common/LodingSpinner";
 
 const SearchResult = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -33,14 +34,17 @@ const SearchResult = () => {
         : searchParams.get("storeName"),
   };
   //가게 검색 결과 리스트 query
-  const { mutate: storeSearch } = useMutation(() => getStoreList(searchInfo), {
-    onSuccess: (res) => {
-      setList(res);
-    },
-    onError: (err) => {
-      console.log(err);
-    },
-  });
+  const { mutate: storeSearch, isLoading: loding } = useMutation(
+    () => getStoreList(searchInfo),
+    {
+      onSuccess: (res) => {
+        setList(res);
+      },
+      onError: (err) => {
+        console.log(err);
+      },
+    }
+  );
 
   const pageOnChange = (page: any) => {
     setPage(page);
@@ -77,7 +81,9 @@ const SearchResult = () => {
         </LocalAndKeyWordBox>
         <Filter filterList={filter} setSort={setSort} />
       </Header>
-      {list && list?.data.length >= 1 ? (
+      {loding ? (
+        <LodingSpinner />
+      ) : list && list?.data.length >= 1 ? (
         <>
           <StoreList>
             {list &&
