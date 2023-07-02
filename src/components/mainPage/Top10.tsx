@@ -40,7 +40,9 @@ const Top10 = ({ title, type }: Top10Type) => {
 
   return (
     <GradeTopContainer>
-      <Title>{title} 높은 Top10</Title>
+      <Title>
+        {title === "리뷰" ? "리뷰 많은 Top10" : `${title} 높은 Top10`}{" "}
+      </Title>
       <SeeMoreInput id="gradetop" type="checkbox" />
       <GradeTop10List>
         {Array.isArray(storeList)
@@ -159,7 +161,6 @@ const SeeMoreBtn = styled.label`
   align-items: center;
   justify-content: center;
   padding: 10px 0;
-  /* width: 100%; */
   height: fit-content;
   background-color: transparent;
   border: none;
