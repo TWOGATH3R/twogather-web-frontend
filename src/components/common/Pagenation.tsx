@@ -11,8 +11,8 @@ const Pagenation = ({ page, pageOnChange, totalCount }: infoType) => {
   return (
     <PaginationBox>
       <Pagination
-        activePage={page}
-        itemsCountPerPage={5}
+        activePage={Number(page)}
+        itemsCountPerPage={6}
         totalItemsCount={totalCount}
         pageRangeDisplayed={5}
         prevPageText="‹"
