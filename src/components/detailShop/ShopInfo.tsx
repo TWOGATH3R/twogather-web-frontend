@@ -12,7 +12,7 @@ import {
   StoreName,
   TotalReviewCount,
 } from "../../store/storeDetailAtom";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   deleteLike,
   getMenuList,

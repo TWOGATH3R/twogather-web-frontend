@@ -1,10 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import LOGO from "../../assets/img/LOGO.png";
-import mypageImg from "../../assets/person-icon.svg";
-import { Link, useNavigate } from "react-router-dom";
 import { getCookie, removeCookie } from "../cookie/cookie";
-import Swal from "sweetalert2";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Nav from "./Nav";
 

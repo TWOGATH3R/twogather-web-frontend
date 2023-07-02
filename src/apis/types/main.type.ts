@@ -50,7 +50,7 @@ export type searchProps = {
   category: string | null;
   search: string | null;
   location: string | null;
-  pagenum: number;
+  pagenum: string | null;
   sort: string | null;
   storeName: string | null;
 };
