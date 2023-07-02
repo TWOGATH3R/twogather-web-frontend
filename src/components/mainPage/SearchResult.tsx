@@ -150,7 +150,7 @@ const KeyWordList = styled.ul`
   overflow-x: scroll;
   &::-webkit-scrollbar {
     width: 3px;
-    height: 7px;
+    height: 4px;
   }
   &::-webkit-scrollbar-thumb {
     width: 3px;
@@ -174,14 +174,17 @@ const Category = styled(KeyWord)``;
 
 const StoreList = styled.ul`
   list-style: none;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 15px;
   padding: 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
+  @media (max-width: 680px) {
+    grid-template-columns: 1fr 1fr;
+  }
 `;
 const StoreItem = styled.li`
-  width: calc(33.3333% - 30px);
-  margin: 0 15px 25px 15px;
+  width: 100%;
   a {
     width: 100%;
     height: 100%;

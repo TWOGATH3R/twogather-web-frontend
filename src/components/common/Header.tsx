@@ -9,24 +9,6 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import Nav from "./Nav";
 
 export default function Header() {
-  const navigate = useNavigate();
-
-  const logoutOnClick = () => {
-    Swal.fire({
-      title: "로그아웃 하시겠습니까?",
-      confirmButtonColor: "#0075FF",
-      cancelButtonColor: "#738598",
-      showCancelButton: true,
-      confirmButtonText: "로그아웃",
-      cancelButtonText: "돌아가기",
-      padding: "3em",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        removeCookie();
-      }
-    });
-  };
-
   useEffect(() => {
     if (getCookie("accessToken") === undefined && localStorage.getItem("role"))
       removeCookie();
@@ -40,7 +22,7 @@ export default function Header() {
         </LogoBox>
         <NavContainer>
           <MenuTwoGatherTitle>TwoGather</MenuTwoGatherTitle>
-          <Nav logoutOnClick={logoutOnClick} />
+          <Nav />
         </NavContainer>
         <MenuBox>
           <MenuBtn htmlFor="menu">
@@ -101,5 +83,3 @@ const MenuTwoGatherTitle = styled.span`
   margin-right: 55px;
   font-weight: bold;
 `;
-
-
