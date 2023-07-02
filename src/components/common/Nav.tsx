@@ -2,14 +2,29 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { role } from "../../apis/types/common.type";
-import { getCookie } from "../cookie/cookie";
+import { getCookie, removeCookie } from "../cookie/cookie";
 import mypageImg from "../../assets/person-icon.svg";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
-interface infoType {
-  logoutOnClick: any;
-}
-const Nav = ({ logoutOnClick }: infoType) => {
+const Nav = () => {
+  
+  const logoutOnClick = () => {
+    Swal.fire({
+      title: "로그아웃 하시겠습니까?",
+      confirmButtonColor: "#0075FF",
+      cancelButtonColor: "#738598",
+      showCancelButton: true,
+      confirmButtonText: "로그아웃",
+      cancelButtonText: "돌아가기",
+      padding: "3em",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        removeCookie();
+      }
+    });
+  };
+
   return (
     <>
       <MenuInput id="menu" type="checkbox" />
