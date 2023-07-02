@@ -22,6 +22,7 @@ type getKeyWordListType = {
   name: string;
 };
 export type getKeyWordListResponse = {
+  map(arg0: (value: any) => any): unknown;
   data: [getKeyWordListType];
 };
 

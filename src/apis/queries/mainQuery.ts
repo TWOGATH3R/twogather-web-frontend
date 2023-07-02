@@ -19,7 +19,7 @@ export const getTop10List = async ({
 //DB에 저장된 검색가능한 키워드 리스트 가져오기
 export const getKeyWordList = async (): Promise<getKeyWordListResponse> => {
   const { data } = await api.get(`/api/keywords?count=6`);
-  return data.data;
+  return data;
 };
 
 //가게 검색 기능 api
