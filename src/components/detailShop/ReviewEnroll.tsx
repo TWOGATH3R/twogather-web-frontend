@@ -50,8 +50,6 @@ const ReviewEnroll = () => {
 
   const enrollBtnOnClick = () => {
     if (getCookie("accessToken") === undefined) alert("로그인 후 이용해주세요");
-    else if (localStorage.getItem("role") !== role.ROLE_CONSUMER)
-      alert("일반 고객만 리뷰를 작성할 수 있습니다");
     else if (!text) alert("리뷰 내용을 작성해주세요");
     else if (count === 0) alert("별점을 매겨주세요");
     else saveReview();

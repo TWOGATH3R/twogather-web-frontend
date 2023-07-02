@@ -8,10 +8,9 @@ import {
 } from "../../apis/queries/myPageQuery";
 import Swal from "sweetalert2";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { Email, Id, Name } from "../../store/userInfoAtom";
+import { Email, Id, Name, Role } from "../../store/userInfoAtom";
 import { role } from "../../apis/types/common.type";
 import { userUpdateProps } from "../../apis/types/mypage.type";
-import { AxiosError } from "axios";
 import PopUp from "./PopUp";
 
 const Info = () => {
@@ -98,6 +97,7 @@ const Info = () => {
     setName(nameText);
   };
 
+  const roleText = useRecoilValue(Role);
   //onClick
   const saveBtnOnClick = () => {
     if (!id) alert("아이디를 입력해주세요");
@@ -105,8 +105,8 @@ const Info = () => {
     else if (!idPattern.test(id)) alert("아이디가 형식에 맞지 않습니다");
     else if (!userNamePattern.test(name)) alert("이름이 형식에 맞지 않습니다");
     else {
-      if (localStorage.getItem("role") === role.ROLE_ADMIN) adminInfoChange();
-      else if (localStorage.getItem("role") === role.ROLE_CONSUMER)
+      if (roleText === role.ROLE_ADMIN) adminInfoChange();
+      else if (roleText === role.ROLE_CONSUMER)
         consumerInfoChange();
       else ownerInfoChange();
     }

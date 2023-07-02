@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { role } from "../../apis/types/common.type";
@@ -6,9 +6,10 @@ import { getCookie, removeCookie } from "../cookie/cookie";
 import mypageImg from "../../assets/person-icon.svg";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Role } from "../../store/userInfoAtom";
+import { useRecoilState } from "recoil";
 
 const Nav = () => {
-  
   const logoutOnClick = () => {
     Swal.fire({
       title: "로그아웃 하시겠습니까?",
@@ -24,6 +25,12 @@ const Nav = () => {
       }
     });
   };
+  
+  const [roleText, setRoleText] = useRecoilState(Role);
+  useEffect(() => {
+    const role = localStorage.getItem("role");
+    role && setRoleText(role);
+  }, []);
 
   return (
     <>
@@ -42,7 +49,7 @@ const Nav = () => {
             <NavLink to="/">Home</NavLink>
           </MenuItem>
 
-          {localStorage.getItem("role") === role.ROLE_ADMIN ? (
+          {roleText === role.ROLE_ADMIN ? (
             <>
               <MenuItem>
                 <NavLink to="/">WaitingList</NavLink>
@@ -51,7 +58,7 @@ const Nav = () => {
                 <NavLink to="/">ApprovedList</NavLink>
               </MenuItem>
             </>
-          ) : localStorage.getItem("role") === role.ROLE_STORE_OWNER ? (
+          ) : roleText === role.ROLE_STORE_OWNER ? (
             <>
               <MenuItem>
                 <NavLink to="/enrollshop">Resgistration</NavLink>

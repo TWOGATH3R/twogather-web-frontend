@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { Email, Id, Name } from "../store/userInfoAtom";
+import { Email, Id, Name, Role } from "../store/userInfoAtom";
 import {
   getAdminInfo,
   getConsumerInfo,
@@ -56,9 +56,11 @@ const MyPage = () => {
     },
   });
 
+  //사용자 권한
+  const roleText = useRecoilValue(Role);
   useEffect(() => {
-    if (localStorage.getItem("role") === role.ROLE_ADMIN) adminInfoGet();
-    else if (localStorage.getItem("role") === role.ROLE_CONSUMER)
+    if (roleText === role.ROLE_ADMIN) adminInfoGet();
+    else if (roleText === role.ROLE_CONSUMER)
       consumerInfoGet();
     else ownerInfoGet();
   }, []);
@@ -78,8 +80,8 @@ const MyPage = () => {
               정보
             </NavLink>
           </MenuItem>
-          {localStorage.getItem("role") ===
-          role.ROLE_ADMIN ? null : localStorage.getItem("role") ===
+          {roleText ===
+          role.ROLE_ADMIN ? null : roleText ===
             role.ROLE_CONSUMER ? (
             <>
               <MenuItem>
@@ -94,7 +96,7 @@ const MyPage = () => {
               <NavLink to={`/mypage/mystore`}>내가게</NavLink>
             </MenuItem>
           )}
-          {localStorage.getItem("role") === role.ROLE_ADMIN ? null : (
+          {roleText === role.ROLE_ADMIN ? null : (
             <MenuItem>
               <NavLink to={`/mypage/withdraw`}>탈퇴</NavLink>
             </MenuItem>

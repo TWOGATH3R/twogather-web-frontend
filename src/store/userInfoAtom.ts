@@ -16,6 +16,11 @@ export const Email = atom({
   default: "",
 });
 
+export const Role = atom({
+  key: `role/${v1()}`,
+  default: "",
+});
+
 export const StoreId = atom({
   key: `storeid/${v1()}`,
   default: 0,
