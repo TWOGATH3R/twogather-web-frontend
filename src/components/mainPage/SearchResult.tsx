@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { useMutation } from "@tanstack/react-query";
 import { getStoreList } from "../../apis/queries/mainQuery";
@@ -9,33 +9,45 @@ import Pagenation from "../common/Pagenation";
 import { AiFillHeart } from "react-icons/ai";
 import Exception from "../common/Exception";
 import LodingSpinner from "../common/LodingSpinner";
+import {
+  Categories,
+  City,
+  PageNum,
+  SearchText,
+  Si,
+  KeyWord,
+} from "../../store/searchAtom";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 const SearchResult = () => {
+  const navigate = useNavigate();
+
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [page, setPage] = useState(Number(searchParams.get("pagenum")));
+  // const [page, setPage] = useState(searchParams.get("pagenum"));
 
   const [list, setList] = useState<getStoreListResponse>();
 
   const [sort, setSort] = useState<string>("MOST_REVIEWED,desc");
 
-  const searchInfo: searchProps = {
-    category:
-      searchParams.get("category") === "" ? null : searchParams.get("category"),
-    search:
-      searchParams.get("search") === "" ? null : searchParams.get("search"),
-    location:
-      searchParams.get("location") === "" ? null : searchParams.get("location"),
-    pagenum: page,
+  const [pageNum, setPageNum] = useRecoilState<string>(PageNum);
+
+  const searchText = useRecoilValue<string>(SearchText);
+  const categories = useRecoilValue<string>(Categories);
+  const city = useRecoilValue<string>(City);
+  const si = useRecoilValue<string>(Si);
+  const keyWord = useRecoilValue<string>(KeyWord);
+  const info: searchProps = {
+    category: categories === "모든 카테고리" ? "" : categories,
+    search: keyWord,
+    location: city === "전체 지역" ? "" : city + " " + si,
+    pagenum: searchParams.get("storeName") === searchText ? pageNum : "0",
     sort: sort,
-    storeName:
-      searchParams.get("storeName") === ""
-        ? null
-        : searchParams.get("storeName"),
+    storeName: searchText,
   };
   //가게 검색 결과 리스트 query
   const { mutate: storeSearch, isLoading: loding } = useMutation(
-    () => getStoreList(searchInfo),
+    () => getStoreList(info),
     {
       onSuccess: (res) => {
         setList(res);
@@ -46,13 +58,20 @@ const SearchResult = () => {
     }
   );
 
+  //onChange
   const pageOnChange = (page: any) => {
-    setPage(page);
+    setPageNum(page);
   };
 
   useEffect(() => {
     storeSearch();
-  }, [page, sort, searchParams]);
+    const URL = `/search?category=${
+      info.category === "모든 카테고리" ? "" : info.category
+    }&search=${info.search}&storeName=${info.storeName}&location=${
+      info.location === "전체 지역" ? "" : info.location
+    }&pagenum=${info.pagenum}&sort=${info.sort}`.replaceAll("null", "");
+    navigate(URL);
+  }, [pageNum, sort]);
 
   const filter = [
     { text: "평점 높은순", sort: "TOP_RATED,desc" },
@@ -72,7 +91,7 @@ const SearchResult = () => {
           </LocalText>
           <KeyWordList>
             {searchParams.get("search") && (
-              <KeyWord># {searchParams.get("search")}</KeyWord>
+              <KeyWordItem># {searchParams.get("search")}</KeyWordItem>
             )}
             {searchParams.get("category") && (
               <Category>{searchParams.get("category")}</Category>
@@ -111,9 +130,9 @@ const SearchResult = () => {
               ))}
           </StoreList>
           <Pagenation
-            page={page}
+            page={pageNum}
             pageOnChange={pageOnChange}
-            totalCount={list.data.length}
+            totalCount={list.totalElements}
           />
         </>
       ) : (
@@ -161,7 +180,7 @@ const KeyWordList = styled.ul`
     background-color: #ffffff;
   }
 `;
-const KeyWord = styled.li`
+const KeyWordItem = styled.li`
   margin: 0 5px;
   padding: 5px 10px;
   min-width: fit-content;
@@ -170,7 +189,7 @@ const KeyWord = styled.li`
   font-size: 0.7rem;
   cursor: pointer;
 `;
-const Category = styled(KeyWord)``;
+const Category = styled(KeyWordItem)``;
 
 const StoreList = styled.ul`
   list-style: none;
@@ -219,7 +238,7 @@ const StoreGrade = styled.span`
 const StoreKeyWordList = styled(KeyWordList)`
   justify-content: flex-start;
 `;
-const StoreKeyWordItem = styled(KeyWord)`
+const StoreKeyWordItem = styled(KeyWordItem)`
   margin: 0 5px 0 0;
 `;
 

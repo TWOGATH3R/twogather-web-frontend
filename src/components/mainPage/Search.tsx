@@ -5,19 +5,29 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getKeyWordList } from "../../apis/queries/mainQuery";
 import PopUp from "./PopUp";
+import { useRecoilState } from "recoil";
+import {
+  Categories,
+  City,
+  KeyWord,
+  PageNum,
+  SearchText,
+  Si,
+} from "../../store/searchAtom";
 
 const Search = () => {
   const navigate = useNavigate();
 
-  const [searchText, setSearchText] = useState<string>("");
+  const [searchText, setSearchText] = useRecoilState<string>(SearchText);
 
-  const [categories, setCategories] = useState<string>("모든 카테고리");
+  const [categories, setCategories] = useRecoilState<string>(Categories);
   const [categoriesBoolean, setCategoriesBoolean] = useState<boolean>(true);
 
-  const [city, setCity] = useState<string>("전체 지역");
-  const [si, setSi] = useState<string>("");
+  const [city, setCity] = useRecoilState<string>(City);
+  const [si, setSi] = useRecoilState<string>(Si);
 
-  const [keyWord, setKeyWord] = useState<string>("");
+  const [keyWord, setKeyWord] = useRecoilState<string>(KeyWord);
+  const [pageNum, setPageNum] = useRecoilState<string>(PageNum);
 
   //DB에 저장된 검색가능한 키워드 리스트 가져오기
   const { data: keyWordList } = useQuery(["keyWordList"], getKeyWordList, {
@@ -46,7 +56,7 @@ const Search = () => {
   //onSubmit
   const searchOnSubmit = (e: any) => {
     e.preventDefault();
-    console.log("나나");
+    setPageNum("0");
     navigate(
       `/search?category=${
         categories === "모든 카테고리" ? "" : categories
