@@ -36,3 +36,11 @@ export type postStoreReviewReplyResponse = {
     createDate: string;
   };
 };
+
+//가게 리뷰 댓글 수정 api props type정의
+export type putReplyProps = {
+  reviewId: any;
+  storeId: number;
+  commentId: any;
+  content: string;
+};

@@ -1,12 +1,67 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { BsArrowReturnRight } from "react-icons/bs";
+import { useMutation } from "@tanstack/react-query";
+import { putReply } from "../../apis/queries/reviewQuery";
+import { useRecoilValue } from "recoil";
+import { OwnerId, StoreId } from "../../store/storeDetailAtom";
+import { BsPencilSquare } from "react-icons/bs";
+import Swal from "sweetalert2";
+import { MemberId } from "../../store/userInfoAtom";
 
 interface infoType {
   commentContent: any;
   commentCreatedDate: any;
+  commentId: any;
+  reviewId: any;
 }
-const ReviewReply = ({ commentContent, commentCreatedDate }: infoType) => {
+const ReviewReply = ({
+  commentId,
+  reviewId,
+  commentContent,
+  commentCreatedDate,
+}: infoType) => {
+  const [updateMode, setUpdateMode] = useState(false);
+
+  const ownerId = useRecoilValue(OwnerId);
+  const memberId = useRecoilValue(MemberId);
+
+  const storeId = useRecoilValue(StoreId);
+  const [text, setText] = useState<string>(commentContent);
+
+  const info = {
+    storeId,
+    reviewId,
+    commentId,
+    content: text,
+  };
+  const { mutate: updateReply } = useMutation(() => putReply(info), {
+    onSuccess: (res) => {
+      console.log(res);
+      Swal.fire({
+        text: "수정 완료",
+        icon: "success",
+        confirmButtonColor: "#0075FF",
+      });
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
+  const textOnChange = (value: string) => {
+    setText(value);
+  };
+
+  const updateModeBtnOnClick = () => {
+    console.log("fsf");
+    setUpdateMode(!updateMode);
+    setText(commentContent);
+  };
+  const updateBtnOnClick = () => {
+    updateReply();
+  };
+
   return (
     <Container>
       <ArrowIcon />
@@ -14,12 +69,22 @@ const ReviewReply = ({ commentContent, commentCreatedDate }: infoType) => {
         <TitleBox>
           <NameStarBox>
             <NameText>사장님</NameText>
+            {ownerId === memberId && (
+              <UpdateModeBtn onClick={() => updateModeBtnOnClick()} />
+            )}
           </NameStarBox>
         </TitleBox>
-        <Input value={commentContent} disabled />
+        <Input
+          value={text}
+          disabled={!updateMode}
+          onChange={(e) => textOnChange(e.target.value)}
+          active={updateMode}
+        />
         <SubmitBtnBox>
           <DateBox>{commentCreatedDate}</DateBox>
-          <UpdateBtn>수정</UpdateBtn>
+          {updateMode && (
+            <UpdateBtn onClick={() => updateBtnOnClick()}>수정</UpdateBtn>
+          )}
         </SubmitBtnBox>
       </ReplyBox>
     </Container>
@@ -55,8 +120,11 @@ const SubmitBtnBox = styled.div`
   display: flex;
   justify-content: space-between;
 `;
-const UpdateBtn = styled.button`
-  width: 105px;
+const UpdateBtn = styled.label`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 20px;
   background-color: #0038ff;
   color: white;
   height: 40px;
@@ -68,7 +136,7 @@ const UpdateBtn = styled.button`
     cursor: pointer;
   }
 `;
-const Input = styled.textarea`
+const Input = styled.textarea<{ active: boolean }>`
   outline: none;
   margin-top: 5px;
   padding: 10px 5px;
@@ -81,12 +149,18 @@ const Input = styled.textarea`
   resize: none;
 `;
 
+const UpdateModeBtn = styled(BsPencilSquare)`
+  font-size: 1.3rem;
+  cursor: pointer;
+`;
+
 const DateBox = styled.div`
   font-size: 0.75rem;
   color: #878787;
 `;
 const NameStarBox = styled.div`
   display: flex;
+  justify-content: space-between;
 `;
 const NameText = styled.div`
   margin-right: 10px;

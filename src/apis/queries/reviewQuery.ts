@@ -3,6 +3,7 @@ import {
   getStoreReviewResponse,
   postReviewProps,
   postStoreReviewReplyResponse,
+  putReplyProps,
 } from "../types/review.type";
 import { api } from "../untils";
 
@@ -58,10 +59,7 @@ export const getStoreReview = async (
 };
 
 //가게 리뷰 삭제 api
-export const deleteReview = async (
-  storeId: string | null,
-  reviewId: any
-) => {
+export const deleteReview = async (storeId: string | null, reviewId: any) => {
   const URL = `/api/stores/${storeId}/reviews/${reviewId}`;
 
   const { data } = await api.delete(URL, {
@@ -71,5 +69,26 @@ export const deleteReview = async (
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
+  return data;
+};
+
+//가게 리뷰 댓글 수정 api
+export const putReply = async (info: putReplyProps) => {
+  const URL = `/api/stores/${info.storeId}/reviews/${info.reviewId}/comments/${info.commentId}`;
+  console.log(URL)
+
+  const { data } = await api.put(
+    URL,
+    {
+      content: info.content,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json,",
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+      },
+    }
+  );
   return data;
 };
