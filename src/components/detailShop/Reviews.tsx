@@ -125,6 +125,8 @@ const Reviews = () => {
               <ReviewReply
                 commentContent={value.commentContent}
                 commentCreatedDate={value.commentCreatedDate}
+                commentId={value.reviewId}
+                reviewId={value.reviewId}
               />
             )}
             {targetReviewNum === index && (
