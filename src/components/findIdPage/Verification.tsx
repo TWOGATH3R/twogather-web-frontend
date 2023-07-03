@@ -54,7 +54,7 @@ const Verification = () => {
       >
         <UserNameInput
           value={userName}
-          placeholder="사용자명"
+          placeholder="닉네임"
           onChange={(e) => userNameOnChange(e.target.value)}
         />
       </UserNameInputBox>

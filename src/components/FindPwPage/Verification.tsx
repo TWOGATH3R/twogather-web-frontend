@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { emailCheckMutaionPostEmail } from "../../apis/queries/signUpQuery";
 import { useMutation } from "@tanstack/react-query";
-import Swal from "sweetalert2";
-import sendMailImg from "../../assets/sendmail.svg";
 import { postInfo } from "../../apis/queries/findPwQuery";
 
 const Verification = () => {
@@ -12,27 +9,7 @@ const Verification = () => {
 
   const [id, setId] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const [code, setCode] = useState<string>("");
 
-  const [codeAnswer, setCodeAnswer] = useState<string>("");
-  const { mutate: emailCheck, isLoading: emailCheckLoading } = useMutation(
-    () => emailCheckMutaionPostEmail(email),
-    {
-      onSuccess: (res) => {
-        setCodeAnswer(res.data.verificationCode);
-        if (sendMailImg) {
-          Swal.fire({
-            text: "이메일로 인증코드를 발송했습니다.",
-            imageUrl: `${sendMailImg}`,
-            confirmButtonColor: "#0075FF",
-          });
-        }
-      },
-      onError: (err: any) => {
-        alert(err.response.data.message);
-      },
-    }
-  );
   const { mutate: getTemporaryPw } = useMutation(() => postInfo(email, id), {
     onSuccess: (res) => {
       alert("임시 비밀번호가 이메일로 전송됬습니다");
@@ -53,28 +30,13 @@ const Verification = () => {
   const emailOnChange = (emailText: string) => {
     setEmail(emailText);
   };
-  const codeOnChange = (codeText: string) => {
-    setCode(codeText);
-  };
 
   //onClick
-  const emailBtnOnClick = () => {
-    if (!email) alert("이메일을 입력해주세요");
-    else if (!emailPattern.test(email)) alert("이메일이 형식에 맞지 않습니다");
-    else {
-      emailCheck();
-      const emailBtn = document.querySelector(".emailBtn") as HTMLElement;
-      emailBtn.innerText = "재전송";
-    }
-  };
   const codeBtnOnClick = () => {
     if (!id) alert("아이디를 입력해주세요");
     else if (!email) alert("이메일을 입력해주세요");
-    else if (!code) alert("인증번호를 입력해주세요");
     else if (!idPattern.test(id)) alert("아이디 양식에 맞게 입력해주세요.");
-    else if (code !== codeAnswer) alert("인증번호가 알맞지 않습니다");
     else {
-      alert("인증완료");
       getTemporaryPw();
     }
   };
@@ -94,18 +56,10 @@ const Verification = () => {
           placeholder="이메일"
           onChange={(e) => emailOnChange(e.target.value)}
         />
-        <EmailSendBtn className="emailBtn" onClick={() => emailBtnOnClick()}>
-          인증 메일 전송
-        </EmailSendBtn>
       </EmailBox>
-      <ConfirmBox valid={true}>
-        <ConfirmInput
-          value={code}
-          placeholder="인증코드"
-          onChange={(e) => codeOnChange(e.target.value)}
-        />
-      </ConfirmBox>
-      <ConfirmBtn onClick={() => codeBtnOnClick()}>인증</ConfirmBtn>
+      <ConfirmBtn onClick={() => codeBtnOnClick()}>
+        임시 비밀번호 발급
+      </ConfirmBtn>
     </>
   );
 };
@@ -135,9 +89,8 @@ const EmailBox = styled.div<{ valid: boolean }>`
   }}
 `;
 const EmailInput = styled.input`
-  margin-right: 15px;
   padding: 15px 10px;
-  width: 50%;
+  width: 75%;
   outline: none;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 2px;
@@ -154,19 +107,14 @@ const EmailSendBtn = styled.button`
   cursor: pointer;
 `;
 
-const ConfirmBox = styled(EmailBox)``;
-const ConfirmInput = styled(EmailInput)`
-  margin-left: 15px;
-  width: calc(50% + 125px);
-`;
 const ConfirmBtn = styled(EmailSendBtn)`
   margin-top: 100px;
-  width: 187px;
+  width: 200px;
   height: 55px;
   font-size: ${({ theme }) => theme.fontSizes.xl};
 `;
 
-const IdBox = styled(ConfirmBox)`
+const IdBox = styled(EmailBox)`
   ${(props) => {
     if (!props.valid) {
       return css`
@@ -177,6 +125,6 @@ const IdBox = styled(ConfirmBox)`
     }
   }}
 `;
-const IdInput = styled(ConfirmInput)``;
+const IdInput = styled(EmailInput)``;
 
 export default Verification;
