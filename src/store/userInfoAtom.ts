@@ -25,3 +25,8 @@ export const StoreId = atom({
   key: `storeid/${v1()}`,
   default: 0,
 });
+
+export const MemberId = atom({
+  key: `memberid/${v1()}`,
+  default: 0,
+});

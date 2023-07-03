@@ -4,9 +4,15 @@ import LOGO from "../../assets/img/LOGO.png";
 import { getCookie, removeCookie } from "../cookie/cookie";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Nav from "./Nav";
+import { useSetRecoilState } from "recoil";
+import { MemberId } from "../../store/userInfoAtom";
 
 export default function Header() {
+  const setMemberId = useSetRecoilState(MemberId);
+
   useEffect(() => {
+    const memberId = localStorage.getItem("memberId");
+    memberId && setMemberId(Number(memberId));
     if (getCookie("accessToken") === undefined && localStorage.getItem("role"))
       removeCookie();
   }, []);
