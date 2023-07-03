@@ -14,6 +14,7 @@ import { deleteReview, getStoreReview } from "../../apis/queries/reviewQuery";
 import { getStoreReviewResponse } from "../../apis/types/review.type";
 import { MemberId } from "../../store/userInfoAtom";
 import Swal from "sweetalert2";
+import ReviewReply from "./ReviewReply";
 
 const Reviews = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -35,6 +36,7 @@ const Reviews = () => {
     () => getStoreReview(storeId, page, sort),
     {
       onSuccess: (res) => {
+        console.log(res);
         setList(res);
         setTotalCount(res.totalElements);
       },
@@ -119,9 +121,15 @@ const Reviews = () => {
                 )}
               </DateReviewBtnBox>
             </Container>
-            {targetReviewNum === index ? (
+            {value.commentContent && (
+              <ReviewReply
+                commentContent={value.commentContent}
+                commentCreatedDate={value.commentCreatedDate}
+              />
+            )}
+            {targetReviewNum === index && (
               <ReveiwReplyEnroll reviewId={value.reviewId} />
-            ) : null}
+            )}
           </div>
         ))
       ) : (
