@@ -25,7 +25,7 @@ const Nav = () => {
       }
     });
   };
-  
+
   const [roleText, setRoleText] = useRecoilState(Role);
   useEffect(() => {
     const role = localStorage.getItem("role");
@@ -39,11 +39,13 @@ const Nav = () => {
         <NavContainer>
           <MenuCheckListXBtn htmlFor="menu">X</MenuCheckListXBtn>
 
-          <MenuCheckListMypageIcon>
-            <NavLink to="/mypage/info">
-              <img src={mypageImg} alt="mypage" />
-            </NavLink>
-          </MenuCheckListMypageIcon>
+          {getCookie("accessToken") !== undefined ? (
+            <MenuCheckListMypageIcon>
+              <NavLink to="/mypage/info">
+                <img src={mypageImg} alt="mypage" />
+              </NavLink>
+            </MenuCheckListMypageIcon>
+          ) : null}
 
           <MenuItem>
             <NavLink to="/">Home</NavLink>

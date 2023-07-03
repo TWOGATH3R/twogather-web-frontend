@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { BsArrowReturnRight } from "react-icons/bs";
 import { useSearchParams } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { postStoreReviewReply } from "../../apis/queries/storeQuery";
+import { postStoreReviewReply } from "../../apis/queries/reviewQuery";
 
 interface infoType {
   reviewId: number;
