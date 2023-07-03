@@ -4,8 +4,8 @@ import Pagenation from "../common/Pagenation";
 import { useMutation } from "@tanstack/react-query";
 import { getStoreReview } from "../../apis/queries/storeQuery";
 import { useSearchParams } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
-import { TotalReviewCount } from "../../store/storeDetailAtom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { OwnerId, TotalReviewCount } from "../../store/storeDetailAtom";
 import { getStoreReviewResponse } from "../../apis/types/store.type";
 import ReveiwReplyEnroll from "./ReveiwReplyEnroll";
 import Star from "./Star";
@@ -15,6 +15,8 @@ import LodingSpinner from "../common/LodingSpinner";
 
 const Reviews = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const ownerId = useRecoilValue(OwnerId);
 
   const setTotalCount = useSetRecoilState(TotalReviewCount);
 
@@ -76,7 +78,9 @@ const Reviews = () => {
               <ReivewContent>{value.content}</ReivewContent>
               <DateReviewBtnBox>
                 <Date>{value.createdDate}</Date>
-                <span onClick={() => replyBtnOnClick(index)}>답글</span>
+                {localStorage.getItem("memberId") === String(ownerId) && (
+                  <span onClick={() => replyBtnOnClick(index)}>답글</span>
+                )}
               </DateReviewBtnBox>
             </Container>
             {targetReviewNum === index ? (

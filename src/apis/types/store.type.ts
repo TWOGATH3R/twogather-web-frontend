@@ -6,8 +6,8 @@ export type postEnrollShopInfoProps = {
   businessNumber: string;
   businessName: string;
   businessStartDate: string;
-  keywordIdList: number[];
-  categoryId: number;
+  keywordIdList: (number | undefined)[];
+  categoryId: number | undefined;
 };
 
 //가게등록 api response type정의
@@ -150,4 +150,14 @@ export type postStoreReviewReplyResponse = {
     isOwner: boolean;
     createDate: string;
   };
+};
+
+//카테고리 리스트 가져오기 api response type정의
+export type getCategoriesResponse = {
+  data: [
+    {
+      categoryId: number;
+      name: string;
+    }
+  ];
 };

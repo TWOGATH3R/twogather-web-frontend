@@ -7,6 +7,7 @@ import {
   PutBusinessHourListResponse,
 } from "./type";
 import {
+  getCategoriesResponse,
   getImgResponse,
   getMenuListResponse,
   getStoreReviewResponse,
@@ -276,5 +277,12 @@ export const postStoreReviewReply = async (
       },
     }
   );
+  return data;
+};
+
+//DB에서 카테고리 리스트 가져오기 api
+export const getCategories = async (): Promise<getCategoriesResponse> => {
+  const URL = `/api/categories`;
+  const { data } = await api.get(URL);
   return data;
 };

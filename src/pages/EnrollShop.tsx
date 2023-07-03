@@ -11,10 +11,11 @@ import InputCategory from "../components/resgistration/InputCategory";
 import InputKeyword from "../components/resgistration/InputKeyword";
 import InputDate from "../components/resgistration/InputDate";
 import ShopSubTitle from "../components/resgistration/ShopSubTitle";
-import { postEnrollShopInfo } from "../apis/queries/storeQuery";
-import { useMutation } from "@tanstack/react-query";
+import { getCategories, postEnrollShopInfo } from "../apis/queries/storeQuery";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { StoreId } from "../store/userInfoAtom";
 import { postEnrollShopInfoProps } from "../apis/types/store.type";
+import { getKeyWordList } from "../apis/queries/mainQuery";
 
 export default function EnrollShop() {
   const navigate = useNavigate();
@@ -29,69 +30,31 @@ export default function EnrollShop() {
 
   const [visibleCategory, setVisibleCategory] = useState<boolean>(false);
   const [categoryValue, setCategoryValue] = useState<string>("");
-  type CATEGORY_TYPE = {
-    categoryId: number;
-    name: string;
-  };
-  type KEYWORD_TYPE = {
-    keywordId: number;
-    name: string;
-  };
 
-  const CATEGORY: CATEGORY_TYPE[] = [
-    {
-      categoryId: 1,
-      name: "양식",
-    },
-    {
-      categoryId: 2,
-      name: "일식",
-    },
-    {
-      categoryId: 3,
-      name: "중식",
-    },
-    {
-      categoryId: 4,
-      name: "카페",
-    },
-    {
-      categoryId: 5,
-      name: "한식",
-    },
-    {
-      categoryId: 6,
-      name: "패스트푸드",
-    },
-    {
-      categoryId: 7,
-      name: "분식",
-    },
-    {
-      categoryId: 8,
-      name: "기타",
-    },
-  ];
+  //DB에 저장된 카테고리 리스트 가져오기
+  const { data: CATEGORY } = useQuery(["getCategoriesList"], getCategories);
+  //DB에 저장된 검색가능한 키워드 리스트 가져오기
+  const { data: KEYWORD } = useQuery(["keyWordList"], getKeyWordList);
 
-  const KEYWORD: KEYWORD_TYPE[] = [
-    { keywordId: 1, name: "분위기 좋은" },
-    { keywordId: 2, name: "저렴한 가격" },
-    { keywordId: 3, name: "아이들과 오기 좋은" },
-    { keywordId: 4, name: "사진찍기 좋은" },
-    { keywordId: 5, name: "친절한" },
-    { keywordId: 6, name: "고급스러운" },
-    { keywordId: 7, name: "조용한" },
-    { keywordId: 8, name: "모임하기 좋은" },
-    { keywordId: 9, name: "특별한 날" },
-    { keywordId: 10, name: "단체 회식" },
-    { keywordId: 11, name: "데이트하기 좋은" },
-    { keywordId: 12, name: "뷰가 좋은" },
-    { keywordId: 13, name: "특별한 메뉴" },
-    { keywordId: 14, name: "멋진 인테리어" },
-    { keywordId: 15, name: "디저트가 맛있는" },
-    { keywordId: 16, name: "청결한 매장" },
-    { keywordId: 17, name: "방송에 나온 맛집" },
-  ];
+  // const KEYWORD: KEYWORD_TYPE[] = [
+  //   { keywordId: 1, name: "분위기 좋은" },
+  //   { keywordId: 2, name: "저렴한 가격" },
+  //   { keywordId: 3, name: "아이들과 오기 좋은" },
+  //   { keywordId: 4, name: "사진찍기 좋은" },
+  //   { keywordId: 5, name: "친절한" },
+  //   { keywordId: 6, name: "고급스러운" },
+  //   { keywordId: 7, name: "조용한" },
+  //   { keywordId: 8, name: "모임하기 좋은" },
+  //   { keywordId: 9, name: "특별한 날" },
+  //   { keywordId: 10, name: "단체 회식" },
+  //   { keywordId: 11, name: "데이트하기 좋은" },
+  //   { keywordId: 12, name: "뷰가 좋은" },
+  //   { keywordId: 13, name: "특별한 메뉴" },
+  //   { keywordId: 14, name: "멋진 인테리어" },
+  //   { keywordId: 15, name: "디저트가 맛있는" },
+  //   { keywordId: 16, name: "청결한 매장" },
+  //   { keywordId: 17, name: "방송에 나온 맛집" },
+  // ];
   const [shopNameMessage, setShopNameMessage] = useState<string>("");
   const [shopNumberMessage, setShopNumberMessage] = useState<string>("");
   const [shopCategoryMessage, setShopCategoryMessage] = useState<string>("");
@@ -159,11 +122,14 @@ export default function EnrollShop() {
     else {
       const keywordIdlist = keywordList.map(
         (kword) =>
-          KEYWORD[KEYWORD.map((value) => value.name).indexOf(kword)].keywordId
+          KEYWORD &&
+          KEYWORD.data[KEYWORD.data.map((value) => value.name).indexOf(kword)]
+            .keywordId
       );
-      const categoryId = CATEGORY.filter(
-        (cate) => cate.name === categoryValue
-      )[0].categoryId;
+      const categoryId =
+        CATEGORY &&
+        CATEGORY.data.filter((cate: any) => cate.name === categoryValue)[0]
+          .categoryId;
 
       const data: postEnrollShopInfoProps = {
         storeName: shopName,
@@ -177,18 +143,6 @@ export default function EnrollShop() {
       };
 
       sendRegiData(data);
-      // navigate('/enrollshop/contents', {
-      //   state: {
-      //     shopName: shopName,
-      //     shopAddress: shopAddress,
-      //     shopNumber: shopNumber,
-      //     categoryValue: categoryValue,
-      //     keywordList: keywordList,
-      //     businessName: businessName,
-      //     businessNumber: businessNumber,
-      //     startBusiness: startBusiness,
-      //   },
-      // });
     }
   };
 
@@ -219,7 +173,6 @@ export default function EnrollShop() {
     }
   };
   const onChangeShopCategory = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // const shopCategoryCurrent = e.target.value;
     setShopCategory(e.target.value);
     if (shopCategory.length >= 0) {
       setShopCategoryMessage("카테고리를 선택해주세요.");
@@ -332,17 +285,18 @@ export default function EnrollShop() {
             {visibleCategory === true ? (
               <>
                 <CategoryWrapper>
-                  {CATEGORY.map((item) => (
-                    <CategoryList>
-                      <span
-                        style={{ cursor: "pointer" }}
-                        onClick={() => onClickCategory(item.name)}
-                      >
-                        {item.name}
-                      </span>
-                      <RightArrow />
-                    </CategoryList>
-                  ))}
+                  {CATEGORY &&
+                    CATEGORY.data.map((item) => (
+                      <CategoryList>
+                        <span
+                          style={{ cursor: "pointer" }}
+                          onClick={() => onClickCategory(item.name)}
+                        >
+                          {item.name}
+                        </span>
+                        <RightArrow />
+                      </CategoryList>
+                    ))}
                 </CategoryWrapper>
               </>
             ) : null}
@@ -358,24 +312,26 @@ export default function EnrollShop() {
 
             {visibleKeyword && (
               <ShopKeywordWrapper>
-                {KEYWORD.map((item) => (
-                  <>
-                    <ShopKeywordList>
-                      <ShopKeywordLabelWrapper>
-                        <ShopKeywordLabel htmlFor={item.name}>
-                          {item.name}
-                        </ShopKeywordLabel>
-                      </ShopKeywordLabelWrapper>
-                      <ShopKeywordCheckBox
-                        type="checkbox"
-                        id={item.name}
-                        onChange={(e) => {
-                          onChangeKeyword(e.target.checked, e.target.id);
-                        }}
-                      />
-                    </ShopKeywordList>
-                  </>
-                ))}
+                {KEYWORD && Array.isArray(KEYWORD?.data)
+                  ? KEYWORD.data.map((item) => (
+                      <>
+                        <ShopKeywordList>
+                          <ShopKeywordLabelWrapper>
+                            <ShopKeywordLabel htmlFor={item.name}>
+                              {item.name}
+                            </ShopKeywordLabel>
+                          </ShopKeywordLabelWrapper>
+                          <ShopKeywordCheckBox
+                            type="checkbox"
+                            id={item.name}
+                            onChange={(e) => {
+                              onChangeKeyword(e.target.checked, e.target.id);
+                            }}
+                          />
+                        </ShopKeywordList>
+                      </>
+                    ))
+                  : null}
               </ShopKeywordWrapper>
             )}
           </ShopInnerOutlineWrapper>
@@ -477,7 +433,7 @@ const CategoryList = styled.div`
   border-left: 1px solid ${({ theme }) => theme.colors.subColor1};
 `;
 const ShopKeywordWrapper = styled.div`
-  width: 30%;
+  width: 50%;
   margin-left: 16.5%;
   padding: 1%;
   height: 200px;
