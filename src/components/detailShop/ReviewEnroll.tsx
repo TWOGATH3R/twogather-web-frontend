@@ -63,7 +63,6 @@ const ReviewEnroll = () => {
           <NameText>{name}</NameText>
           <StarClick count={count} setCount={setCount} />
         </NameStarBox>
-        <Score>평균 평점: 1.2</Score>
       </TitleBox>
       <Input
         value={text}
@@ -91,11 +90,6 @@ const TitleBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-`;
-const Score = styled.div`
-  color: #a1a1a1;
-  font-weight: bold;
-  font-size: 0.75rem;
 `;
 
 const SubmitBtnBox = styled.div`
