@@ -226,9 +226,15 @@ const ShopInfo = () => {
 const DetailShopWrapper = styled.div`
   display: flex;
   flex-direction: row;
+  @media (max-width: 1080px) {
+    flex-direction: column;
+  }
 `;
 const DetailShopInfoWrapper = styled.div`
   width: 55%;
+  @media (max-width: 1080px) {
+    width: 100%;
+  }
 `;
 const DetailShopInfoTitleWrapper = styled.div`
   display: flex;

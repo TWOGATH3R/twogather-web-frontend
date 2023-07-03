@@ -26,8 +26,9 @@ const InfoInput = () => {
     name: name,
   };
   //개인 회원가입 query
-  const { mutate: consumersSignUp, isLoading: consumersSignUpLoading } =
-    useMutation(() => consumersMutaionPostInfo(info), {
+  const { mutate: consumersSignUp } = useMutation(
+    () => consumersMutaionPostInfo(info),
+    {
       onSuccess: (res) => {
         navigate("/login");
         alert("회원가입 성공");
@@ -35,11 +36,13 @@ const InfoInput = () => {
       onError: (err: any) => {
         alert(err.response.data.message);
       },
-    });
+    }
+  );
 
   //사업자 회원가입 query
-  const { mutate: storeOwnerSignUp, isLoading: storeOwnerSignUpLoading } =
-    useMutation(() => storeOwnerMutaionPostInfo(info), {
+  const { mutate: storeOwnerSignUp } = useMutation(
+    () => storeOwnerMutaionPostInfo(info),
+    {
       onSuccess: (res) => {
         navigate("/login");
         alert("회원가입 성공");
@@ -47,9 +50,11 @@ const InfoInput = () => {
       onError: (err: any) => {
         alert(err.response.data.message);
       },
-    });
+    }
+  );
 
   //onChange
+  const idPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{4,15}$/;
   const idOnChange = (idText: string) => {
     setId(idText);
   };
@@ -71,8 +76,11 @@ const InfoInput = () => {
     else if (!pwPattern.test(pw)) alert("비밀번호가 양식에 맞지 않습니다");
     else if (!pwCheck) alert("비밀번호를 확인해주세요");
     else if (pw !== pwCheck) alert("비밀번호가 일치하지 않습니다");
-    else if (!name) alert("이름을 입력해주세요");
-    else if (!userNamePattern.test(name)) alert("이름이 양식에 맞지 않습니다");
+    else if (!id) alert("아이디를 입력해주세요");
+    else if (!idPattern.test(id)) alert("아이디 양식에 맞게 입력해주세요.");
+    else if (!name) alert("닉넴임을 입력해주세요");
+    else if (!userNamePattern.test(name))
+      alert("닉네임이 양식에 맞지 않습니다");
     else if (param.signUpType === "customer") {
       //고객전용 회원가입 api 실행
       consumersSignUp();
@@ -82,14 +90,14 @@ const InfoInput = () => {
   return (
     <>
       <NameInputBox valid={name.length > 0 ? userNamePattern.test(name) : true}>
-        <NameText>이름</NameText>
+        <NameText>닉네임</NameText>
         <NameInput
           value={name}
-          placeholder="이름을 입력해주세요"
+          placeholder="닉넴임을 입력해주세요"
           onChange={(e) => nameOnChange(e.target.value)}
         />
       </NameInputBox>
-      <IdCheckInputBox valid={true}>
+      <IdCheckInputBox valid={id.length > 0 ? idPattern.test(id) : true}>
         <IdCheckText>아이디</IdCheckText>
         <IdCheckInput
           value={id}
@@ -164,7 +172,7 @@ const IdCheckInputBox = styled(PwInputBox)`
     if (!props.valid) {
       return css`
         &::after {
-          content: "일치하지 않습니다.";
+          content: "영어,숫자를 포함 4~15자 이내로 입력해주세요.";
         }
       `;
     }

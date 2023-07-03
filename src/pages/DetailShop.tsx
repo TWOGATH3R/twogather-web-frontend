@@ -74,6 +74,9 @@ const DetailShopContainer = styled.div`
   width: 1440px;
   margin: 0 auto;
   padding: 5%;
+  @media (max-width: 1440px) {
+    width: 80%;
+  }
 `;
 const Title = styled.h2`
   margin-top: 20px;

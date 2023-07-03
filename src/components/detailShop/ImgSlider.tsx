@@ -17,13 +17,12 @@ const ImgSlider = () => {
     <ImageSlicer>
       <DetailShopImageWrapper>
         <Slick>
-          {Array.isArray(imgList)
-            ? imgList.map((item: imgListType, index: number) => (
-                <SliderItem key={index}>
-                  <img src={item.url} alt={item.url} />
-                </SliderItem>
-              ))
-            : null}
+          {Array.isArray(imgList) &&
+            imgList.map((item: imgListType, index: number) => (
+              <SliderItem key={index}>
+                <img src={item.url} alt={item.url} />
+              </SliderItem>
+            ))}
         </Slick>
       </DetailShopImageWrapper>
     </ImageSlicer>
@@ -35,6 +34,10 @@ const ImageSlicer = styled.div`
   width: 45%;
   padding: 0 60px;
   margin: auto;
+  @media (max-width: 1080px) {
+    width: 100%;
+    padding: 0;
+  }
 `;
 const DetailShopImageWrapper = styled.div`
   margin: 0 auto;
