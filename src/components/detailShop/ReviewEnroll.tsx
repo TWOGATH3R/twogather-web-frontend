@@ -4,11 +4,10 @@ import StarClick from "./StarClick";
 import { getCookie } from "../cookie/cookie";
 import { useRecoilValue } from "recoil";
 import { StoreId } from "../../store/storeDetailAtom";
-import { postReviewProps } from "../../apis/types/store.type";
 import { useMutation } from "@tanstack/react-query";
-import { postReview } from "../../apis/queries/storeQuery";
 import Swal from "sweetalert2";
-import { role } from "../../apis/types/common.type";
+import { postReview } from "../../apis/queries/reviewQuery";
+import { postReviewProps } from "../../apis/types/review.type";
 
 const ReviewEnroll = () => {
   const date = new Date();

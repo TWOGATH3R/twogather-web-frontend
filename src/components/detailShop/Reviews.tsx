@@ -2,21 +2,24 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Pagenation from "../common/Pagenation";
 import { useMutation } from "@tanstack/react-query";
-import { getStoreReview } from "../../apis/queries/storeQuery";
 import { useSearchParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { OwnerId, TotalReviewCount } from "../../store/storeDetailAtom";
-import { getStoreReviewResponse } from "../../apis/types/store.type";
 import ReveiwReplyEnroll from "./ReveiwReplyEnroll";
 import Star from "./Star";
 import Filter from "../common/Filter";
 import Exception from "../common/Exception";
 import LodingSpinner from "../common/LodingSpinner";
+import { deleteReview, getStoreReview } from "../../apis/queries/reviewQuery";
+import { getStoreReviewResponse } from "../../apis/types/review.type";
+import { MemberId } from "../../store/userInfoAtom";
+import Swal from "sweetalert2";
 
 const Reviews = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const ownerId = useRecoilValue(OwnerId);
+  const memberId = useRecoilValue(MemberId);
 
   const setTotalCount = useSetRecoilState(TotalReviewCount);
 
@@ -27,12 +30,25 @@ const Reviews = () => {
   const [list, setList] = useState<getStoreReviewResponse>();
   const [sort, setSort] = useState<string>("createdDate,desc");
   const storeId = searchParams.get("storeId");
+  //가게 리뷰 리스트 가져오기
   const { mutate: getReviewList, isLoading: loding } = useMutation(
     () => getStoreReview(storeId, page, sort),
     {
       onSuccess: (res) => {
         setList(res);
         setTotalCount(res.totalElements);
+      },
+    }
+  );
+  //리뷰 삭제
+  const { mutate: reviewDelete } = useMutation(
+    (reviewId) => deleteReview(storeId, reviewId),
+    {
+      onSuccess: (res) => {
+        window.location.reload();
+      },
+      onError: (err) => {
+        console.log(err);
       },
     }
   );
@@ -47,6 +63,21 @@ const Reviews = () => {
 
   const replyBtnOnClick = (index: number) => {
     setTargetReviewNum(index);
+  };
+  const deleteBtnOnClick = (reviewId: any) => {
+    Swal.fire({
+      title: "댓글을 삭제하겠습니까?",
+      confirmButtonColor: "#0075FF",
+      cancelButtonColor: "#738598",
+      showCancelButton: true,
+      confirmButtonText: "네",
+      cancelButtonText: "아니요",
+      padding: "3em",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        reviewDelete(reviewId);
+      }
+    });
   };
 
   const filter = [
@@ -72,13 +103,18 @@ const Reviews = () => {
                 <NameStarBox>
                   <Name>{value.consumerName}</Name>
                   <Star count={value.score} />
+                  {memberId === value.consumerId && (
+                    <DeleteBtn onClick={() => deleteBtnOnClick(value.reviewId)}>
+                      X
+                    </DeleteBtn>
+                  )}
                 </NameStarBox>
                 <Score>평균 평점: {value.consumerAvgScore}</Score>
               </TitleBox>
               <ReivewContent>{value.content}</ReivewContent>
               <DateReviewBtnBox>
                 <Date>{value.createdDate}</Date>
-                {localStorage.getItem("memberId") === String(ownerId) && (
+                {memberId === ownerId && (
                   <span onClick={() => replyBtnOnClick(index)}>답글</span>
                 )}
               </DateReviewBtnBox>
@@ -102,6 +138,11 @@ const Reviews = () => {
     </>
   );
 };
+
+const DeleteBtn = styled.span`
+  margin: 0 0 0 auto;
+  cursor: pointer;
+`;
 
 const Title = styled.h2`
   display: flex;

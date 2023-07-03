@@ -10,16 +10,13 @@ import {
   getCategoriesResponse,
   getImgResponse,
   getMenuListResponse,
-  getStoreReviewResponse,
   postEnrollShopInfoProps,
   postEnrollShopInfoResponse,
   postMenuListProps,
   postMenuListResponse,
   postOpenHourProps,
   postOpenHourResponse,
-  postReviewProps,
   postStoreImgResponse,
-  postStoreReviewReplyResponse,
 } from "../types/store.type";
 
 //가게 등록 api
@@ -189,20 +186,6 @@ export const putBusinessHourtList = async ({
   return data;
 };
 
-//리뷰 등록 api
-export const postReview = async (info: postReviewProps, storeId: number) => {
-  const URL = `/api/stores/${storeId}/reviews`;
-
-  const { data } = await api.post(URL, info, {
-    headers: {
-      "Content-Type": "application/json",
-      accept: "application/json,",
-      Authorization: `Bearer ${getCookie("accessToken")}`,
-    },
-  });
-  return data;
-};
-
 //좋아요 누르기
 export const postLike = async (storeId: number, memberId: string | null) => {
   const res = await api.post(
@@ -241,43 +224,6 @@ export const getImg = async (
   const URL = `/api/stores/${storeId}/images`;
   const { data } = await api.get(URL);
   return data.data;
-};
-
-//가게 리뷰 List 가져오기 api
-export const getStoreReview = async (
-  storeId: string | null,
-  pageNum: number,
-  sort: string
-): Promise<getStoreReviewResponse> => {
-  const URL = `/api/stores/${storeId}/reviews?sort=${sort}&page=${
-    pageNum - 1
-  }&size=5`;
-  const { data } = await api.get(URL);
-  return data;
-};
-
-//가게 리뷰 대댓글 달기 api
-export const postStoreReviewReply = async (
-  storeId: string | null,
-  reviewId: number,
-  text: string
-): Promise<postStoreReviewReplyResponse> => {
-  const URL = `/api/stores/${storeId}/reviews/${reviewId}/comments`;
-
-  const { data } = await api.post(
-    URL,
-    {
-      content: text,
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-        accept: "application/json,",
-        Authorization: `Bearer ${getCookie("accessToken")}`,
-      },
-    }
-  );
-  return data;
 };
 
 //DB에서 카테고리 리스트 가져오기 api
