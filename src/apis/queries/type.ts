@@ -51,6 +51,7 @@ export type GetStoreInfoProps = {
 
 export interface GetStoreInfoResponse {
   data: {
+    ownerId: number;
     storeId: number;
     storeName: string;
     address: string;

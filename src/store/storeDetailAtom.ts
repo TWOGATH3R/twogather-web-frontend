@@ -41,3 +41,10 @@ export const TotalReviewCount = atom({
   key: `totalReviewCount/${v1()}`,
   default: 0,
 });
+
+export const OwnerId = atom({
+  key: `ownerId/${v1()}`,
+  default: 0,
+});
+
+

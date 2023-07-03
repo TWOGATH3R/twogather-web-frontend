@@ -5,12 +5,13 @@ import ReviewEnroll from "../components/detailShop/ReviewEnroll";
 import Reviews from "../components/detailShop/Reviews";
 import { useMutation } from "@tanstack/react-query";
 import { getStoreOne } from "../apis/queries/storeQuery";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   Address,
   CategoryName,
   KeywordList,
   LikeCount,
+  OwnerId,
   Phone,
   StoreId,
   StoreName,
@@ -22,12 +23,13 @@ export default function DetailShop() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [storeId, setStoreId] = useRecoilState(StoreId);
-  const [address, setAddress] = useRecoilState(Address);
-  const [keywordList, setKeywordList] = useRecoilState(KeywordList);
-  const [likeCount, setLikeCount] = useRecoilState(LikeCount);
-  const [phone, setPhone] = useRecoilState(Phone);
-  const [storeName, setStoreName] = useRecoilState(StoreName);
-  const [category, setCategory] = useRecoilState(CategoryName);
+  const setOwnerId = useSetRecoilState(OwnerId);
+  const setAddress = useSetRecoilState(Address);
+  const setKeywordList = useSetRecoilState(KeywordList);
+  const setLikeCount = useSetRecoilState(LikeCount);
+  const setPhone = useSetRecoilState(Phone);
+  const setStoreName = useSetRecoilState(StoreName);
+  const setCategory = useSetRecoilState(CategoryName);
 
   useEffect(() => {
     setStoreId(Number(searchParams.get("storeId")));
@@ -36,6 +38,7 @@ export default function DetailShop() {
   const { mutate: getStoreInfo } = useMutation(() => getStoreOne(storeId), {
     onSuccess: (res) => {
       const data = res.data;
+      setOwnerId(data.ownerId);
       setAddress(data.address);
       setCategory(data.categoryName);
       setKeywordList(data.keywordList);
