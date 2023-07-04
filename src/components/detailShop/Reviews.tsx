@@ -105,20 +105,20 @@ const Reviews = () => {
                 <NameStarBox>
                   <Name>{value.consumerName}</Name>
                   <Star count={value.score} />
-                  {memberId === value.consumerId && (
+                  {memberId === value.consumerId ? (
                     <DeleteBtn onClick={() => deleteBtnOnClick(value.reviewId)}>
                       X
                     </DeleteBtn>
-                  )}
+                  ) : null}
                 </NameStarBox>
                 <Score>평균 평점: {value.consumerAvgScore}</Score>
               </TitleBox>
               <ReivewContent>{value.content}</ReivewContent>
               <DateReviewBtnBox>
                 <Date>{value.createdDate}</Date>
-                {memberId === ownerId && (
+                {memberId === ownerId ? (
                   <span onClick={() => replyBtnOnClick(index)}>답글</span>
-                )}
+                ) : null}
               </DateReviewBtnBox>
             </Container>
             {value.commentContent && (
