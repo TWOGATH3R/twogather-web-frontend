@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { ReactComponent as RightArrow } from "../../assets/right-arrow.svg";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -13,7 +13,6 @@ import { address, visibleAddress } from "../../store/addressAtom";
 import {
   getCategories,
   getKeyWordList,
-  postEnrollShopInfo,
   putStoreInfo,
 } from "../../apis/queries/storeQuery";
 import { StoreId } from "../../store/storeDetailAtom";
@@ -223,6 +222,10 @@ export default function EnrollShop() {
       setStartBusinessMessage("선택해주세요.");
     }
   };
+
+  useEffect(()=>{
+    
+  },[])
 
   return (
     <EnrollShopContainer>

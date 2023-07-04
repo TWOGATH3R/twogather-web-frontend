@@ -131,7 +131,7 @@ export type getStoresResponse = {
       storeName: string;
       address: string;
       phone: string;
-      isApproved: false;
+      status: string;
       reasonForRejection: string;
       requestDate: string;
       storeImageUrl: string;
