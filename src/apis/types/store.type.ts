@@ -122,3 +122,25 @@ export type getCategoriesResponse = {
     }
   ];
 };
+
+//사업자 가게 리스트 가져오기 api response type정의
+export type getStoresResponse = {
+  data: [
+    {
+      storeId: number;
+      storeName: string;
+      address: string;
+      phone: string;
+      isApproved: false;
+      reasonForRejection: string;
+      requestDate: string;
+      storeImageUrl: string;
+    }
+  ];
+  currentPage: number;
+  totalPages: number;
+  totalElements: number;
+  pageSize: number;
+  isFirst: boolean;
+  isLast: boolean;
+};

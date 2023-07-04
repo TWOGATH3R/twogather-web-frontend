@@ -10,6 +10,7 @@ import {
   getCategoriesResponse,
   getImgResponse,
   getMenuListResponse,
+  getStoresResponse,
   postEnrollShopInfoProps,
   postEnrollShopInfoResponse,
   postMenuListProps,
@@ -230,5 +231,21 @@ export const getImg = async (
 export const getCategories = async (): Promise<getCategoriesResponse> => {
   const URL = `/api/categories`;
   const { data } = await api.get(URL);
+  return data;
+};
+
+//사업자가 등록한 가게 리스트 가져오기 api
+export const getStores = async (
+  memberId: any,
+  pageNum: any
+): Promise<getStoresResponse> => {
+  const URL = `/api/my/stores/?ownerId=${memberId}&page=${pageNum}&size=2&sort=MOST_REVIEWED,desc`;
+  const { data } = await api.get(URL, {
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+      accept: "application/json,",
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+  });
   return data;
 };

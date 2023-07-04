@@ -1,26 +1,43 @@
-import React from 'react';
-import styled from 'styled-components';
-import Button from '../common/Button';
+import React from "react";
+import styled from "styled-components";
+// import Button from "../common/Button";
+import { useNavigate } from "react-router-dom";
 
-type Props = {};
+type Props = {
+  value: {
+    storeId: number;
+    storeName: string;
+    address: string;
+    phone: string;
+    isApproved: boolean;
+    reasonForRejection: string;
+    requestDate: string;
+    storeImageUrl: string;
+  };
+};
 
-export default function StoreItem({}: Props) {
+export default function StoreItem({ value }: Props) {
+  const navigate = useNavigate();
+
+  const BtnOnClick = (storeId: any) => {
+    navigate(`/editenrollshop/?storeId=${storeId}`);
+  };
   return (
     <Container>
-      <Image>image</Image>
+      <Image src={value.storeImageUrl} />
       <InfoItem>
         <Header>
-          <Name>보세쥬르</Name>
-          <Status>승인</Status>
+          <Name>{value.storeName}</Name>
+          <Status>{value.isApproved ? "승인" : "거부"}</Status>
         </Header>
         <BottomBox>
           <BottomInfoBox>
-            <InfoText>02-321-2222</InfoText>
-            <InfoText>서울시 용산2가동 남산공원길 126 1층</InfoText>
+            <InfoText>{value.phone}</InfoText>
+            <InfoText>{value.address}</InfoText>
           </BottomInfoBox>
           <BottomButtonBox>
-            <Button onClick={() => {}}>수정</Button>
-            <Date>2022.03.22</Date>
+            <Button onClick={() => BtnOnClick(value.storeId)}>수정</Button>
+            <Date>{value.requestDate}</Date>
           </BottomButtonBox>
         </BottomBox>
       </InfoItem>
@@ -39,7 +56,7 @@ const Container = styled.div`
 `;
 
 //todo img 태그로 변경할 것
-const Image = styled.div`
+const Image = styled.img`
   background-color: yellow;
   margin-right: 28px;
   width: 310px;
@@ -99,9 +116,15 @@ const BottomButtonBox = styled.div`
   flex-direction: row;
 `;
 
-const PageNation = styled.div`
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 19px;
-  text-align: center;
+const Button = styled.button`
+  box-sizing: border-box;
+  width: 97px;
+  height: 30px;
+  background: #4d74ff;
+  color: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  :hover {
+    cursor: pointer;
+  }
 `;
