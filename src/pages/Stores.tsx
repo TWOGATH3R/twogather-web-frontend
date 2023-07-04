@@ -1,29 +1,44 @@
-import React from 'react';
-import styled from 'styled-components';
-import StoreItem from '../components/stores/StoreItem';
-import { getMyStoreList } from '../apis/queries/storeQuery';
-import { GetMyStoreListProps } from '../apis/queries/type';
-import { useQuery } from '@tanstack/react-query';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import StoreItem from "../components/stores/StoreItem";
+import { getStores } from "../apis/queries/storeQuery";
+import { useMutation } from "@tanstack/react-query";
+import { getStoresResponse } from "../apis/types/store.type";
+import Pagenation from "../components/common/Pagenation";
 
-type Props = {};
+const Stores = () => {
+  const [page, setPage] = useState(0);
 
-const Stores = (props: Props) => {
-  const MyStoreListProps: GetMyStoreListProps = {
-    ownerId: 9,
+  const [list, setList] = useState<getStoresResponse>();
+  const memberId = localStorage.getItem("memberId");
+  const { mutate: getList } = useMutation(() => getStores(memberId, page), {
+    onSuccess: (res) => {
+      setList(res);
+      console.log(res);
+    },
+  });
+
+  const pageOnChange = (page: any) => {
+    setPage(page);
   };
-  //todo 페이지 네이션 구현하기
-  const { data } = useQuery(['myRoom'], () => getMyStoreList(MyStoreListProps));
-  console.log(data);
 
-  const arr = [0, 1];
+  useEffect(() => {
+    getList();
+  }, [page]);
 
   return (
     <Container>
       <Title>나의 가게</Title>
-      {arr.map(key => (
-        <StoreItem key={key}></StoreItem>
+      {list?.data.map((value, index) => (
+        <StoreItem value={value} key={index}></StoreItem>
       ))}
-      <PageNation>1 2 3 4 5</PageNation>
+      {list && (
+        <Pagenation
+          page={page}
+          pageOnChange={pageOnChange}
+          totalCount={list.data.length}
+        />
+      )}
     </Container>
   );
 };

@@ -121,11 +121,11 @@ const Reviews = () => {
                 ) : null}
               </DateReviewBtnBox>
             </Container>
-            {value.commentContent && (
+            {value.comment.content && (
               <ReviewReply
-                commentContent={value.commentContent}
-                commentCreatedDate={value.commentCreatedDate}
-                commentId={value.reviewId}
+                commentContent={value.comment.content}
+                commentCreatedDate={value.comment.createdDate}
+                commentId={value.comment.commentId}
                 reviewId={value.reviewId}
               />
             )}

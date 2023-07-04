@@ -66,7 +66,7 @@ const Nav = () => {
                 <NavLink to="/enrollshop">Resgistration</NavLink>
               </MenuItem>
               <MenuItem>
-                <NavLink to="/">Stores</NavLink>
+                <NavLink to="/stores">Stores</NavLink>
               </MenuItem>
             </>
           ) : null}

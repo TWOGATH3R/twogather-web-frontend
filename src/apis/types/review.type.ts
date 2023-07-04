@@ -17,6 +17,11 @@ export type getStoreReviewResponse = {
       consumerName: string;
       consumerId: number;
       consumerAvgScore: number;
+      comment: {
+        commentId: number;
+        content: string;
+        createdDate: string;
+      };
     }
   ];
   currentPage: number;
@@ -55,6 +60,7 @@ export type getUserReviewResponse = {
       createdDate: string;
       consumerName: string;
       url: string;
+      storeId: number;
       storeName: string;
       storeAddress: string;
     }
