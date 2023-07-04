@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import StarClick from "./StarClick";
 import { getCookie } from "../cookie/cookie";
-import { useRecoilValue } from "recoil";
-import { StoreId } from "../../store/storeDetailAtom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { Page, ReviewList, Sort, StoreId } from "../../store/storeDetailAtom";
 import { useMutation } from "@tanstack/react-query";
 import Swal from "sweetalert2";
-import { postReview } from "../../apis/queries/reviewQuery";
+import { getStoreReview, postReview } from "../../apis/queries/reviewQuery";
 import { postReviewProps } from "../../apis/types/review.type";
 
 const ReviewEnroll = () => {
@@ -22,13 +22,24 @@ const ReviewEnroll = () => {
     setText(value);
   };
 
+  const page = useRecoilValue(Page);
+  const setList = useSetRecoilState(ReviewList);
+  const sort = useRecoilValue(Sort);
+  //가게 리뷰 리스트 가져오기
+  const { mutate: getReviewList } = useMutation(
+    () => getStoreReview(String(storeId), page, sort),
+    {
+      onSuccess: (res) => {
+        setList(res);
+      },
+    }
+  );
   const info: postReviewProps = {
     consumerId: localStorage.getItem("memberId"),
     storeId: storeId,
     content: text,
     score: count,
   };
-  //query
   //리뷰등록 api
   const { mutate: saveReview } = useMutation(() => postReview(info, storeId), {
     onSuccess: (res) => {
@@ -39,7 +50,7 @@ const ReviewEnroll = () => {
         icon: "success",
         confirmButtonColor: "#0075FF",
       }).then((result) => {
-        if (result.isConfirmed) window.location.reload();
+        if (result.isConfirmed) getReviewList();
       });
     },
     onError: (err) => {

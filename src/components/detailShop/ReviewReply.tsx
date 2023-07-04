@@ -2,12 +2,17 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { BsArrowReturnRight } from "react-icons/bs";
 import { useMutation } from "@tanstack/react-query";
-import { putReply } from "../../apis/queries/reviewQuery";
-import { useRecoilValue } from "recoil";
-import { OwnerId, StoreId } from "../../store/storeDetailAtom";
+import { getStoreReview, putReply } from "../../apis/queries/reviewQuery";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  OwnerId,
+  Page,
+  ReviewList,
+  Sort,
+  StoreId,
+} from "../../store/storeDetailAtom";
 import { BsPencilSquare } from "react-icons/bs";
 import Swal from "sweetalert2";
-import { MemberId } from "../../store/userInfoAtom";
 
 interface infoType {
   commentContent: any;
@@ -29,6 +34,20 @@ const ReviewReply = ({
   const storeId = useRecoilValue(StoreId);
   const [text, setText] = useState<string>(commentContent);
 
+  const page = useRecoilValue(Page);
+  const setList = useSetRecoilState(ReviewList);
+  const sort = useRecoilValue(Sort);
+  //가게 리뷰 리스트 가져오기
+  const { mutate: getReviewList } = useMutation(
+    () => getStoreReview(String(storeId), page, sort),
+    {
+      onSuccess: (res) => {
+        setList(res);
+      },
+    }
+  );
+
+  //리뷰 대댓글 수정 api
   const info = {
     storeId,
     reviewId,
@@ -37,11 +56,15 @@ const ReviewReply = ({
   };
   const { mutate: updateReply } = useMutation(() => putReply(info), {
     onSuccess: (res) => {
-      console.log(res);
       Swal.fire({
         text: "수정 완료",
         icon: "success",
         confirmButtonColor: "#0075FF",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          getReviewList();
+          setUpdateMode(!updateMode);
+        }
       });
     },
     onError: (err) => {
