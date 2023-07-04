@@ -19,6 +19,7 @@ import {
   postOpenHourResponse,
   postStoreImgResponse,
 } from "../types/store.type";
+import { getKeyWordListResponse } from "../types/main.type";
 
 //가게 등록 api
 export const postEnrollShopInfo = async (
@@ -231,6 +232,12 @@ export const getImg = async (
 export const getCategories = async (): Promise<getCategoriesResponse> => {
   const URL = `/api/categories`;
   const { data } = await api.get(URL);
+  return data;
+};
+
+//DB에서 키워드 리스트 가져오기 api
+export const getKeyWordList = async (): Promise<getKeyWordListResponse> => {
+  const { data } = await api.get(`/api/keywords?count=20`);
   return data;
 };
 
