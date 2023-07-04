@@ -23,7 +23,6 @@ const Top10 = ({ title, type }: Top10Type) => {
     },
     {
       onSuccess: (res) => {
-        console.log(res.data);
         setStoreList(res.data);
       },
     }
