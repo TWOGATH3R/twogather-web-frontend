@@ -106,8 +106,7 @@ const Info = () => {
     else if (!userNamePattern.test(name)) alert("이름이 형식에 맞지 않습니다");
     else {
       if (roleText === role.ROLE_ADMIN) adminInfoChange();
-      else if (roleText === role.ROLE_CONSUMER)
-        consumerInfoChange();
+      else if (roleText === role.ROLE_CONSUMER) consumerInfoChange();
       else ownerInfoChange();
     }
   };
@@ -115,7 +114,7 @@ const Info = () => {
   const [emailPopUp, setEmailPopUpBoolean] = useState<boolean>(true);
 
   return (
-    <SignUpContainer>
+    <Container>
       <PopUp
         setEmailDate={setEmailDate}
         verson={emailPopUp ? "이메일" : "비밀번호"}
@@ -155,19 +154,22 @@ const Info = () => {
         </EmailBtn>
       </EmailBox>
       <SaveBtn onClick={() => saveBtnOnClick()}>저장</SaveBtn>
-    </SignUpContainer>
+    </Container>
   );
 };
 
-const SignUpContainer = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 90px 80px;
+  padding: 90px 50px;
   margin: 0 auto;
-  box-sizing: border-box;
   width: 580px;
+  box-sizing: border-box;
   border: 1px solid rgba(0, 0, 0, 0.2);
+  @media (max-width: 680px) {
+    width: 100%;
+  }
 `;
 
 const SaveBtn = styled.button`
@@ -206,12 +208,20 @@ const IdBox = styled.div<{ valid: boolean }>`
       `;
     }
   }}
+  @media (max-width: 680px) {
+    flex-direction: column;
+    width: 100%;
+  }
 `;
 const IdText = styled.h3`
   margin: 0;
   width: 20%;
   font-weight: 900;
   font-size: ${({ theme }) => theme.fontSizes.small};
+  @media (max-width: 680px) {
+    padding: 3px 0;
+    width: 100%;
+  }
 `;
 const IdInput = styled.input`
   padding: 5px 3px;
@@ -220,6 +230,9 @@ const IdInput = styled.input`
   outline: none;
   border: 1px solid rgba(0, 0, 0, 0.2);
   font-size: ${({ theme }) => theme.fontSizes.base};
+  @media (max-width: 680px) {
+    width: calc(100% - 6px);
+  }
 `;
 
 const EmailBox = styled(IdBox)`
@@ -235,8 +248,12 @@ const EmailBox = styled(IdBox)`
 `;
 const EmailText = styled(IdText)``;
 const EmailInput = styled(IdInput)`
+  box-sizing: border-box;
   width: calc(80% - 80px);
   background-color: #ececec;
+  @media (max-width: 680px) {
+    width: 100%;
+  }
 `;
 const EmailBtn = styled.label`
   display: flex;
@@ -248,6 +265,9 @@ const EmailBtn = styled.label`
   font-size: ${({ theme }) => theme.fontSizes.small};
   color: ${({ theme }) => theme.colors.white};
   cursor: pointer;
+  @media (max-width: 680px) {
+    width: 100%;
+  }
 `;
 
 const PwBox = styled(EmailBox)`

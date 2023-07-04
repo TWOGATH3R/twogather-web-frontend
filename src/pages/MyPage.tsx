@@ -60,9 +60,8 @@ const MyPage = () => {
   const roleText = useRecoilValue(Role);
   useEffect(() => {
     if (roleText === role.ROLE_ADMIN) adminInfoGet();
-    else if (roleText === role.ROLE_CONSUMER)
-      consumerInfoGet();
-    else ownerInfoGet();
+    else if (roleText === role.ROLE_CONSUMER) consumerInfoGet();
+    else if (roleText === role.ROLE_STORE_OWNER) ownerInfoGet();
   }, []);
 
   return (
@@ -80,8 +79,7 @@ const MyPage = () => {
               정보
             </NavLink>
           </MenuItem>
-          {roleText ===
-          role.ROLE_ADMIN ? null : roleText ===
+          {roleText === role.ROLE_ADMIN ? null : roleText ===
             role.ROLE_CONSUMER ? (
             <>
               <MenuItem>
@@ -121,6 +119,9 @@ const MyPageWrraper = styled.div`
   margin: 0 auto;
   box-sizing: border-box;
   width: 900px;
+  @media (max-width: 900px) {
+    width: 80%;
+  }
 `;
 
 const UserNameBox = styled.div`
@@ -138,9 +139,17 @@ const MenuList = styled.ul`
   justify-content: center;
   padding: 30px 0 60px;
   width: 100%;
+  @media (max-width: 680px) {
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0 60px;
+  }
 `;
 const MenuItem = styled.li`
   margin: 0 40px;
+  @media (max-width: 680px) {
+    margin: 5px 0;
+  }
   a {
     padding: 0 10px;
     color: ${({ theme }) => theme.colors.black};
