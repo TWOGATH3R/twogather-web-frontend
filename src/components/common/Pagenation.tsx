@@ -24,6 +24,7 @@ const Pagenation = ({ page, pageOnChange, totalCount }: infoType) => {
 };
 
 const PaginationBox = styled.div`
+  padding-bottom: 50px;
   a {
     color: black;
   }

@@ -72,13 +72,13 @@ const ReviewContainer = styled.div`
 
 const ReviewList = styled.ul`
   list-style: none;
+  width: 100%;
 `;
 const ReviewItem = styled.li`
   display: flex;
   box-sizing: border-box;
   margin-bottom: 15px;
-  width: 890px;
-  height: 178px;
+  width: 100%;
   border: 2px solid #e6e6e6;
   a {
     display: flex;
@@ -87,18 +87,30 @@ const ReviewItem = styled.li`
     height: calc(100% - 40px);
     color: ${({ theme }) => theme.colors.black};
   }
+  @media (max-width: 680px) {
+    margin: 0 auto 15px auto;
+    width: 80%;
+    a {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
 `;
 
 const StoreInfoReviewBox = styled.div``;
 
 const StoreImgBox = styled.div`
-  margin-right: 45px;
-  height: 100%;
-  aspect-ratio: 1 / 1;
+  margin-right: 25px;
+  width: 135px;
+  min-width: 135px;
+  height: 135px;
   img {
     width: 100%;
     height: 100%;
     border-radius: 50%;
+  }
+  @media (max-width: 680px) {
+    margin: 0;
   }
 `;
 const StoreInfoBox = styled.div`
@@ -111,6 +123,9 @@ const StoreName = styled.h3`
   svg {
     margin-left: 8px;
   }
+  @media (max-width: 680px) {
+    justify-content: center;
+  }
 `;
 const StoreAddress = styled.span`
   color: #797979;
@@ -121,30 +136,33 @@ const KeyWordList = styled.ul`
   list-style: none;
   display: flex;
   padding-top: 10px;
+  width: 100%;
+  @media (max-width: 680px) {
+    justify-content: normal;
+    padding-bottom: 5px;
+    overflow-x: scroll;
+    &::-webkit-scrollbar {
+      width: 3px;
+      height: 7px;
+    }
+    &::-webkit-scrollbar-thumb {
+      width: 3px;
+      border-radius: 5px;
+      background-color: #b1b1b1;
+    }
+    &::-webkit-scrollbar-track {
+      background-color: #ffffff;
+    }
+  }
 `;
 const KeyWordItem = styled.li`
   margin: 0 10px 0 0;
   padding: 3px 10px;
+  min-width: fit-content;
   background-color: #d9d9d9;
   border-radius: 10px;
   font-size: 0.7rem;
   cursor: pointer;
-`;
-
-const PaginationBox = styled.div`
-  a {
-    color: black;
-  }
-  ul {
-    display: flex;
-    list-style: none;
-    li {
-      padding: 3px 10px;
-    }
-  }
-  ul.pagination li.active a {
-    color: red;
-  }
 `;
 
 const FillHeart = styled(AiOutlineHeart)`

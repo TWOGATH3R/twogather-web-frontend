@@ -44,3 +44,25 @@ export type putReplyProps = {
   commentId: any;
   content: string;
 };
+
+//사용자가 댓글 남긴 리스트 가져오기 api response type정의
+export type getUserReviewResponse = {
+  data: [
+    {
+      reviewId: number;
+      content: string;
+      score: number;
+      createdDate: string;
+      consumerName: string;
+      url: string;
+      storeName: string;
+      storeAddress: string;
+    }
+  ];
+  currentPage: number;
+  totalPages: number;
+  totalElements: number;
+  pageSize: number;
+  isFirst: boolean;
+  isLast: boolean;
+};
