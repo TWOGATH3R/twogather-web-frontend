@@ -55,6 +55,7 @@ export type getUserReviewResponse = {
       createdDate: string;
       consumerName: string;
       url: string;
+      storeId: number;
       storeName: string;
       storeAddress: string;
     }

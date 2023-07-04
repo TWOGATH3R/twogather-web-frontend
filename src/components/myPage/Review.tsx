@@ -53,7 +53,7 @@ const Review = () => {
         <ReviewList>
           {list?.data.map((value, index) => (
             <ReviewItem key={index}>
-              <Link to={`/detailShop/?storeId=`}>
+              <Link to={`/detailShop/?storeId=${value.storeId}`}>
                 <StoreImgBox>
                   <img src={value.url} alt={value.url} />
                 </StoreImgBox>
