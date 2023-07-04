@@ -256,3 +256,34 @@ export const getStores = async (
   });
   return data;
 };
+
+//가게 정보 수정 api
+export const putStoreInfo = async (
+  storeId: string | null,
+  info: any
+): Promise<postEnrollShopInfoResponse> => {
+  const URL = `/api/stores/${storeId}`;
+
+  const { data } = await api.put(
+    URL,
+    {
+      storeName: info.storeName,
+      address: info.address,
+      phone: info.phone,
+      businessNumber: info.businessNumber,
+      businessName: info.businessName,
+      businessStartDate: info.businessStartDate,
+      keywordIdList: info.keywordIdList,
+      categoryId: info.categoryId,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json,",
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+      },
+    }
+  );
+
+  return data;
+};
