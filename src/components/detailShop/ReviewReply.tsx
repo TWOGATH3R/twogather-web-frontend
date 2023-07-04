@@ -24,7 +24,7 @@ const ReviewReply = ({
   const [updateMode, setUpdateMode] = useState(false);
 
   const ownerId = useRecoilValue(OwnerId);
-  const memberId = useRecoilValue(MemberId);
+  const memberId = localStorage.getItem("memberId");
 
   const storeId = useRecoilValue(StoreId);
   const [text, setText] = useState<string>(commentContent);
@@ -54,7 +54,6 @@ const ReviewReply = ({
   };
 
   const updateModeBtnOnClick = () => {
-    console.log("fsf");
     setUpdateMode(!updateMode);
     setText(commentContent);
   };
@@ -69,7 +68,7 @@ const ReviewReply = ({
         <TitleBox>
           <NameStarBox>
             <NameText>사장님</NameText>
-            {ownerId === memberId && (
+            {ownerId === Number(memberId) && (
               <UpdateModeBtn onClick={() => updateModeBtnOnClick()} />
             )}
           </NameStarBox>
