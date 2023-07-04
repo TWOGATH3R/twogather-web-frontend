@@ -1,6 +1,7 @@
 import { getCookie } from "../../components/cookie/cookie";
 import {
   getStoreReviewResponse,
+  getUserReviewResponse,
   postReviewProps,
   postStoreReviewReplyResponse,
   putReplyProps,
@@ -75,7 +76,7 @@ export const deleteReview = async (storeId: string | null, reviewId: any) => {
 //가게 리뷰 댓글 수정 api
 export const putReply = async (info: putReplyProps) => {
   const URL = `/api/stores/${info.storeId}/reviews/${info.reviewId}/comments/${info.commentId}`;
-  console.log(URL)
+  console.log(URL);
 
   const { data } = await api.put(
     URL,
@@ -90,5 +91,24 @@ export const putReply = async (info: putReplyProps) => {
       },
     }
   );
+  return data;
+};
+
+//사용자가 리뷰를 남긴 리스트 가져오기 api
+export const getUserReview = async (
+  memberId: string | null,
+  pageNum: number,
+  sort: string
+): Promise<getUserReviewResponse> => {
+  const URL = `/api/reviews/members/${memberId}?sort=${sort}&page=${
+    pageNum - 1
+  }&size=5`;
+  const { data } = await api.get(URL, {
+    headers: {
+      "Content-Type": "application/json",
+      accept: "application/json,",
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+  });
   return data;
 };
