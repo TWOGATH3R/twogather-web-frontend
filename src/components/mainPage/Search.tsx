@@ -196,7 +196,6 @@ const SearchInput = styled.input`
   font-size: ${({ theme }) => theme.fontSizes.base};
 `;
 const SearchBtn = styled.button`
-  margin-left: -3px;
   width: 100px;
   height: 55px;
   background: #0075ff;

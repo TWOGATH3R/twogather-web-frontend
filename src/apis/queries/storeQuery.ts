@@ -304,3 +304,33 @@ export const putStoreInfo = async (
 
   return data;
 };
+
+//가게 업데이트시 메뉴 api
+export const putMenuList = async (
+  shopMenuList: postMenuListProps[],
+  storeId: string | null
+): Promise<postMenuListResponse> => {
+  const list = shopMenuList.map((value) => {
+    return {
+      menuId: value.id,
+      name: value.shopMenuName,
+      price: Number(value.shopMenuPrice),
+    };
+  });
+  const URL = `/api/stores/${storeId}/menus`;
+
+  const { data } = await api.patch(
+    URL,
+    {
+      menuUpdateList: list,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json,",
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+      },
+    }
+  );
+  return data;
+};
