@@ -65,9 +65,10 @@ export default function EnrollShop() {
   const setStoreId = useSetRecoilState(StoreId);
   const storeId = searchParams.get("storeId");
 
+  //가게 정보 가져오기 api
   const { mutate: getInfo } = useMutation(() => getMyStoresInfo(storeId), {
     onSuccess: (res) => {
-      console.log(res);
+      const num = res.data.businessNumber;
       const data = res.data;
       setShopName(data.storeName);
       setShopNumber(data.phone);
@@ -75,7 +76,9 @@ export default function EnrollShop() {
       setKeywordList(data.keywordList);
       setCategoryValue(data.categoryName);
       setBusinessName(data.businessName);
-      setBusinessNumber(data.businessNumber);
+      setBusinessNumber(
+        num.slice(0, 3) + `-` + num.slice(3, 5) + `-` + num.slice(5, 10)
+      );
       setStartBusiness(data.businessStartDate);
     },
     onError: (err) => {
@@ -89,7 +92,7 @@ export default function EnrollShop() {
       onSuccess: (res) => {
         console.log(res);
         setStoreId(res.data.storeId);
-        // navigate("/enrollshop/contents");
+        navigate(`/editenrollshop/contents/?storeId=${res.data.storeId}`);
       },
       onError: (err: any) => {
         alert(err.response.data.message);
@@ -384,7 +387,7 @@ export default function EnrollShop() {
         </ShopWrapper>
         <Outlet />
       </EnrollShopWrapper>
-      {location.pathname !== "/enrollshop/contents" ? (
+      {location.pathname === "/editenrollshop/" ? (
         <EnrollButtonContainer>
           <EnrollButton onClick={() => nextBtnOnClick()}>다음</EnrollButton>
         </EnrollButtonContainer>
@@ -400,6 +403,9 @@ const EnrollShopContainer = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
+  @media (max-width: 680px) {
+    padding: 2% 10%;
+  }
 `;
 const Overlay = styled.div<IShopAddressVisible>`
   width: 100%;
