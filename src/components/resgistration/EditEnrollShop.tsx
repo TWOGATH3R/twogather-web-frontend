@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { ReactComponent as RightArrow } from "../../assets/right-arrow.svg";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   Outlet,
   useLocation,
@@ -13,6 +13,7 @@ import { address, visibleAddress } from "../../store/addressAtom";
 import {
   getCategories,
   getKeyWordList,
+  getMyStoresInfo,
   putStoreInfo,
 } from "../../apis/queries/storeQuery";
 import { StoreId } from "../../store/storeDetailAtom";
@@ -32,7 +33,7 @@ export default function EnrollShop() {
   const location = useLocation();
 
   const [shopName, setShopName] = useState<string>("");
-  const shopAddress = useRecoilValue(address);
+  const [shopAddress, setShopAddress] = useRecoilState(address);
   const [visibleShopAddress, setVisibleShopAddress] =
     useRecoilState(visibleAddress);
   const [shopNumber, setShopNumber] = useState<string>("");
@@ -64,6 +65,23 @@ export default function EnrollShop() {
   const setStoreId = useSetRecoilState(StoreId);
   const storeId = searchParams.get("storeId");
 
+  const { mutate: getInfo } = useMutation(() => getMyStoresInfo(storeId), {
+    onSuccess: (res) => {
+      console.log(res);
+      const data = res.data;
+      setShopName(data.storeName);
+      setShopNumber(data.phone);
+      setShopAddress(data.address);
+      setKeywordList(data.keywordList);
+      setCategoryValue(data.categoryName);
+      setBusinessName(data.businessName);
+      setBusinessNumber(data.businessNumber);
+      setStartBusiness(data.businessStartDate);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
   //가게 정보 수정 api
   const { mutate: updateStoreInfo } = useMutation(
     (data: postEnrollShopInfoProps) => putStoreInfo(storeId, data),
@@ -223,9 +241,9 @@ export default function EnrollShop() {
     }
   };
 
-  useEffect(()=>{
-    
-  },[])
+  useEffect(() => {
+    getInfo();
+  }, []);
 
   return (
     <EnrollShopContainer>

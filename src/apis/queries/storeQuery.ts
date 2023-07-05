@@ -10,6 +10,7 @@ import {
   getCategoriesResponse,
   getImgResponse,
   getMenuListResponse,
+  getMyStoresInfoResponse,
   getStoresResponse,
   postEnrollShopInfoProps,
   postEnrollShopInfoResponse,
@@ -247,6 +248,22 @@ export const getStores = async (
   pageNum: any
 ): Promise<getStoresResponse> => {
   const URL = `/api/my/stores/?ownerId=${memberId}&page=${pageNum}&size=2&sort=MOST_REVIEWED,desc`;
+  const { data } = await api.get(URL, {
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+      accept: "application/json,",
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+  });
+  return data;
+};
+
+//내가게 정보 가져오기 api
+export const getMyStoresInfo = async (
+  storeId: string | null
+): Promise<getMyStoresInfoResponse> => {
+  console.log("정보시작", storeId, getCookie("accessToken"));
+  const URL = `/api/my/stores/${storeId}/detail`;
   const { data } = await api.get(URL, {
     headers: {
       "Content-type": "application/json; charset=UTF-8",

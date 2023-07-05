@@ -144,3 +144,18 @@ export type getStoresResponse = {
   isFirst: boolean;
   isLast: boolean;
 };
+
+//사업자 가게 리스트 가져오기 api response type정의
+export type getMyStoresInfoResponse = {
+  data: {
+    storeId: number;
+    storeName: string;
+    address: string;
+    phone: string;
+    businessNumber: string;
+    businessName: string;
+    businessStartDate: string;
+    keywordList: string[];
+    categoryName: string;
+  };
+};
