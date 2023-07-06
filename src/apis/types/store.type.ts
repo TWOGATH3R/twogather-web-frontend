@@ -159,3 +159,8 @@ export type getMyStoresInfoResponse = {
     categoryName: string;
   };
 };
+
+//가게 사진 삭제 api props type정의
+export type deleteImgListProps = {
+  imageIdList: number[];
+};

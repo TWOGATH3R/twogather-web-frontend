@@ -7,6 +7,7 @@ import {
   PutBusinessHourListResponse,
 } from "./type";
 import {
+  deleteImgListProps,
   getCategoriesResponse,
   getImgResponse,
   getMenuListResponse,
@@ -52,7 +53,7 @@ export const postEnrollShopInfo = async (
 //가게등록시 사진 등록 api
 export const postStoreImg = async (
   shopImages: any[],
-  storeId: string
+  storeId: string | null
 ): Promise<postStoreImgResponse> => {
   const form = new FormData();
   shopImages.forEach((value, index) => {
@@ -105,7 +106,7 @@ export const postOpenHour = async (
 ): Promise<postOpenHourResponse> => {
   const URL = `/api/stores/${storeId}/business-hours`;
 
-  const { data } = await api.post(
+  const { data } = await api.put(
     URL,
     {
       businessHourList: dayOfWeek,
@@ -226,7 +227,7 @@ export const getImg = async (
 ): Promise<getImgResponse> => {
   const URL = `/api/stores/${storeId}/images`;
   const { data } = await api.get(URL);
-  return data.data;
+  return data;
 };
 
 //DB에서 카테고리 리스트 가져오기 api
@@ -247,7 +248,7 @@ export const getStores = async (
   memberId: any,
   pageNum: any
 ): Promise<getStoresResponse> => {
-  const URL = `/api/my/stores/?ownerId=${memberId}&page=${pageNum}&size=2&sort=MOST_REVIEWED,desc`;
+  const URL = `/api/my/stores/?ownerId=${memberId}&page=${pageNum}&size=5&sort=MOST_REVIEWED,desc`;
   const { data } = await api.get(URL, {
     headers: {
       "Content-type": "application/json; charset=UTF-8",
@@ -317,6 +318,7 @@ export const putMenuList = async (
       price: Number(value.shopMenuPrice),
     };
   });
+  console.log(list);
   const URL = `/api/stores/${storeId}/menus`;
 
   const { data } = await api.patch(
@@ -332,5 +334,25 @@ export const putMenuList = async (
       },
     }
   );
+  return data;
+};
+
+//가게 업데이트시 사진 삭제 api
+export const deleteImgList = async (
+  imageIdList: deleteImgListProps[] | undefined,
+  storeId: string | null
+): Promise<postMenuListResponse> => {
+  const URL = `/api/stores/${storeId}/images `;
+
+  const { data } = await api.delete(URL, {
+    headers: {
+      "Content-Type": "application/json",
+      accept: "application/json,",
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+    data: {
+      imageIdList: imageIdList,
+    },
+  });
   return data;
 };

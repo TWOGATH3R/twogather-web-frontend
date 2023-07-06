@@ -5,7 +5,13 @@ import { ReactComponent as DeleteIcon } from "../../assets/delete-icon.svg";
 import Swal from "sweetalert2";
 import { IShopInputItem } from "../../apis/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getMenuList, putMenuList } from "../../apis/queries/storeQuery";
+import {
+  deleteImgList,
+  getImg,
+  getMenuList,
+  postStoreImg,
+  putMenuList,
+} from "../../apis/queries/storeQuery";
 import { IShopMenuList } from "../../apis/api";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Day from "./Day";
@@ -39,19 +45,49 @@ const EditContentsEnroll = () => {
       },
     }
   );
-  const { mutate: updateMenuList, isLoading: updateMenuListLoding } =
-    useMutation(() => putMenuList(shopMenuList, storeId), {
+  const [imageIdList, setImageIdList] = useState<any>();
+  //가게 사진 리스트 가져오기 query
+  const { data: imageList } = useQuery(
+    ["getimageList"],
+    () => getImg(storeId),
+    {
       onSuccess: (res) => {
-        console.log(res);
+        setImageIdList([...res.data.map((value) => value.imageId)]);
+        setShopImages((v) => [...res.data.map((value) => value.url)]);
       },
       onError: (err) => {
         console.log(err);
       },
+    }
+  );
+  //가게 사진 재등록 query
+  const { mutate: saveImg, isLoading: updateImgLoding } = useMutation(
+    () => postStoreImg(imgList, storeId),
+    {
+      onError: (err) => {
+        console.log(err);
+      },
+    }
+  );
+  //가게 사진 삭제 query
+  const { mutate: deleteImg } = useMutation(
+    () => deleteImgList(imageIdList, storeId),
+    {
+      onSuccess: (res) => {
+        saveImg();
+      },
+      onError: (err) => {
+        console.log(err);
+      },
+    }
+  );
+  //가게 메뉴 리스트 업데이트
+  const { mutate: updateMenuList, isLoading: updateMenuListLoding } =
+    useMutation(() => putMenuList(shopMenuList, storeId), {
+      onError: (err) => {
+        console.log(err);
+      },
     });
-
-  //   useEffect(()=>{
-  //     setShopMenuList(menuList.data)
-  //   },[])
 
   //   useEffect(() => {
   //     if (updateImgLoding && updateMenuListLoding && updateOpenHourLoding) {
@@ -310,6 +346,7 @@ const EditContentsEnroll = () => {
   //onSubmit
   const enrollBtnOnSubmit = () => {
     updateMenuList();
+    deleteImg();
     // if (!(shopImages.length >= 1)) alert("사진을 1개 이상 등록해주세요");
     // else if (!shopMenuList[0].shopMenuName || !shopMenuList[0].shopMenuPrice)
     //   alert("메뉴를 입력해주세요");
