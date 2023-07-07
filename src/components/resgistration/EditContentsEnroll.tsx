@@ -7,8 +7,12 @@ import { IShopInputItem } from "../../apis/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   deleteImgList,
+  deleteMenuListAPI,
   getImg,
   getMenuList,
+  getOpenHour,
+  postMenuList,
+  postOpenHour,
   postStoreImg,
   putMenuList,
 } from "../../apis/queries/storeQuery";
@@ -16,7 +20,11 @@ import { IShopMenuList } from "../../apis/api";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Day from "./Day";
 import ShopTimePicker from "./ShopTimePicker";
-import { postOpenHourProps } from "../../apis/types/store.type";
+import {
+  getOpenHourResponse,
+  postMenuListProps,
+  postOpenHourProps,
+} from "../../apis/types/store.type";
 
 const EditContentsEnroll = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -24,12 +32,15 @@ const EditContentsEnroll = () => {
 
   const storeId = searchParams.get("storeId");
 
+  const [newMenuList, setNewMenuList] = useState<any>();
+
   //가게 메뉴 리스트 가져오기 query
   const { data: menuList } = useQuery(
     ["getMenuList"],
     () => getMenuList(Number(storeId)),
     {
       onSuccess: (res) => {
+        setNewMenuList(res.data);
         setShopMenuList(
           res.data.map((value) => {
             return {
@@ -47,19 +58,116 @@ const EditContentsEnroll = () => {
   );
   const [imageIdList, setImageIdList] = useState<any>();
   //가게 사진 리스트 가져오기 query
-  const { data: imageList } = useQuery(
-    ["getimageList"],
-    () => getImg(storeId),
+  const { mutate: getImageList } = useMutation(() => getImg(storeId), {
+    onSuccess: (res) => {
+      setImageIdList([...res.data.map((value) => value.imageId)]);
+      setShopImages((v) => [...res.data.map((value) => value.url)]);
+      setImgList(res.data.map((value) => value.url));
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+  //가게의 영업시간 정보 가져오기
+  const { mutate: getOpenHourList } = useMutation(
+    () => getOpenHour(Number(storeId)),
     {
-      onSuccess: (res) => {
-        setImageIdList([...res.data.map((value) => value.imageId)]);
-        setShopImages((v) => [...res.data.map((value) => value.url)]);
+      onSuccess: (res: getOpenHourResponse) => {
+        const data = res.data;
+        console.log(data);
+        const groupByHours = (): IShopInputItem[] => {
+          const groupedHours: { [key: string]: IShopInputItem } = {};
+
+          //나머지정보(starttime, endtime, isopen, hasbreaktime)를 key값으로 한다. 이 덕분에 key값 별로 데이터를 그루핑하는게 가능해진다
+          const dayNames: { [key: string]: string } = {
+            MONDAY: "월",
+            TUESDAY: "화",
+            WEDNESDAY: "수",
+            THURSDAY: "목",
+            FRIDAY: "금",
+            SATURDAY: "토",
+            SUNDAY: "일",
+          };
+
+          //businessHours은 api 응답객체를 의미
+          data.forEach((hour: any, index: number) => {
+            const {
+              dayOfWeek,
+              startTime,
+              isOpen,
+              endTime,
+              hasBreakTime,
+              breakStartTime,
+              breakEndTime,
+            } = hour;
+
+            const key = `${startTime}-${isOpen.toString()}-${endTime}-${breakStartTime}-${breakEndTime}-${hasBreakTime.toString()}`;
+
+            if (groupedHours[key]) {
+              //groupedHours[key]가 true라는 말은 같은 영업시간, breaktime... 의 정보를 가진다는얘기.
+              //같은 정보를 가지는 경우 하나로 묶어주어야한다. 이때 이미 존재하는 객체의 status를 true로 바꾸준다
+              //push를 하게 되면 순서가뒤바뀌기 때문에 상태변경을 해주어야함
+              groupedHours[key].week.forEach((weekday) => {
+                if (weekday.dayOfWeek === dayOfWeek) {
+                  weekday.status = true;
+                }
+              });
+            } else {
+              //groupedHours[key]가 false -> 다른 영업시간, breaktime... 의 정보를 가짐 -> 또다른 영업시간요소 추가 필요
+              groupedHours[key] = {
+                id: index,
+                startTime: startTime,
+                endTime: endTime,
+                startBreakTime: breakStartTime,
+                endBreakTime: breakEndTime,
+                breakTimeCheckBox: hasBreakTime,
+                //week를 추가로 넣어줄때는 월~일요일까지의 데이터를 미리 넣어두고 status를 변경하는 식으로 하였음
+                week: Object.values(dayNames).map((weekDay) => ({
+                  dayOfWeek: Object.keys(dayNames).find(
+                    (key) => dayNames[key] === weekDay
+                  ) as string,
+                  day: weekDay,
+                  status: weekDay === dayNames[dayOfWeek],
+                })),
+              };
+            }
+          });
+
+          const inputItems: IShopInputItem[] = Object.values(groupedHours);
+
+          return inputItems;
+        };
+
+        const groupedHourList = groupByHours();
+        setInputItems(groupedHourList);
+
+        //이미 선택된 요일을 저장
+        const trueDays = groupedHourList.map((item: any) =>
+          item.week.filter((day: any) => day.status === true)
+        );
+        trueDays.forEach((value) => {
+          checkWeekList.push({
+            day: value.map((value: any) => {
+              return value.day;
+            }),
+          });
+        });
       },
-      onError: (err) => {
-        console.log(err);
+      onError: (err: any) => {
+        console.log(err.response.data.message);
       },
     }
   );
+  //가게등록시 영업시간 등록 query
+  const { mutate: updateOpenHour, isLoading: updateOpenHourLoding } =
+    useMutation(() => postOpenHour(dayOfWeek && dayOfWeek, String(storeId)), {
+      onSuccess: (res) => {
+        console.log(res);
+      },
+      onError: (err: any) => {
+        alert(err.response.data.message);
+      },
+    });
   //가게 사진 재등록 query
   const { mutate: saveImg, isLoading: updateImgLoding } = useMutation(
     () => postStoreImg(imgList, storeId),
@@ -83,17 +191,50 @@ const EditContentsEnroll = () => {
   );
   //가게 메뉴 리스트 업데이트
   const { mutate: updateMenuList, isLoading: updateMenuListLoding } =
-    useMutation(() => putMenuList(shopMenuList, storeId), {
+    useMutation(
+      (differentObjects: postMenuListProps[]) =>
+        putMenuList(differentObjects, storeId),
+      {
+        onSuccess: (res) => {
+          console.log(res);
+        },
+        onError: (err) => {
+          console.log(err);
+        },
+      }
+    );
+  //가게등록시 메뉴 등록 query
+  const { mutate: saveMenuList, isLoading: saveMenuListLoding } = useMutation(
+    (saveList: postMenuListProps[]) => postMenuList(saveList, String(storeId)),
+    {
+      onError: (err: any) => {
+        alert(err.response.data.message);
+      },
+    }
+  );
+  //가게 메뉴 삭제 query
+  const { mutate: deleteMenu } = useMutation(
+    ["deleteMenu"],
+    (list: number[]) => deleteMenuListAPI(list, storeId),
+    {
+      onSuccess: (res) => {
+        console.log(res);
+      },
       onError: (err) => {
         console.log(err);
       },
-    });
+    }
+  );
 
-  //   useEffect(() => {
-  //     if (updateImgLoding && updateMenuListLoding && updateOpenHourLoding) {
-  //       navigate("/");
-  //     }
-  //   }, [updateImgLoding, updateMenuListLoding, updateOpenHourLoding]);
+  useEffect(() => {
+    if (updateMenuListLoding && updateOpenHourLoding) {
+      // navigate("/");
+    }
+  }, [updateMenuListLoding, updateOpenHourLoding]);
+  useEffect(() => {
+    getOpenHourList();
+    getImageList();
+  }, []);
 
   //가게 메뉴
   const shopMenuID = useRef<number>(1);
@@ -137,9 +278,9 @@ const EditContentsEnroll = () => {
   type checkWeekListType = {
     day: string[];
   };
-  const [checkWeekList, setCheckWeekList] = useState<Array<checkWeekListType>>([
-    { day: [] },
-  ]);
+  const [checkWeekList, setCheckWeekList] = useState<Array<checkWeekListType>>(
+    []
+  );
 
   //onClick
   const onClickPhotoFile = () => {
@@ -211,6 +352,7 @@ const EditContentsEnroll = () => {
   };
 
   const [imgList, setImgList] = useState<any[]>([]);
+
   //onChange
   const onChangeShopImage = (e: React.ChangeEvent) => {
     const targetFiles = (e.target as HTMLInputElement).files as FileList;
@@ -345,35 +487,88 @@ const EditContentsEnroll = () => {
 
   //onSubmit
   const enrollBtnOnSubmit = () => {
-    updateMenuList();
-    deleteImg();
-    // if (!(shopImages.length >= 1)) alert("사진을 1개 이상 등록해주세요");
-    // else if (!shopMenuList[0].shopMenuName || !shopMenuList[0].shopMenuPrice)
-    //   alert("메뉴를 입력해주세요");
-    // else {
-    //   const addDay: any = [];
-    //   for (let i = 0; i < inputItems.length; i++) {
-    //     for (let j = 0; j < 7; j++) {
-    //       if (inputItems[i].week[j].status === true) {
-    //         addDay.push({
-    //           startTime: inputItems[i].startTime,
-    //           endTime: inputItems[i].endTime,
-    //           dayOfWeek: inputItems[i].week[j].dayOfWeek,
-    //           isOpen: inputItems[i].week[j].status,
-    //           hasBreakTime: inputItems[i].breakTimeCheckBox,
-    //           breakStartTime: inputItems[i].breakTimeCheckBox
-    //             ? inputItems[i].startBreakTime
-    //             : null,
-    //           breakEndTime: inputItems[i].breakTimeCheckBox
-    //             ? inputItems[i].endBreakTime
-    //             : null,
-    //         });
-    //         setDayOfWeek(addDay);
-    //       }
-    //     }
-    //   }
-    // //   updateMenuList();
-    // }
+    if (!(shopImages.length >= 1)) alert("사진을 1개 이상 등록해주세요");
+    else if (!shopMenuList[0].shopMenuName || !shopMenuList[0].shopMenuPrice)
+      alert("메뉴를 입력해주세요");
+    else {
+      const addDay: any = [];
+      for (let i = 0; i < inputItems.length; i++) {
+        for (let j = 0; j < 7; j++) {
+          if (inputItems[i].week[j].status === true) {
+            addDay.push({
+              startTime: inputItems[i].startTime,
+              endTime: inputItems[i].endTime,
+              dayOfWeek: inputItems[i].week[j].dayOfWeek,
+              isOpen: inputItems[i].week[j].status,
+              hasBreakTime: inputItems[i].breakTimeCheckBox,
+              breakStartTime: inputItems[i].breakTimeCheckBox
+                ? inputItems[i].startBreakTime
+                : null,
+              breakEndTime: inputItems[i].breakTimeCheckBox
+                ? inputItems[i].endBreakTime
+                : null,
+            });
+            setDayOfWeek(addDay);
+          }
+        }
+      }
+      // updateMenuList();
+      const array1 = newMenuList.map((value: any) => value.menuId);
+      const array2 = shopMenuList.map((value) => value.id);
+      const addMenuList: any = [];
+
+      //새롭게 추가한 menu를 구하는 로직
+      for (let i = 0; i < array2.length; i++) {
+        const currentValue = array2[i];
+
+        if (!array1.includes(currentValue)) {
+          addMenuList.push(currentValue);
+        }
+      }
+      if (shopMenuList.filter((v) => addMenuList.includes(v.id)).length >= 1)
+        saveMenuList(shopMenuList.filter((v) => addMenuList.includes(v.id)));
+
+      //삭제된 menu를 구하는 로직
+      const deleteMenuIdList = [];
+      for (let i = 0; i < array1.length; i++) {
+        const currentValue = array1[i];
+
+        if (!array2.includes(currentValue)) {
+          deleteMenuIdList.push(currentValue);
+        }
+      }
+      if (deleteMenuIdList.length >= 1) deleteMenu(deleteMenuIdList);
+
+      //수정된 menu를 구하는 로직
+      const differentObjects = [];
+
+      for (let i = 0; i < newMenuList.length; i++) {
+        const currentObj1 = newMenuList[i];
+
+        for (let j = 0; j < shopMenuList.length; j++) {
+          const currentObj2 = shopMenuList[j];
+
+          if (currentObj1.menuId === currentObj2.id) {
+            if (
+              currentObj1.name !== currentObj2.shopMenuName ||
+              currentObj1.price !== Number(currentObj2.shopMenuPrice)
+            ) {
+              differentObjects.push(currentObj2);
+            }
+
+            break;
+          }
+        }
+      }
+      if (differentObjects.length >= 1) updateMenuList(differentObjects);
+      // saveMenuList();
+      //   updateOpenHour();
+      //   //이미 저장되어 있던 img만 있을 경우 함수 실행 제어
+      //   if (!(imgList.length === 1 || imgList[0].includes("twogather"))) {
+      //     console.log("이미지 삭제");
+      //     deleteImg();
+      //   }
+    }
   };
 
   return (
@@ -510,7 +705,7 @@ const EditContentsEnroll = () => {
               </ShopInnerWrapper>
 
               <ShopTimeButtonWrapper>
-                {item.id === inputItems.length - 1 && (
+                {index === inputItems.length - 1 ? (
                   <>
                     {inputItems.length <= 6 && (
                       <ShopTimeButton onClick={addInputItem}>
@@ -518,7 +713,7 @@ const EditContentsEnroll = () => {
                       </ShopTimeButton>
                     )}
                   </>
-                )}
+                ) : null}
               </ShopTimeButtonWrapper>
             </ShopInnerOutlineWrapper>
           </ShopWrapper>

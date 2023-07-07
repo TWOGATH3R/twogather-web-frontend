@@ -90,7 +90,6 @@ export default function EnrollShop() {
     (data: postEnrollShopInfoProps) => putStoreInfo(storeId, data),
     {
       onSuccess: (res) => {
-        console.log(res);
         setStoreId(res.data.storeId);
         navigate(`/editenrollshop/contents/?storeId=${res.data.storeId}`);
       },

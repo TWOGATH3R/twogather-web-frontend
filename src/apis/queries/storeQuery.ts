@@ -8,6 +8,7 @@ import {
 } from "./type";
 import {
   deleteImgListProps,
+  deleteMenuListResponse,
   getCategoriesResponse,
   getImgResponse,
   getMenuListResponse,
@@ -132,7 +133,7 @@ export const getStoreOne = async (
 };
 
 //가게 영업시간 가져오기 api
-export const getOpenHour = async (storeId: number) => {
+export const getOpenHour = async (storeId: number | null) => {
   const URL = `/api/stores/${storeId}/business-hours`;
   const { data } = await api.get(URL);
   return data;
@@ -352,6 +353,26 @@ export const deleteImgList = async (
     },
     data: {
       imageIdList: imageIdList,
+    },
+  });
+  return data;
+};
+
+//가게 메뉴 삭제 api
+export const deleteMenuListAPI = async (
+  menuIdList: number[] | undefined,
+  storeId: string | null
+): Promise<deleteMenuListResponse> => {
+  const URL = `/api/stores/${storeId}/menus  `;
+
+  const { data } = await api.delete(URL, {
+    headers: {
+      "Content-Type": "application/json",
+      accept: "application/json,",
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+    data: {
+      menuIdList: menuIdList,
     },
   });
   return data;

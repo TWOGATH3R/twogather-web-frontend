@@ -92,6 +92,23 @@ export type getOpenHourProps = {
   breakEndTime: string | null;
 };
 
+//영업시간 가져오기 api response type 정의
+export type getOpenHourResponse = {
+  data: [
+    {
+      businessHourId: number;
+      storeId: number;
+      startTime: string;
+      endTime: string;
+      dayOfWeek: string;
+      isOpen: boolean;
+      hasBreakTime: boolean;
+      breakStartTime: string | null;
+      breakEndTime: string | null;
+    }
+  ];
+};
+
 //메뉴리스트 가져오기 api response type정의
 export type getMenuListResponse = {
   data: [
@@ -163,4 +180,15 @@ export type getMyStoresInfoResponse = {
 //가게 사진 삭제 api props type정의
 export type deleteImgListProps = {
   imageIdList: number[];
+};
+
+//가게 메뉴 삭제 api response type 정의
+export type deleteMenuListResponse = {
+  menuUpdateList: [
+    {
+      menuId: number;
+      name: string;
+      price: number;
+    }
+  ];
 };
