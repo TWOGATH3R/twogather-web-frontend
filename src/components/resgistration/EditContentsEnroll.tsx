@@ -227,8 +227,8 @@ const EditContentsEnroll = () => {
   );
 
   useEffect(() => {
-    if (updateMenuListLoding && updateOpenHourLoding) {
-      // navigate("/");
+    if (updateOpenHourLoding) {
+      navigate(-2);
     }
   }, [updateMenuListLoding, updateOpenHourLoding]);
   useEffect(() => {
@@ -561,13 +561,11 @@ const EditContentsEnroll = () => {
         }
       }
       if (differentObjects.length >= 1) updateMenuList(differentObjects);
-      // saveMenuList();
-      //   updateOpenHour();
-      //   //이미 저장되어 있던 img만 있을 경우 함수 실행 제어
-      //   if (!(imgList.length === 1 || imgList[0].includes("twogather"))) {
-      //     console.log("이미지 삭제");
-      //     deleteImg();
-      //   }
+      updateOpenHour();
+      //이미 저장되어 있던 img만 있을 경우 함수 실행 제어
+      if (!(imgList.length === 1 || imgList[0].includes("twogather"))) {
+        deleteImg();
+      }
     }
   };
 
