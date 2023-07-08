@@ -11,11 +11,14 @@ import InputCategory from "../components/resgistration/InputCategory";
 import InputKeyword from "../components/resgistration/InputKeyword";
 import InputDate from "../components/resgistration/InputDate";
 import ShopSubTitle from "../components/resgistration/ShopSubTitle";
-import { getCategories, postEnrollShopInfo } from "../apis/queries/storeQuery";
+import {
+  getCategories,
+  getKeyWordList,
+  postEnrollShopInfo,
+} from "../apis/queries/storeQuery";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { StoreId } from "../store/userInfoAtom";
 import { postEnrollShopInfoProps } from "../apis/types/store.type";
-import { getKeyWordList } from "../apis/queries/mainQuery";
 
 export default function EnrollShop() {
   const navigate = useNavigate();
@@ -36,25 +39,6 @@ export default function EnrollShop() {
   //DB에 저장된 검색가능한 키워드 리스트 가져오기
   const { data: KEYWORD } = useQuery(["keyWordList"], getKeyWordList);
 
-  // const KEYWORD: KEYWORD_TYPE[] = [
-  //   { keywordId: 1, name: "분위기 좋은" },
-  //   { keywordId: 2, name: "저렴한 가격" },
-  //   { keywordId: 3, name: "아이들과 오기 좋은" },
-  //   { keywordId: 4, name: "사진찍기 좋은" },
-  //   { keywordId: 5, name: "친절한" },
-  //   { keywordId: 6, name: "고급스러운" },
-  //   { keywordId: 7, name: "조용한" },
-  //   { keywordId: 8, name: "모임하기 좋은" },
-  //   { keywordId: 9, name: "특별한 날" },
-  //   { keywordId: 10, name: "단체 회식" },
-  //   { keywordId: 11, name: "데이트하기 좋은" },
-  //   { keywordId: 12, name: "뷰가 좋은" },
-  //   { keywordId: 13, name: "특별한 메뉴" },
-  //   { keywordId: 14, name: "멋진 인테리어" },
-  //   { keywordId: 15, name: "디저트가 맛있는" },
-  //   { keywordId: 16, name: "청결한 매장" },
-  //   { keywordId: 17, name: "방송에 나온 맛집" },
-  // ];
   const [shopNameMessage, setShopNameMessage] = useState<string>("");
   const [shopNumberMessage, setShopNumberMessage] = useState<string>("");
   const [shopCategoryMessage, setShopCategoryMessage] = useState<string>("");

@@ -7,9 +7,12 @@ import {
   PutBusinessHourListResponse,
 } from "./type";
 import {
+  deleteImgListProps,
+  deleteMenuListResponse,
   getCategoriesResponse,
   getImgResponse,
   getMenuListResponse,
+  getMyStoresInfoResponse,
   getStoresResponse,
   postEnrollShopInfoProps,
   postEnrollShopInfoResponse,
@@ -19,6 +22,7 @@ import {
   postOpenHourResponse,
   postStoreImgResponse,
 } from "../types/store.type";
+import { getKeyWordListResponse } from "../types/main.type";
 
 //가게 등록 api
 export const postEnrollShopInfo = async (
@@ -50,7 +54,7 @@ export const postEnrollShopInfo = async (
 //가게등록시 사진 등록 api
 export const postStoreImg = async (
   shopImages: any[],
-  storeId: string
+  storeId: string | null
 ): Promise<postStoreImgResponse> => {
   const form = new FormData();
   shopImages.forEach((value, index) => {
@@ -103,7 +107,7 @@ export const postOpenHour = async (
 ): Promise<postOpenHourResponse> => {
   const URL = `/api/stores/${storeId}/business-hours`;
 
-  const { data } = await api.post(
+  const { data } = await api.put(
     URL,
     {
       businessHourList: dayOfWeek,
@@ -129,7 +133,7 @@ export const getStoreOne = async (
 };
 
 //가게 영업시간 가져오기 api
-export const getOpenHour = async (storeId: number) => {
+export const getOpenHour = async (storeId: number | null) => {
   const URL = `/api/stores/${storeId}/business-hours`;
   const { data } = await api.get(URL);
   return data;
@@ -224,7 +228,7 @@ export const getImg = async (
 ): Promise<getImgResponse> => {
   const URL = `/api/stores/${storeId}/images`;
   const { data } = await api.get(URL);
-  return data.data;
+  return data;
 };
 
 //DB에서 카테고리 리스트 가져오기 api
@@ -234,17 +238,141 @@ export const getCategories = async (): Promise<getCategoriesResponse> => {
   return data;
 };
 
+//DB에서 키워드 리스트 가져오기 api
+export const getKeyWordList = async (): Promise<getKeyWordListResponse> => {
+  const { data } = await api.get(`/api/keywords?count=20`);
+  return data;
+};
+
 //사업자가 등록한 가게 리스트 가져오기 api
 export const getStores = async (
   memberId: any,
   pageNum: any
 ): Promise<getStoresResponse> => {
-  const URL = `/api/my/stores/?ownerId=${memberId}&page=${pageNum}&size=2&sort=MOST_REVIEWED,desc`;
+  const URL = `/api/my/stores/?ownerId=${memberId}&page=${pageNum}&size=5&sort=MOST_REVIEWED,desc`;
   const { data } = await api.get(URL, {
     headers: {
       "Content-type": "application/json; charset=UTF-8",
       accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+  });
+  return data;
+};
+
+//내가게 정보 가져오기 api
+export const getMyStoresInfo = async (
+  storeId: string | null
+): Promise<getMyStoresInfoResponse> => {
+  console.log("정보시작", storeId, getCookie("accessToken"));
+  const URL = `/api/my/stores/${storeId}/detail`;
+  const { data } = await api.get(URL, {
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+      accept: "application/json,",
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+  });
+  return data;
+};
+
+//가게 정보 수정 api
+export const putStoreInfo = async (
+  storeId: string | null,
+  info: any
+): Promise<postEnrollShopInfoResponse> => {
+  const URL = `/api/stores/${storeId}`;
+
+  const { data } = await api.put(
+    URL,
+    {
+      storeName: info.storeName,
+      address: info.address,
+      phone: info.phone,
+      businessNumber: info.businessNumber,
+      businessName: info.businessName,
+      businessStartDate: info.businessStartDate,
+      keywordIdList: info.keywordIdList,
+      categoryId: info.categoryId,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json,",
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+      },
+    }
+  );
+
+  return data;
+};
+
+//가게 업데이트시 메뉴 api
+export const putMenuList = async (
+  shopMenuList: postMenuListProps[],
+  storeId: string | null
+): Promise<postMenuListResponse> => {
+  const list = shopMenuList.map((value) => {
+    return {
+      menuId: value.id,
+      name: value.shopMenuName,
+      price: Number(value.shopMenuPrice),
+    };
+  });
+  console.log(list);
+  const URL = `/api/stores/${storeId}/menus`;
+
+  const { data } = await api.patch(
+    URL,
+    {
+      menuUpdateList: list,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json,",
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+      },
+    }
+  );
+  return data;
+};
+
+//가게 업데이트시 사진 삭제 api
+export const deleteImgList = async (
+  imageIdList: deleteImgListProps[] | undefined,
+  storeId: string | null
+): Promise<postMenuListResponse> => {
+  const URL = `/api/stores/${storeId}/images `;
+
+  const { data } = await api.delete(URL, {
+    headers: {
+      "Content-Type": "application/json",
+      accept: "application/json,",
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+    data: {
+      imageIdList: imageIdList,
+    },
+  });
+  return data;
+};
+
+//가게 메뉴 삭제 api
+export const deleteMenuListAPI = async (
+  menuIdList: number[] | undefined,
+  storeId: string | null
+): Promise<deleteMenuListResponse> => {
+  const URL = `/api/stores/${storeId}/menus  `;
+
+  const { data } = await api.delete(URL, {
+    headers: {
+      "Content-Type": "application/json",
+      accept: "application/json,",
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+    data: {
+      menuIdList: menuIdList,
     },
   });
   return data;

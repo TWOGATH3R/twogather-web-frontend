@@ -9,7 +9,7 @@ type Props = {
     storeName: string;
     address: string;
     phone: string;
-    isApproved: boolean;
+    status: string;
     reasonForRejection: string;
     requestDate: string;
     storeImageUrl: string;
@@ -28,7 +28,7 @@ export default function StoreItem({ value }: Props) {
       <InfoItem>
         <Header>
           <Name>{value.storeName}</Name>
-          <Status>{value.isApproved ? "승인" : "거부"}</Status>
+          <Status>{value.status === "APPROVED" ? "승인" : "거부"}</Status>
         </Header>
         <BottomBox>
           <BottomInfoBox>

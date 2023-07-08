@@ -3,8 +3,13 @@ import styled from "styled-components";
 import Pagenation from "../common/Pagenation";
 import { useMutation } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { OwnerId, TotalReviewCount } from "../../store/storeDetailAtom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  OwnerId,
+  ReviewList,
+  Sort,
+  TotalReviewCount,
+} from "../../store/storeDetailAtom";
 import ReveiwReplyEnroll from "./ReveiwReplyEnroll";
 import Star from "./Star";
 import Filter from "../common/Filter";
@@ -12,7 +17,6 @@ import Exception from "../common/Exception";
 import LodingSpinner from "../common/LodingSpinner";
 import { deleteReview, getStoreReview } from "../../apis/queries/reviewQuery";
 import { getStoreReviewResponse } from "../../apis/types/review.type";
-import { MemberId } from "../../store/userInfoAtom";
 import Swal from "sweetalert2";
 import ReviewReply from "./ReviewReply";
 
@@ -20,7 +24,7 @@ const Reviews = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const ownerId = useRecoilValue(OwnerId);
-  const memberId = useRecoilValue(MemberId);
+  const memberId = localStorage.getItem("memberId");
 
   const setTotalCount = useSetRecoilState(TotalReviewCount);
 
@@ -28,15 +32,14 @@ const Reviews = () => {
 
   const [targetReviewNum, setTargetReviewNum] = useState<number>();
 
-  const [list, setList] = useState<getStoreReviewResponse>();
-  const [sort, setSort] = useState<string>("createdDate,desc");
+  const [list, setList] = useRecoilState<getStoreReviewResponse>(ReviewList);
+  const [sort, setSort] = useRecoilState(Sort);
   const storeId = searchParams.get("storeId");
   //가게 리뷰 리스트 가져오기
   const { mutate: getReviewList, isLoading: loding } = useMutation(
     () => getStoreReview(storeId, page, sort),
     {
       onSuccess: (res) => {
-        console.log(res);
         setList(res);
         setTotalCount(res.totalElements);
       },
@@ -116,7 +119,7 @@ const Reviews = () => {
               <ReivewContent>{value.content}</ReivewContent>
               <DateReviewBtnBox>
                 <Date>{value.createdDate}</Date>
-                {memberId === ownerId ? (
+                {Number(memberId) === ownerId ? (
                   <span onClick={() => replyBtnOnClick(index)}>답글</span>
                 ) : null}
               </DateReviewBtnBox>

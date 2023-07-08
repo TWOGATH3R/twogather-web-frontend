@@ -1,5 +1,6 @@
 import { atom } from "recoil";
 import { v1 } from "uuid";
+import { getStoreReviewResponse } from "../apis/types/review.type";
 
 export const StoreId = atom({
   key: `storeId/${v1()}`,
@@ -47,4 +48,17 @@ export const OwnerId = atom({
   default: 0,
 });
 
+export const ReviewList = atom<getStoreReviewResponse>({
+  key: `reviewList/${v1()}`,
+  default: undefined,
+});
 
+export const Sort = atom<string>({
+  key: `sort/${v1()}`,
+  default: "createdDate,desc",
+});
+
+export const Page = atom({
+  key: `page/${v1()}`,
+  default: 0,
+});

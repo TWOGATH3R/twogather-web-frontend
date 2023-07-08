@@ -36,7 +36,7 @@ const Stores = () => {
         <Pagenation
           page={page}
           pageOnChange={pageOnChange}
-          totalCount={list.data.length}
+          totalCount={list.totalElements}
         />
       )}
     </Container>

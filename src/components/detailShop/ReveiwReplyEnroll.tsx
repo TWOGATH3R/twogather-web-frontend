@@ -3,7 +3,12 @@ import styled from "styled-components";
 import { BsArrowReturnRight } from "react-icons/bs";
 import { useSearchParams } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { postStoreReviewReply } from "../../apis/queries/reviewQuery";
+import {
+  getStoreReview,
+  postStoreReviewReply,
+} from "../../apis/queries/reviewQuery";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { Page, ReviewList, Sort } from "../../store/storeDetailAtom";
 
 interface infoType {
   reviewId: number;
@@ -17,9 +22,25 @@ const ReveiwReplyEnroll = ({ reviewId }: infoType) => {
 
   const [text, setText] = useState<string>("");
 
+  const page = useRecoilValue(Page);
+  const setList = useSetRecoilState(ReviewList);
+  const sort = useRecoilValue(Sort);
+  //가게 리뷰 리스트 가져오기
+  const { mutate: getReviewList } = useMutation(
+    () => getStoreReview(String(storeId), page, sort),
+    {
+      onSuccess: (res) => {
+        setList(res);
+      },
+    }
+  );
+
   const { mutate: saveReply } = useMutation(
     () => postStoreReviewReply(storeId, reviewId, text),
     {
+      onSuccess: (res) => {
+        getReviewList();
+      },
       onError: (err) => {
         console.log(err);
       },
