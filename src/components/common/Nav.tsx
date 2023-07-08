@@ -54,10 +54,10 @@ const Nav = () => {
           {roleText === role.ROLE_ADMIN ? (
             <>
               <MenuItem>
-                <NavLink to="/">WaitingList</NavLink>
+                <NavLink to="/waitingList">WaitingList</NavLink>
               </MenuItem>
               <MenuItem>
-                <NavLink to="/">ApprovedList</NavLink>
+                <NavLink to="/approvedList">ApprovedList</NavLink>
               </MenuItem>
             </>
           ) : roleText === role.ROLE_STORE_OWNER ? (

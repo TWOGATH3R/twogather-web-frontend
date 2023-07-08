@@ -26,6 +26,8 @@ import VerificationId from "./components/findIdPage/Verification";
 import Check from "./components/findIdPage/Check";
 import Stores from "./pages/Stores";
 import EditContentsEnroll from "./components/resgistration/EditContentsEnroll";
+import ApprovedList from "./pages/ApprovedList";
+import WaitingList from "./pages/WaitingList";
 
 const Router = () => {
   return (
@@ -36,6 +38,8 @@ const Router = () => {
           <Route path="" element={<DefaultContents />} />
           <Route path="search" element={<SearchResult />} />
         </Route>
+        <Route path="/waitingList" element={<WaitingList />} />
+        <Route path="/approvedList" element={<ApprovedList />} />
         <Route path="/detailShop" element={<DetailShop />} />
         <Route path="/enrollshop" element={<EnrollShop />}>
           <Route path="contents" element={<ContentsEnroll />} />
