@@ -33,6 +33,7 @@ const EditContentsEnroll = () => {
   const storeId = searchParams.get("storeId");
 
   const [newMenuList, setNewMenuList] = useState<any>();
+  const [newImgList, setNewImgList] = useState<any>();
 
   //가게 메뉴 리스트 가져오기 query
   const { data: menuList } = useQuery(
@@ -56,12 +57,12 @@ const EditContentsEnroll = () => {
       },
     }
   );
-  const [imageIdList, setImageIdList] = useState<any>();
+  const [imageIdList, setImageIdList] = useState<any>([]);
   //가게 사진 리스트 가져오기 query
   const { mutate: getImageList } = useMutation(() => getImg(storeId), {
     onSuccess: (res) => {
-      setImageIdList([...res.data.map((value) => value.imageId)]);
       setShopImages((v) => [...res.data.map((value) => value.url)]);
+      setNewImgList(res.data);
       setImgList(res.data.map((value) => value.url));
     },
     onError: (err) => {
@@ -228,7 +229,7 @@ const EditContentsEnroll = () => {
 
   useEffect(() => {
     if (updateOpenHourLoding) {
-      navigate(-2);
+      // navigate(-2);
     }
   }, [updateMenuListLoding, updateOpenHourLoding]);
   useEffect(() => {
@@ -286,7 +287,8 @@ const EditContentsEnroll = () => {
   const onClickPhotoFile = () => {
     inputPhotoFile.current?.click();
   };
-  const onClickDeltePohoto = (idx: number) => {
+  const onClickDeltePohoto = (idx: number, url: string) => {
+    const num = newImgList.map((v: any) => v.url).indexOf(url);
     Swal.fire({
       title: "이미지를 삭제하겠습니까?",
       showCancelButton: true,
@@ -304,6 +306,10 @@ const EditContentsEnroll = () => {
           ...imgList.slice(0, idx),
           ...imgList.slice(idx + 1, shopImages.length),
         ]);
+        if (newImgList.map((v: any) => v.url).includes(url)) {
+          imageIdList.push(newImgList[num].imageId);
+          console.log(imageIdList);
+        }
         Swal.fire("삭제되었습니다!", "", "success");
       }
     });
@@ -563,14 +569,14 @@ const EditContentsEnroll = () => {
       if (differentObjects.length >= 1) updateMenuList(differentObjects);
       updateOpenHour();
       //이미 저장되어 있던 img만 있을 경우 함수 실행 제어
-      if (
-        !(imgList.length === 1 && typeof imgList[0] === "object"
-          ? false
-          : imgList[0].includes("twogather"))
-      ) {
-        console.log("이미지 삭제");
+      const result = newImgList
+        .map((v: any) => v.url)
+        .every((item: any) => shopImages.some((image) => image === item));
+      if (!result) {
         deleteImg();
-      } else saveImg();
+      } else if (result) {
+        saveImg();
+      }
     }
   };
 
@@ -591,7 +597,7 @@ const EditContentsEnroll = () => {
                 <PreViewImage
                   src={url}
                   alt={`image${idx}`}
-                  onClick={() => onClickDeltePohoto(idx)}
+                  onClick={() => onClickDeltePohoto(idx, url)}
                 />
               </React.Fragment>
             ))}
