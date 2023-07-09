@@ -138,7 +138,7 @@ const Reviews = () => {
           </div>
         ))
       ) : (
-        <Exception verson={"리뷰"} />
+        <Exception text={"리뷰"} />
       )}
 
       {list && (

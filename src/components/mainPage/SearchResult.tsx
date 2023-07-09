@@ -136,7 +136,7 @@ const SearchResult = () => {
           />
         </>
       ) : (
-        <Exception verson={"가게검색"} />
+        <Exception text={"가게검색 결과가"} />
       )}
     </SearchResultContainer>
   );
