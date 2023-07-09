@@ -28,7 +28,13 @@ export default function StoreItem({ value }: Props) {
       <InfoItem>
         <Header>
           <Name>{value.storeName}</Name>
-          <Status>{value.status === "APPROVED" ? "승인" : "거부"}</Status>
+          <Status>
+            {value.status === "APPROVED"
+              ? "승인"
+              : value.status === "PENDING"
+              ? "대기"
+              : "거부"}
+          </Status>
         </Header>
         <BottomBox>
           <BottomInfoBox>
