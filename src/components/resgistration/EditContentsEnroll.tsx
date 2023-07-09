@@ -162,9 +162,6 @@ const EditContentsEnroll = () => {
   //가게등록시 영업시간 등록 query
   const { mutate: updateOpenHour, isLoading: updateOpenHourLoding } =
     useMutation(() => postOpenHour(dayOfWeek && dayOfWeek, String(storeId)), {
-      onSuccess: (res) => {
-        console.log(res);
-      },
       onError: (err: any) => {
         alert(err.response.data.message);
       },
@@ -183,7 +180,11 @@ const EditContentsEnroll = () => {
     () => deleteImgList(imageIdList, storeId),
     {
       onSuccess: (res) => {
-        saveImg();
+        const hasMissing = hasMissingValues(
+          newImgList.map((v: any) => v.url),
+          shopImages
+        );
+        if (hasMissing) saveImg();
       },
       onError: (err) => {
         console.log(err);
@@ -490,7 +491,34 @@ const EditContentsEnroll = () => {
   function deleteMenuList(index: number) {
     setShopMenuList(shopMenuList.filter((item) => item.id !== index));
   }
+  //shopImages와 newMenuList의 url 값이 같은지 아닌지 확인
+  function compareArrays(arr1: any, arr2: any) {
+    // 배열의 길이가 다르면 다른 배열임
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
 
+    // 각 요소를 순회하면서 비교
+    for (let i = 0; i < arr1.length; i++) {
+      // 요소의 값과 순서가 다르면 다른 배열임
+      if (arr1[i] !== arr2[i]) {
+        return false;
+      }
+    }
+
+    // 모든 요소가 일치하면 같은 배열임
+    return true;
+  }
+  //shopImages에 newImgList에 없는 값이 있는지를 확인
+  function hasMissingValues(arr1: any, arr2: any) {
+    for (let i = 0; i < arr2.length; i++) {
+      if (!arr1.includes(arr2[i])) {
+        return true;
+      }
+    }
+
+    return false;
+  }
   //onSubmit
   const enrollBtnOnSubmit = () => {
     if (!(shopImages.length >= 1)) alert("사진을 1개 이상 등록해주세요");
@@ -572,9 +600,15 @@ const EditContentsEnroll = () => {
       const result = newImgList
         .map((v: any) => v.url)
         .every((item: any) => shopImages.some((image) => image === item));
+
+      const areEqual = compareArrays(
+        newImgList.map((v: any) => v.url),
+        shopImages
+      );
+
       if (!result) {
         deleteImg();
-      } else if (result) {
+      } else if (!areEqual) {
         saveImg();
       }
     }
