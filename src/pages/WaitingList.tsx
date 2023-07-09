@@ -3,12 +3,14 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { getPendingList, patchApproveStore } from "../apis/queries/adminQuery";
 import Pagenation from "../components/common/Pagenation";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPendingListResponse } from "../apis/types/admin.type";
 import DeniedPopup from "../components/waitingList/DeniedPopup";
 import Swal from "sweetalert2";
+import Exception from "../components/common/Exception";
 
 const WaitingList = () => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [page, setPage] = useState(0);
@@ -28,7 +30,7 @@ const WaitingList = () => {
       },
     }
   );
-  //가게 승인하기 
+  //가게 승인하기
   const { mutate: approve } = useMutation(() => patchApproveStore(storeId), {
     onSuccess: (res) => {
       getPending();
@@ -64,46 +66,50 @@ const WaitingList = () => {
   };
 
   useEffect(() => {
+    navigate(`/waitingList/?pagenum=${page}`);
     getPending();
-  }, []);
-  useEffect(() => {
-    console.log(storeId);
-  }, [storeId]);
+  }, [getPending, navigate, page]);
 
   return (
     <Container>
-      <DeniedInput id="denied" type="checkbox" />
-      <DeniedPopup storeId={storeId} />
-      <StoreList>
-        {list?.data.map((value, index) => (
-          <StoreItem key={index}>
-            <Image src={value.storeImageUrl} />
-            <InfoItem>
-              <Header>
-                <Name>{value.storeName}</Name>
-              </Header>
-              <BottomBox>
-                <BottomInfoBox>
-                  <InfoText>{value.phone}</InfoText>
-                  <InfoText>{value.address}</InfoText>
-                </BottomInfoBox>
-                <BottomButtonBox onClick={() => btnOnClick(value.storeId)}>
-                  <ModifyBtn onClick={() => approveBtnOnClick()}>
-                    승인
-                  </ModifyBtn>
-                  <DeniedBtn htmlFor="denied">거부</DeniedBtn>
-                </BottomButtonBox>
-              </BottomBox>
-            </InfoItem>
-          </StoreItem>
-        ))}
-      </StoreList>
-      {list && (
-        <Pagenation
-          page={page}
-          pageOnChange={pageOnChange}
-          totalCount={list.totalElements}
-        />
+      {list && list?.data.length < 1 ? (
+        <Exception text={"대기중인 가게"} />
+      ) : (
+        <>
+          <DeniedInput id="denied" type="checkbox" />
+          <DeniedPopup storeId={storeId} />
+          <StoreList>
+            {list?.data.map((value, index) => (
+              <StoreItem key={index}>
+                <Image src={value.storeImageUrl} />
+                <InfoItem>
+                  <Header>
+                    <Name>{value.storeName}</Name>
+                  </Header>
+                  <BottomBox>
+                    <BottomInfoBox>
+                      <InfoText>{value.phone}</InfoText>
+                      <InfoText>{value.address}</InfoText>
+                    </BottomInfoBox>
+                    <BottomButtonBox onClick={() => btnOnClick(value.storeId)}>
+                      <ModifyBtn onClick={() => approveBtnOnClick()}>
+                        승인
+                      </ModifyBtn>
+                      <DeniedBtn htmlFor="denied">거부</DeniedBtn>
+                    </BottomButtonBox>
+                  </BottomBox>
+                </InfoItem>
+              </StoreItem>
+            ))}
+          </StoreList>
+          {list && (
+            <Pagenation
+              page={page}
+              pageOnChange={pageOnChange}
+              totalCount={list.totalElements}
+            />
+          )}
+        </>
       )}
     </Container>
   );
