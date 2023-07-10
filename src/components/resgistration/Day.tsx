@@ -22,13 +22,13 @@ export default function Day({
           {day.status === true ? (
             <ShopDayList
               style={{ backgroundColor: "#FFB5B5" }}
-              onClick={() => adminBoolean && onClickDay(day, idx, index)}
+              onClick={() => !adminBoolean && onClickDay(day, idx, index)}
             >
               {day.day}
             </ShopDayList>
           ) : (
             <ShopDayList
-              onClick={() => adminBoolean && onClickDay(day, idx, index)}
+              onClick={() => !adminBoolean && onClickDay(day, idx, index)}
             >
               {day.day}
             </ShopDayList>
