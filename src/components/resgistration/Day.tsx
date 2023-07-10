@@ -1,27 +1,35 @@
-import React from 'react';
-import styled from 'styled-components';
-import { IShopInputItem } from '../../apis/api';
+import React from "react";
+import styled from "styled-components";
+import { IShopInputItem } from "../../apis/api";
 
 type Props = {
+  adminBoolean?: boolean;
   dayItem: IShopInputItem;
   index: number;
   onClickDay: (day: any, idx: number, index: number) => void;
 };
 
-export default function Day({ dayItem, index, onClickDay }: Props) {
+export default function Day({
+  adminBoolean,
+  dayItem,
+  index,
+  onClickDay,
+}: Props) {
   return (
     <ShopDayUl>
       {dayItem.week.map((day, idx) => (
         <React.Fragment key={idx}>
           {day.status === true ? (
             <ShopDayList
-              style={{ backgroundColor: '#FFB5B5' }}
-              onClick={() => onClickDay(day, idx, index)}
+              style={{ backgroundColor: "#FFB5B5" }}
+              onClick={() => adminBoolean && onClickDay(day, idx, index)}
             >
               {day.day}
             </ShopDayList>
           ) : (
-            <ShopDayList onClick={() => onClickDay(day, idx, index)}>
+            <ShopDayList
+              onClick={() => adminBoolean && onClickDay(day, idx, index)}
+            >
               {day.day}
             </ShopDayList>
           )}

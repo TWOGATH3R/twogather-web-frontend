@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import InputLabel from './InputLabel';
+import React from "react";
+import styled from "styled-components";
+import InputLabel from "./InputLabel";
 
 type InputTextProps = {
   inputTxt: string;
@@ -14,7 +14,7 @@ type InputTextProps = {
 };
 
 export default function InputText({
-  type = 'text',
+  type = "text",
   title,
   inputTxt,
   onChangeHandler,
@@ -23,7 +23,10 @@ export default function InputText({
   placeholder,
   style,
 }: InputTextProps) {
-  const isDisabled = pathName === '/enrollshop/contents' ? true : false;
+  const isDisabled =
+    pathName === "/enrollshop" || pathName === "/editenrollshop/"
+      ? false
+      : true;
 
   return (
     <ShopInnerWrapper>
@@ -37,7 +40,7 @@ export default function InputText({
           disabled={isDisabled}
           style={style}
         />
-        <InputMessage>{inputTxt.length > 0 ? guideMsg : ''}</InputMessage>
+        <InputMessage>{inputTxt.length > 0 ? guideMsg : ""}</InputMessage>
       </InputMessageWrapper>
     </ShopInnerWrapper>
   );
@@ -49,6 +52,9 @@ const InputMessage = styled.span`
   height: 20px;
   color: ${({ theme }) => theme.colors.subColor3};
   font-size: ${({ theme }) => theme.fontSizes.small};
+  @media (max-width: 680px) {
+    display: none;
+  }
 `;
 const InputMessageWrapper = styled.div`
   flex: 5;
@@ -64,10 +70,10 @@ const ShopInnerWrapper = styled.div`
   .time-wave {
     font-size: 23px;
   }
-  input[type='checkbox'] {
+  input[type="checkbox"] {
     display: none;
   }
-  input[type='checkbox'] + label {
+  input[type="checkbox"] + label {
     display: flex;
     width: 30px;
     height: 30px;
@@ -76,9 +82,9 @@ const ShopInnerWrapper = styled.div`
     align-items: center;
     justify-content: center;
   }
-  input[id='checkbox1']:checked + label::after,
-  [id='checkbox2']:checked + label::after {
-    content: '✔';
+  input[id="checkbox1"]:checked + label::after,
+  [id="checkbox2"]:checked + label::after {
+    content: "✔";
     font-size: 25px;
     width: 30px;
     height: 30px;
@@ -87,6 +93,10 @@ const ShopInnerWrapper = styled.div`
     color: #ff8181;
     left: 0;
     top: 0;
+  }
+  @media (max-width: 680px) {
+    flex-direction: column;
+    margin-bottom: 20px;
   }
 `;
 
