@@ -17,7 +17,7 @@ import {
   putMenuList,
 } from "../../apis/queries/storeQuery";
 import { IShopMenuList } from "../../apis/api";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Day from "./Day";
 import ShopTimePicker from "./ShopTimePicker";
 import {
@@ -29,6 +29,8 @@ import {
 const EditContentsEnroll = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const pathName = location.pathname;
 
   const storeId = searchParams.get("storeId");
 
@@ -162,9 +164,6 @@ const EditContentsEnroll = () => {
   //가게등록시 영업시간 등록 query
   const { mutate: updateOpenHour, isLoading: updateOpenHourLoding } =
     useMutation(() => postOpenHour(dayOfWeek && dayOfWeek, String(storeId)), {
-      onSuccess: (res) => {
-        console.log(res);
-      },
       onError: (err: any) => {
         alert(err.response.data.message);
       },
@@ -183,7 +182,11 @@ const EditContentsEnroll = () => {
     () => deleteImgList(imageIdList, storeId),
     {
       onSuccess: (res) => {
-        saveImg();
+        const hasMissing = hasMissingValues(
+          newImgList.map((v: any) => v.url),
+          shopImages
+        );
+        if (hasMissing) saveImg();
       },
       onError: (err) => {
         console.log(err);
@@ -490,7 +493,34 @@ const EditContentsEnroll = () => {
   function deleteMenuList(index: number) {
     setShopMenuList(shopMenuList.filter((item) => item.id !== index));
   }
+  //shopImages와 newMenuList의 url 값이 같은지 아닌지 확인
+  function compareArrays(arr1: any, arr2: any) {
+    // 배열의 길이가 다르면 다른 배열임
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
 
+    // 각 요소를 순회하면서 비교
+    for (let i = 0; i < arr1.length; i++) {
+      // 요소의 값과 순서가 다르면 다른 배열임
+      if (arr1[i] !== arr2[i]) {
+        return false;
+      }
+    }
+
+    // 모든 요소가 일치하면 같은 배열임
+    return true;
+  }
+  //shopImages에 newImgList에 없는 값이 있는지를 확인
+  function hasMissingValues(arr1: any, arr2: any) {
+    for (let i = 0; i < arr2.length; i++) {
+      if (!arr1.includes(arr2[i])) {
+        return true;
+      }
+    }
+
+    return false;
+  }
   //onSubmit
   const enrollBtnOnSubmit = () => {
     if (!(shopImages.length >= 1)) alert("사진을 1개 이상 등록해주세요");
@@ -572,14 +602,23 @@ const EditContentsEnroll = () => {
       const result = newImgList
         .map((v: any) => v.url)
         .every((item: any) => shopImages.some((image) => image === item));
+
+      const areEqual = compareArrays(
+        newImgList.map((v: any) => v.url),
+        shopImages
+      );
+
       if (!result) {
         deleteImg();
-      } else if (result) {
+      } else if (!areEqual) {
         saveImg();
       }
     }
   };
 
+  const isDisabled = pathName === "/editenrollshop/" ? false : true;
+  const adminBoolean = searchParams.get("role") !== "admin";
+  console.log(searchParams.get("role") === "admin" ? true : false);
   return (
     <>
       {/* 가게 사진 등록 */}
@@ -601,29 +640,31 @@ const EditContentsEnroll = () => {
                 />
               </React.Fragment>
             ))}
-            <ShopPhotoForm encType="multipart/form-data">
-              <ShopInput
-                style={{ width: "204px", height: "100%" }}
-                ref={inputPhotoFile}
-                multiple
-                className="input-file"
-                type="file"
-                id="file"
-                accept="image/*,jpg/*"
-                onChange={onChangeShopImage}
-              />
-              <PhotoIcon
-                onClick={onClickPhotoFile}
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  cursor: "pointer",
-                }}
-              />
-              <label onClick={onClickPhotoFile}>사진추가</label>
-            </ShopPhotoForm>
+            {adminBoolean && (
+              <ShopPhotoForm encType="multipart/form-data">
+                <ShopInput
+                  style={{ width: "204px", height: "100%" }}
+                  ref={inputPhotoFile}
+                  multiple
+                  className="input-file"
+                  type="file"
+                  id="file"
+                  accept="image/*,jpg/*"
+                  onChange={onChangeShopImage}
+                />
+                <PhotoIcon
+                  onClick={onClickPhotoFile}
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    cursor: "pointer",
+                  }}
+                />
+                <label onClick={onClickPhotoFile}>사진추가</label>
+              </ShopPhotoForm>
+            )}
           </ShopPhotoInputWrapper>
         </ShopInnerOutlineWrapper>
       </ShopWrapper>
@@ -644,12 +685,14 @@ const EditContentsEnroll = () => {
             <ShopInnerOutlineWrapper>
               <ShopInnerOutlineTitleWrapper>
                 <ShopInfoDeleteWrapper>
-                  {inputItems.length >= 1 && item.id !== 0 && (
-                    <DeleteIcon
-                      style={{ cursor: "pointer" }}
-                      onClick={() => deleteInputItem(item.id)}
-                    />
-                  )}
+                  {inputItems.length >= 1 &&
+                    item.id !== 0 &&
+                    location.pathname === "/editenrollshop/contents/" && (
+                      <DeleteIcon
+                        style={{ cursor: "pointer" }}
+                        onClick={() => deleteInputItem(item.id)}
+                      />
+                    )}
                 </ShopInfoDeleteWrapper>
                 <ShopInnerOutlineBigTitle>
                   영업시간 정보 <span>*</span>
@@ -657,7 +700,12 @@ const EditContentsEnroll = () => {
               </ShopInnerOutlineTitleWrapper>
 
               <ShopDayWrapper>
-                <Day dayItem={item} index={index} onClickDay={onClickDay}></Day>
+                <Day
+                  adminBoolean={adminBoolean}
+                  dayItem={item}
+                  index={index}
+                  onClickDay={onClickDay}
+                ></Day>
               </ShopDayWrapper>
               <ShopInnerWrapper>
                 <ShopTitle style={{ flex: 0.3, fontWeight: "500" }}>
@@ -677,6 +725,7 @@ const EditContentsEnroll = () => {
                       index={index}
                       startTime={item.startTime}
                       endTime={item.endTime}
+                      disabled={!adminBoolean}
                     ></ShopTimePicker>
                   </div>
                 </ShopInputItemsWrapper>
@@ -694,7 +743,7 @@ const EditContentsEnroll = () => {
                       index={index}
                       startTime={item.startBreakTime}
                       endTime={item.endBreakTime}
-                      disabled={!item.breakTimeCheckBox}
+                      disabled={!item.breakTimeCheckBox || !adminBoolean}
                     />
                     <ShopCheckBoxWrapper>
                       <ShopInput
@@ -714,7 +763,7 @@ const EditContentsEnroll = () => {
               </ShopInnerWrapper>
 
               <ShopTimeButtonWrapper>
-                {index === inputItems.length - 1 ? (
+                {adminBoolean && index === inputItems.length - 1 ? (
                   <>
                     {inputItems.length <= 6 && (
                       <ShopTimeButton onClick={addInputItem}>
@@ -744,7 +793,7 @@ const EditContentsEnroll = () => {
                   <ShopDeleteButtonWrapper
                     onClick={() => deleteMenuList(item.id)}
                   >
-                    <DeleteIcon />
+                    {adminBoolean && <DeleteIcon />}
                   </ShopDeleteButtonWrapper>
                 )}
 
@@ -756,6 +805,7 @@ const EditContentsEnroll = () => {
                     value={item.shopMenuName || ""}
                     onChange={(e) => onChangeShopMenuName(e, index)}
                     placeholder="입력해주세요"
+                    disabled={!adminBoolean}
                   />
                 </ShopMenuWrapper>
                 <ShopMenuWrapper>
@@ -766,28 +816,34 @@ const EditContentsEnroll = () => {
                     value={item.shopMenuPrice || ""}
                     onChange={(e) => onChangeShopMenuPrice(e, index)}
                     placeholder="입력해주세요"
+                    disabled={!adminBoolean}
                   />
                 </ShopMenuWrapper>
               </ShopMenuInnerWrapper>
             ))}
-
-            <div>
-              <ShopAddMenuContainer>
-                <ShopAddMenuWrapper>
-                  <ShopAddMenuBox onClick={addMenuItem}>
-                    {/* <PlusIcon /> */}
-                    <span>메뉴 추가하기</span>
-                  </ShopAddMenuBox>
-                </ShopAddMenuWrapper>
-              </ShopAddMenuContainer>
-            </div>
+            {adminBoolean && (
+              <div>
+                <ShopAddMenuContainer>
+                  <ShopAddMenuWrapper>
+                    <ShopAddMenuBox onClick={addMenuItem}>
+                      {/* <PlusIcon /> */}
+                      <span>메뉴 추가하기</span>
+                    </ShopAddMenuBox>
+                  </ShopAddMenuWrapper>
+                </ShopAddMenuContainer>
+              </div>
+            )}
           </ShopMenuContainer>
         </ShopInnerOutlineWrapper>
       </ShopWrapper>
       <EnrollButtonContainer>
-        <EnrollButton onClick={() => enrollBtnOnSubmit()}>
-          등록하기
-        </EnrollButton>
+        {adminBoolean ? (
+          <EnrollButton onClick={() => enrollBtnOnSubmit()}>
+            등록하기
+          </EnrollButton>
+        ) : (
+          <EnrollButton onClick={() => navigate(-1)}>이전 페이지</EnrollButton>
+        )}
       </EnrollButtonContainer>
     </>
   );

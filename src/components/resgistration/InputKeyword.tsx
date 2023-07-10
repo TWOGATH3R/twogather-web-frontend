@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import InputLabel from './InputLabel';
+import React from "react";
+import styled from "styled-components";
+import InputLabel from "./InputLabel";
 
 type InputKeywordProps = {
   inputTxt: string[];
@@ -22,19 +22,31 @@ export default function InputKeyword({
   placeholder,
   style,
 }: InputKeywordProps) {
+  const isDisabled =
+    pathName === "/enrollshop" || pathName === "/editenrollshop/"
+      ? false
+      : true;
   return (
     <ShopInnerWrapper>
       <InputLabel>{title}</InputLabel>
-      <InputMessageWrapper>
-        <ShopInput
-          placeholder={placeholder}
-          value={inputTxt}
-          onClick={onClickHandler}
-          style={style}
-          disabled={pathName === '/enrollshop/contents' ? true : false}
-        />
-        {!visiblePopup ? <InputMessage /> : null}
-      </InputMessageWrapper>
+      {isDisabled ? (
+        <KeywordList>
+          {inputTxt.map((value) => (
+            <KeywordItem key={value}>{value}</KeywordItem>
+          ))}
+        </KeywordList>
+      ) : (
+        <InputMessageWrapper>
+          <ShopInput
+            placeholder={placeholder}
+            value={inputTxt}
+            onClick={onClickHandler}
+            style={style}
+            disabled={isDisabled}
+          />
+          {!visiblePopup ? <InputMessage /> : null}
+        </InputMessageWrapper>
+      )}
     </ShopInnerWrapper>
   );
 }
@@ -61,10 +73,10 @@ const ShopInnerWrapper = styled.div`
   .time-wave {
     font-size: 23px;
   }
-  input[type='checkbox'] {
+  input[type="checkbox"] {
     display: none;
   }
-  input[type='checkbox'] + label {
+  input[type="checkbox"] + label {
     display: flex;
     width: 30px;
     height: 30px;
@@ -73,9 +85,9 @@ const ShopInnerWrapper = styled.div`
     align-items: center;
     justify-content: center;
   }
-  input[id='checkbox1']:checked + label::after,
-  [id='checkbox2']:checked + label::after {
-    content: '✔';
+  input[id="checkbox1"]:checked + label::after,
+  [id="checkbox2"]:checked + label::after {
+    content: "✔";
     font-size: 25px;
     width: 30px;
     height: 30px;
@@ -85,6 +97,10 @@ const ShopInnerWrapper = styled.div`
     left: 0;
     top: 0;
   }
+  @media (max-width: 680px) {
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
 `;
 
 const InputMessage = styled.span`
@@ -93,4 +109,22 @@ const InputMessage = styled.span`
   height: 20px;
   color: ${({ theme }) => theme.colors.subColor3};
   font-size: ${({ theme }) => theme.fontSizes.small};
+`;
+
+const KeywordList = styled.ul`
+  list-style: none;
+  flex: 5;
+  display: flex;
+  height: fit-content;
+  font-size: 1rem;
+  @media (max-width: 680px) {
+    padding-top: 10px;
+  }
+`;
+const KeywordItem = styled.li`
+  width: fit-content;
+  margin-right: 5px;
+  padding: 3px 10px;
+  border: 2px solid #6d6d6d;
+  border-radius: 10px;
 `;

@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import InputLabel from './InputLabel';
+import React from "react";
+import styled from "styled-components";
+import InputLabel from "./InputLabel";
 
 type InputCategoryProps = {
   inputTxt: string;
@@ -24,6 +24,10 @@ export default function InputCategory({
   placeholder,
   style,
 }: InputCategoryProps) {
+  const isDisabled =
+    pathName === "/enrollshop" || pathName === "/editenrollshop/"
+      ? false
+      : true;
   return (
     <ShopInnerWrapper>
       <InputLabel>{title}</InputLabel>
@@ -34,7 +38,7 @@ export default function InputCategory({
           value={inputTxt}
           onClick={onClickHandler}
           style={style}
-          disabled={pathName === '/enrollshop/contents' ? true : false}
+          disabled={isDisabled}
         />
         {!visiblePopup ? <InputMessage /> : null}
       </InputMessageWrapper>
@@ -64,10 +68,10 @@ const ShopInnerWrapper = styled.div`
   .time-wave {
     font-size: 23px;
   }
-  input[type='checkbox'] {
+  input[type="checkbox"] {
     display: none;
   }
-  input[type='checkbox'] + label {
+  input[type="checkbox"] + label {
     display: flex;
     width: 30px;
     height: 30px;
@@ -76,9 +80,9 @@ const ShopInnerWrapper = styled.div`
     align-items: center;
     justify-content: center;
   }
-  input[id='checkbox1']:checked + label::after,
-  [id='checkbox2']:checked + label::after {
-    content: '✔';
+  input[id="checkbox1"]:checked + label::after,
+  [id="checkbox2"]:checked + label::after {
+    content: "✔";
     font-size: 25px;
     width: 30px;
     height: 30px;
@@ -87,6 +91,9 @@ const ShopInnerWrapper = styled.div`
     color: #ff8181;
     left: 0;
     top: 0;
+  }
+  @media (max-width: 680px) {
+    flex-direction: column;
   }
 `;
 

@@ -17,12 +17,11 @@ const ImgSlider = () => {
     <ImageSlicer>
       <DetailShopImageWrapper>
         <Slick>
-          {Array.isArray(imgList) &&
-            imgList.map((item: imgListType, index: number) => (
-              <SliderItem key={index}>
-                <img src={item.url} alt={item.url} />
-              </SliderItem>
-            ))}
+          {imgList?.data.map((item: imgListType, index: number) => (
+            <SliderItem key={index}>
+              <img src={item.url} alt={item.url} />
+            </SliderItem>
+          ))}
         </Slick>
       </DetailShopImageWrapper>
     </ImageSlicer>
