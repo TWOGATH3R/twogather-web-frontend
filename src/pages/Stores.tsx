@@ -5,9 +5,13 @@ import { getStores } from "../apis/queries/storeQuery";
 import { useMutation } from "@tanstack/react-query";
 import { getStoresResponse } from "../apis/types/store.type";
 import Pagenation from "../components/common/Pagenation";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Stores = () => {
-  const [page, setPage] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const [page, setPage] = useState(searchParams.get("pagenum"));
 
   const [list, setList] = useState<getStoresResponse>();
   const memberId = localStorage.getItem("memberId");
@@ -24,6 +28,7 @@ const Stores = () => {
 
   useEffect(() => {
     getList();
+    navigate(`/stores/?pagenum=${page}`);
   }, [page]);
 
   return (
