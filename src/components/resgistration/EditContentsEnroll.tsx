@@ -11,6 +11,7 @@ import {
   getImg,
   getMenuList,
   getOpenHour,
+  patchReapplyStore,
   postMenuList,
   postOpenHour,
   postStoreImg,
@@ -229,12 +230,21 @@ const EditContentsEnroll = () => {
       },
     }
   );
+  //가게 재신청 query
+  const { mutate: reapplyStore } = useMutation(
+    () => patchReapplyStore(storeId),
+    {
+      onSuccess: (res) => {
+        navigate(-2);
+      },
+    }
+  );
 
   useEffect(() => {
     if (updateOpenHourLoding) {
-      // navigate(-2);
+      navigate(-2);
     }
-  }, [updateMenuListLoding, updateOpenHourLoding]);
+  }, [updateOpenHourLoding]);
   useEffect(() => {
     getOpenHourList();
     getImageList();
@@ -282,9 +292,9 @@ const EditContentsEnroll = () => {
   type checkWeekListType = {
     day: string[];
   };
-  const [checkWeekList, setCheckWeekList] = useState<Array<checkWeekListType>>(
-    []
-  );
+  const [checkWeekList, setCheckWeekList] = useState<Array<checkWeekListType>>([
+    { day: [] },
+  ]);
 
   //onClick
   const onClickPhotoFile = () => {
@@ -321,6 +331,8 @@ const EditContentsEnroll = () => {
     setBreakTimeInputCheckBox((prev) => !prev);
   };
   const onClickDay = (day: any, idx: number, index: number) => {
+    console.log(day, index, idx);
+    console.log(checkWeekList[index]);
     let sameDay = true;
     for (let i = 0; i < checkWeekList.length; i++) {
       if (checkWeekList[i].day.includes(day.day)) {
@@ -615,10 +627,12 @@ const EditContentsEnroll = () => {
       }
     }
   };
+  const reapplyBtnOnSubmit = () => {
+    reapplyStore();
+  };
 
-  const isDisabled = pathName === "/editenrollshop/" ? false : true;
-  const adminBoolean = searchParams.get("role") !== "admin";
-  console.log(searchParams.get("role") === "admin" ? true : false);
+  const adminBoolean = searchParams.get("role") === "admin";
+
   return (
     <>
       {/* 가게 사진 등록 */}
@@ -640,7 +654,7 @@ const EditContentsEnroll = () => {
                 />
               </React.Fragment>
             ))}
-            {adminBoolean && (
+            {!adminBoolean && (
               <ShopPhotoForm encType="multipart/form-data">
                 <ShopInput
                   style={{ width: "204px", height: "100%" }}
@@ -725,7 +739,7 @@ const EditContentsEnroll = () => {
                       index={index}
                       startTime={item.startTime}
                       endTime={item.endTime}
-                      disabled={!adminBoolean}
+                      disabled={adminBoolean}
                     ></ShopTimePicker>
                   </div>
                 </ShopInputItemsWrapper>
@@ -743,7 +757,7 @@ const EditContentsEnroll = () => {
                       index={index}
                       startTime={item.startBreakTime}
                       endTime={item.endBreakTime}
-                      disabled={!item.breakTimeCheckBox || !adminBoolean}
+                      disabled={!item.breakTimeCheckBox || adminBoolean}
                     />
                     <ShopCheckBoxWrapper>
                       <ShopInput
@@ -763,7 +777,7 @@ const EditContentsEnroll = () => {
               </ShopInnerWrapper>
 
               <ShopTimeButtonWrapper>
-                {adminBoolean && index === inputItems.length - 1 ? (
+                {!adminBoolean && index === inputItems.length - 1 ? (
                   <>
                     {inputItems.length <= 6 && (
                       <ShopTimeButton onClick={addInputItem}>
@@ -793,7 +807,7 @@ const EditContentsEnroll = () => {
                   <ShopDeleteButtonWrapper
                     onClick={() => deleteMenuList(item.id)}
                   >
-                    {adminBoolean && <DeleteIcon />}
+                    {!adminBoolean && <DeleteIcon />}
                   </ShopDeleteButtonWrapper>
                 )}
 
@@ -805,7 +819,7 @@ const EditContentsEnroll = () => {
                     value={item.shopMenuName || ""}
                     onChange={(e) => onChangeShopMenuName(e, index)}
                     placeholder="입력해주세요"
-                    disabled={!adminBoolean}
+                    disabled={adminBoolean}
                   />
                 </ShopMenuWrapper>
                 <ShopMenuWrapper>
@@ -816,12 +830,12 @@ const EditContentsEnroll = () => {
                     value={item.shopMenuPrice || ""}
                     onChange={(e) => onChangeShopMenuPrice(e, index)}
                     placeholder="입력해주세요"
-                    disabled={!adminBoolean}
+                    disabled={adminBoolean}
                   />
                 </ShopMenuWrapper>
               </ShopMenuInnerWrapper>
             ))}
-            {adminBoolean && (
+            {!adminBoolean && (
               <div>
                 <ShopAddMenuContainer>
                   <ShopAddMenuWrapper>
@@ -837,10 +851,16 @@ const EditContentsEnroll = () => {
         </ShopInnerOutlineWrapper>
       </ShopWrapper>
       <EnrollButtonContainer>
-        {adminBoolean ? (
-          <EnrollButton onClick={() => enrollBtnOnSubmit()}>
-            등록하기
-          </EnrollButton>
+        {!adminBoolean ? (
+          searchParams.get("role") === "reapply" ? (
+            <EnrollButton onClick={() => reapplyBtnOnSubmit()}>
+              재신청
+            </EnrollButton>
+          ) : (
+            <EnrollButton onClick={() => enrollBtnOnSubmit()}>
+              수정하기
+            </EnrollButton>
+          )
         ) : (
           <EnrollButton onClick={() => navigate(-1)}>이전 페이지</EnrollButton>
         )}

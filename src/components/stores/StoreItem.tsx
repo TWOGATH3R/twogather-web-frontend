@@ -22,18 +22,21 @@ export default function StoreItem({ value }: Props) {
   const BtnOnClick = (storeId: any) => {
     navigate(`/editenrollshop/?storeId=${storeId}`);
   };
+  const reapplyBtnOnClick = (storeId: any) => {
+    navigate(`/editenrollshop/?storeId=${storeId}&role=reapply`);
+  };
   return (
     <Container>
       <Image src={value.storeImageUrl} />
       <InfoItem>
         <Header>
           <Name>{value.storeName}</Name>
-          <Status>
+          <Status active={value.status === "DENIED"}>
             {value.status === "APPROVED"
               ? "승인"
               : value.status === "PENDING"
               ? "대기"
-              : "거부"}
+              : `거부 - ${value.reasonForRejection}`}
           </Status>
         </Header>
         <BottomBox>
@@ -42,7 +45,13 @@ export default function StoreItem({ value }: Props) {
             <InfoText>{value.address}</InfoText>
           </BottomInfoBox>
           <BottomButtonBox>
-            <Button onClick={() => BtnOnClick(value.storeId)}>수정</Button>
+            {value.status === "DENIED" ? (
+              <Button onClick={() => reapplyBtnOnClick(value.storeId)}>
+                재신청
+              </Button>
+            ) : (
+              <Button onClick={() => BtnOnClick(value.storeId)}>수정</Button>
+            )}
             <Date>{value.requestDate}</Date>
           </BottomButtonBox>
         </BottomBox>
@@ -86,11 +95,12 @@ const Name = styled.div`
   line-height: 24px;
 `;
 
-const Status = styled.div`
+const Status = styled.div<{ active: boolean }>`
   font-weight: 700;
   font-size: 13px;
   line-height: 16px;
   color: #4d74ff;
+  ${(props) => props.active && `color:red`}
 `;
 const InfoText = styled.div`
   font-weight: 400;

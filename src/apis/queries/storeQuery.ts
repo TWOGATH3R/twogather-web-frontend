@@ -365,7 +365,7 @@ export const deleteMenuListAPI = async (
   menuIdList: number[] | undefined,
   storeId: string | null
 ): Promise<deleteMenuListResponse> => {
-  const URL = `/api/stores/${storeId}/menus  `;
+  const URL = `/api/stores/${storeId}/menus`;
 
   const { data } = await api.delete(URL, {
     headers: {
@@ -377,5 +377,23 @@ export const deleteMenuListAPI = async (
       menuIdList: menuIdList,
     },
   });
+  return data;
+};
+
+//가게 재신청 api
+export const patchReapplyStore = async (storeId: string | null) => {
+  const URL = `/api/stores/${storeId}`;
+
+  const { data } = await api.patch(
+    URL,
+    {},
+    {
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json,",
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+      },
+    }
+  );
   return data;
 };

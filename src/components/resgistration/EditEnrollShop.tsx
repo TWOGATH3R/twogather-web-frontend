@@ -91,7 +91,11 @@ export default function EnrollShop() {
     {
       onSuccess: (res) => {
         setStoreId(res.data.storeId);
-        navigate(`/editenrollshop/contents/?storeId=${res.data.storeId}`);
+        navigate(
+          `/editenrollshop/contents/?storeId=${res.data.storeId}&role=${
+            searchParams.get("role") === "reapply" && "reapply"
+          }`
+        );
       },
       onError: (err: any) => {
         alert(err.response.data.message);
