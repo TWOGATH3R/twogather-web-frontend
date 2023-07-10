@@ -8,6 +8,7 @@ import { getPendingListResponse } from "../apis/types/admin.type";
 import DeniedPopup from "../components/waitingList/DeniedPopup";
 import Swal from "sweetalert2";
 import Exception from "../components/common/Exception";
+import { Link } from "react-router-dom";
 
 const WaitingList = () => {
   const navigate = useNavigate();
@@ -81,7 +82,11 @@ const WaitingList = () => {
           <StoreList>
             {list?.data.map((value, index) => (
               <StoreItem key={index}>
-                <Image src={value.storeImageUrl} />
+                <Link
+                  to={`/editenrollshop/contents/?storeId=${value.storeId}&role=admin`}
+                >
+                  <Image src={value.storeImageUrl} />
+                </Link>
                 <InfoItem>
                   <Header>
                     <Name>{value.storeName}</Name>
@@ -128,6 +133,8 @@ const StoreItem = styled.li`
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 2px;
   margin-bottom: 53px;
+  a {
+  }
 `;
 
 const Image = styled.img`
