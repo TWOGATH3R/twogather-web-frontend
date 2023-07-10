@@ -18,10 +18,9 @@ const WaitingList = () => {
 
   const [storeId, setStoreId] = useState<number>(0);
   const [list, setList] = useState<getPendingListResponse>();
-  const pageNum = searchParams.get("pagenum");
   //승인 대기중인 가게 리스트
   const { mutate: getPending } = useMutation(
-    () => getPendingList("PENDING", pageNum),
+    () => getPendingList("PENDING", String(page)),
     {
       onSuccess: (res) => {
         setList(res);
@@ -70,6 +69,10 @@ const WaitingList = () => {
     navigate(`/waitingList/?pagenum=${page}`);
     getPending();
   }, [getPending, navigate, page]);
+
+  useEffect(()=>{
+    setPage(Number(searchParams.get("pagenum")))
+  },[])
 
   return (
     <Container>

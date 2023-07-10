@@ -8,7 +8,7 @@ export const getPendingList = async (
   page: string | null
 ): Promise<getPendingListResponse> => {
   const { data } = await api.get(
-    `/api/admin/stores/${type}?page=${page}&size=5`,
+    `/api/admin/stores/${type}?page=${Number(page)-1}&size=5`,
     {
       headers: {
         "Content-Type": "application/json",
