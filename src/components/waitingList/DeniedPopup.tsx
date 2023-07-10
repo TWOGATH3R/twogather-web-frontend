@@ -6,8 +6,9 @@ import Swal from "sweetalert2";
 
 interface infoType {
   storeId: number;
+  getPending: any;
 }
-const DeniedPopup = ({ storeId }: infoType) => {
+const DeniedPopup = ({ storeId, getPending }: infoType) => {
   const [text, setText] = useState<string>("");
 
   const { mutate: sendText } = useMutation(
@@ -18,6 +19,7 @@ const DeniedPopup = ({ storeId }: infoType) => {
           "#denied"
         ) as HTMLInputElement;
         background.checked = false;
+        getPending();
       },
     }
   );

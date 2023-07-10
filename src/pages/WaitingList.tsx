@@ -81,7 +81,7 @@ const WaitingList = () => {
       ) : (
         <>
           <DeniedInput id="denied" type="checkbox" />
-          <DeniedPopup storeId={storeId} />
+          <DeniedPopup storeId={storeId} getPending={getPending}/>
           <StoreList>
             {list?.data.map((value, index) => (
               <StoreItem key={index}>
