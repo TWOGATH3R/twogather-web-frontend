@@ -15,10 +15,10 @@ import { BsPencilSquare } from "react-icons/bs";
 import Swal from "sweetalert2";
 
 interface infoType {
-  commentContent: any;
-  commentCreatedDate: any;
-  commentId: any;
-  reviewId: any;
+  commentContent: string;
+  commentCreatedDate: string;
+  commentId: number;
+  reviewId: number;
 }
 const ReviewReply = ({
   commentId,

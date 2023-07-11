@@ -5,12 +5,13 @@ import { emailCheckMutaionPostEmail } from "../../apis/queries/signUpQuery";
 import Swal from "sweetalert2";
 import sendMailImg from "../../assets/sendmail.svg";
 import { putUserPw, userPwCheck } from "../../apis/queries/myPageQuery";
+import { AxiosError } from "axios";
 
 interface info {
-  setEmailDate: any;
+  setEmailDate: (value: string) => void;
   verson: "비밀번호" | "이메일";
-  pw: any;
-  setPw: any;
+  pw: string;
+  setPw: (value: string) => void;
 }
 const PopUp = ({ setEmailDate, verson, pw, setPw }: info) => {
   //email 인증,변경 state
@@ -35,8 +36,8 @@ const PopUp = ({ setEmailDate, verson, pw, setPw }: info) => {
         console.log(res);
         setCodeAnswer(res.data.verificationCode);
       },
-      onError: (err: any) => {
-        alert(err.response.data.message);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );
@@ -52,8 +53,8 @@ const PopUp = ({ setEmailDate, verson, pw, setPw }: info) => {
         alert("획인완료");
       }
     },
-    onError: (err: any) => {
-      alert(err.response.data.message);
+    onError: (err: AxiosError<any>) => {
+      alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
     },
   });
   //비밀번호 변경 query
@@ -66,8 +67,8 @@ const PopUp = ({ setEmailDate, verson, pw, setPw }: info) => {
       setChangePw("");
       setCheckPw("");
     },
-    onError: (err: any) => {
-      alert(err.response.data.message);
+    onError: (err: AxiosError<any>) => {
+      alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
     },
   });
 

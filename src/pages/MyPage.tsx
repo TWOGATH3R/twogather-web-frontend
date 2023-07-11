@@ -10,6 +10,7 @@ import {
 } from "../apis/queries/myPageQuery";
 import { useMutation } from "@tanstack/react-query";
 import { role } from "../apis/types/common.type";
+import { AxiosError } from "axios";
 
 const MyPage = () => {
   const name = useRecoilValue(Name);
@@ -28,8 +29,8 @@ const MyPage = () => {
         setEmailDate(res.data.email);
         setIdDate(res.data.username);
       },
-      onError: (err: any) => {
-        alert(err.response.data.message);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );
@@ -40,8 +41,8 @@ const MyPage = () => {
       setEmailDate(res.data.email);
       setIdDate(res.data.username);
     },
-    onError: (err: any) => {
-      alert(err.response.data.message);
+    onError: (err: AxiosError<any>) => {
+      alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
     },
   });
   //사업자 정보 가져오기 query
@@ -51,8 +52,8 @@ const MyPage = () => {
       setEmailDate(res.data.email);
       setIdDate(res.data.username);
     },
-    onError: (err: any) => {
-      alert(err.response.data.message);
+    onError: (err: AxiosError<any>) => {
+      alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
     },
   });
 
@@ -91,7 +92,7 @@ const MyPage = () => {
             </>
           ) : (
             <MenuItem>
-              <NavLink to={`/mypage/mystore`}>내가게</NavLink>
+              <NavLink to={`/stores/?pagenum=0`}>내가게</NavLink>
             </MenuItem>
           )}
           {roleText === role.ROLE_ADMIN ? null : (

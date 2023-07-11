@@ -2,10 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import styled, { css } from "styled-components";
 import { getKeyWordList } from "../../apis/queries/mainQuery";
+import { getKeyWordListType } from "../../apis/types/main.type";
 
 interface infoType {
-  keyWord: any;
-  setKeyWord: any;
+  keyWord: string;
+  setKeyWord: (value: string) => void;
 }
 const KeyWordInput = ({ keyWord, setKeyWord }: infoType) => {
   //DB에 저장된 검색가능한 키워드 리스트 가져오기
@@ -24,7 +25,7 @@ const KeyWordInput = ({ keyWord, setKeyWord }: infoType) => {
     <KeyWordBox>
       <KeyWordList>
         {keyWordList &&
-          keyWordList.data.map((value: any, index: any) => (
+          keyWordList.data.map((value: getKeyWordListType, index: number) => (
             <KeyWordItem
               active={keyWord === value.name}
               onClick={() => keyWordOnClick(value.name)}

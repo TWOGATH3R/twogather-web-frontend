@@ -7,23 +7,22 @@ export type postReviewProps = {
 };
 
 //가게 리뷰리스트 가져오기 api response type정의
+export type getStoreReviewDataResponse = {
+  reviewId: number;
+  content: string;
+  score: number;
+  createdDate: string;
+  consumerName: string;
+  consumerId: number;
+  consumerAvgScore: number;
+  comment: {
+    commentId: number;
+    content: string;
+    createdDate: string;
+  };
+};
 export type getStoreReviewResponse = {
-  data: [
-    {
-      reviewId: number;
-      content: string;
-      score: number;
-      createdDate: string;
-      consumerName: string;
-      consumerId: number;
-      consumerAvgScore: number;
-      comment: {
-        commentId: number;
-        content: string;
-        createdDate: string;
-      };
-    }
-  ];
+  data: getStoreReviewDataResponse[];
   currentPage: number;
   totalPages: number;
   totalElements: number;
@@ -44,9 +43,9 @@ export type postStoreReviewReplyResponse = {
 
 //가게 리뷰 댓글 수정 api props type정의
 export type putReplyProps = {
-  reviewId: any;
+  reviewId: number;
   storeId: number;
-  commentId: any;
+  commentId: number;
   content: string;
 };
 

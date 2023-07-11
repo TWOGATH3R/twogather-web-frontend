@@ -32,7 +32,7 @@ const Spinner = styled.div`
   width: 120px;
   height: 120px;
 `;
-const Item = styled.span<{ num: any }>`
+const Item = styled.span<{ num: number }>`
   position: absolute;
   top: 0;
   left: 0;

@@ -5,19 +5,20 @@ export type getTop10ListProps = {
 };
 
 //각 장르별 Top10 가져오기 api response type 정의
-type getTop10ListResponseType = {
+export type getTop10ListResponseType = {
   storeId: number;
   storeName: string;
   address: string;
   avgScore: number;
   storeImageUrl: string;
+  likeCount: number;
 };
 export type getTop10ListResponse = {
   data: [getTop10ListResponseType];
 };
 
 //keyword 리스트 가져오기 api response type 정의
-type getKeyWordListType = {
+export type getKeyWordListType = {
   keywordId: number;
   name: string;
 };

@@ -16,5 +16,5 @@ export type Top10Type = {
 
 export type cityType = {
   city: string;
-  si: Array<any>;
+  si: string[];
 };

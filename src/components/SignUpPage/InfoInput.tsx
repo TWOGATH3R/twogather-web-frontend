@@ -8,6 +8,7 @@ import {
   storeOwnerMutaionPostInfo,
 } from "../../apis/queries/signUpQuery";
 import { userSignUpProps } from "../../apis/types/signup.type";
+import { AxiosError } from "axios";
 
 const InfoInput = () => {
   const location = useLocation();
@@ -33,8 +34,8 @@ const InfoInput = () => {
         navigate("/login");
         alert("회원가입 성공");
       },
-      onError: (err: any) => {
-        alert(err.response.data.message);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );
@@ -47,8 +48,8 @@ const InfoInput = () => {
         navigate("/login");
         alert("회원가입 성공");
       },
-      onError: (err: any) => {
-        alert(err.response.data.message);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );

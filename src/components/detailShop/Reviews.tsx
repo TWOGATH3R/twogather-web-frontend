@@ -16,7 +16,10 @@ import Filter from "../common/Filter";
 import Exception from "../common/Exception";
 import LodingSpinner from "../common/LodingSpinner";
 import { deleteReview, getStoreReview } from "../../apis/queries/reviewQuery";
-import { getStoreReviewResponse } from "../../apis/types/review.type";
+import {
+  getStoreReviewDataResponse,
+  getStoreReviewResponse,
+} from "../../apis/types/review.type";
 import Swal from "sweetalert2";
 import ReviewReply from "./ReviewReply";
 
@@ -47,7 +50,7 @@ const Reviews = () => {
   );
   //리뷰 삭제
   const { mutate: reviewDelete } = useMutation(
-    (reviewId) => deleteReview(storeId, reviewId),
+    (reviewId: number) => deleteReview(storeId, reviewId),
     {
       onSuccess: (res) => {
         window.location.reload();
@@ -58,7 +61,7 @@ const Reviews = () => {
     }
   );
 
-  const pageOnChange = (page: any) => {
+  const pageOnChange = (page: number) => {
     setPage(page);
   };
 
@@ -69,7 +72,7 @@ const Reviews = () => {
   const replyBtnOnClick = (index: number) => {
     setTargetReviewNum(index);
   };
-  const deleteBtnOnClick = (reviewId: any) => {
+  const deleteBtnOnClick = (reviewId: number) => {
     Swal.fire({
       title: "댓글을 삭제하겠습니까?",
       confirmButtonColor: "#0075FF",
@@ -101,14 +104,14 @@ const Reviews = () => {
       {loding ? (
         <LodingSpinner />
       ) : list && list?.data.length >= 1 ? (
-        list.data.map((value: any, index) => (
+        list.data.map((value: getStoreReviewDataResponse, index) => (
           <div key={index}>
             <Container>
               <TitleBox>
                 <NameStarBox>
                   <Name>{value.consumerName}</Name>
                   <Star count={value.score} />
-                  {memberId === value.consumerId ? (
+                  {Number(memberId) === value.consumerId ? (
                     <DeleteBtn onClick={() => deleteBtnOnClick(value.reviewId)}>
                       X
                     </DeleteBtn>

@@ -4,12 +4,12 @@ import { cityType } from "./type";
 
 interface infoType {
   categoriesBoolean: boolean;
-  city: any;
-  setCity: any;
-  si: any;
-  setSi: any;
-  categories: any;
-  setCategories: any;
+  city: string;
+  setCity: (value: string) => void;
+  si: string;
+  setSi: (value: string) => void;
+  categories: string;
+  setCategories: (value: string) => void;
 }
 const PopUp = ({
   categoriesBoolean,
@@ -20,7 +20,6 @@ const PopUp = ({
   categories,
   setCategories,
 }: infoType) => {
-
   const CategoriesMenuList = [
     "양식",
     "한식",
@@ -35,7 +34,10 @@ const PopUp = ({
     "카페",
     "기타",
   ];
-  const cityList = [
+  const cityList: {
+    city: string;
+    si: string[];
+  }[] = [
     {
       city: "서울",
       si: [
@@ -387,7 +389,7 @@ const PopUp = ({
               {cityList[[...cityList].map((value) => value.city).indexOf(city)]
                 ? cityList[
                     [...cityList].map((value) => value.city).indexOf(city)
-                  ].si.map((value: any) => (
+                  ].si.map((value) => (
                     <SiItem
                       key={value}
                       onClick={() => siOnClick(value)}

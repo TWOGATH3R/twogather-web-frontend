@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { removeCookie } from '../cookie/cookie';
 import { role } from '../../apis/types/common.type';
 import { userPwCheckProps } from '../../apis/types/mypage.type';
+import { AxiosError } from 'axios';
 
 const Withdraw = () => {
   const [pw, setPw] = useState<string>('');
@@ -19,15 +20,15 @@ const Withdraw = () => {
   const { mutate: consumerDelete } = useMutation(
     () => deleteConsumer(memberId),
     {
-      onError: (err: any) => {
-        alert(err.response.data.message);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || '알 수 없는 에러가 발생했습니다.');
       },
     },
   );
   //사업자 회원탈퇴
   const { mutate: ownerDelete } = useMutation(() => deleteOwner(memberId), {
-    onError: (err: any) => {
-      alert(err.response.data.message);
+    onError: (err: AxiosError<any>) => {
+      alert(err.response?.data.message || '알 수 없는 에러가 발생했습니다.');
     },
   });
   const info: userPwCheckProps = {
@@ -57,8 +58,8 @@ const Withdraw = () => {
         });
       }
     },
-    onError: (err: any) => {
-      alert(err.response.data.message);
+    onError: (err: AxiosError<any>) => {
+      alert(err.response?.data.message || '알 수 없는 에러가 발생했습니다.');
     },
   });
 

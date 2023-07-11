@@ -17,6 +17,8 @@ import ShopTimePicker from "./ShopTimePicker";
 import { useRecoilState } from "recoil";
 import { StoreId } from "../../store/userInfoAtom";
 import { postOpenHourProps } from "../../apis/types/store.type";
+import { AxiosError } from "axios";
+import { dayType } from "./type";
 
 const ContentsEnroll = () => {
   const navigate = useNavigate();
@@ -27,8 +29,8 @@ const ContentsEnroll = () => {
   const { mutate: saveOpenHour, isLoading: saveOpenHourLoding } = useMutation(
     () => postOpenHour(dayOfWeek && dayOfWeek, String(storeId)),
     {
-      onError: (err: any) => {
-        alert(err.response.data.message);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );
@@ -36,8 +38,8 @@ const ContentsEnroll = () => {
   const { mutate: saveImg, isLoading: saveImgLoding } = useMutation(
     () => postStoreImg(imgList, String(storeId)),
     {
-      onError: (err: any) => {
-        alert(err.response.data.message);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );
@@ -45,8 +47,8 @@ const ContentsEnroll = () => {
   const { mutate: saveMenuList, isLoading: saveMenuListLoding } = useMutation(
     () => postMenuList(shopMenuList, String(storeId)),
     {
-      onError: (err: any) => {
-        alert(err.response.data.message);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );
@@ -132,7 +134,8 @@ const ContentsEnroll = () => {
   const onClickBreakTimeCheckBox = () => {
     setBreakTimeInputCheckBox((prev) => !prev);
   };
-  const onClickDay = (day: any, idx: number, index: number) => {
+  const onClickDay = (day: dayType, idx: number, index: number) => {
+    console.log(day);
     let sameDay = true;
     for (let i = 0; i < checkWeekList.length; i++) {
       if (checkWeekList[i].day.includes(day.day)) {
@@ -311,7 +314,7 @@ const ContentsEnroll = () => {
     else if (!shopMenuList[0].shopMenuName || !shopMenuList[0].shopMenuPrice)
       alert("메뉴를 입력해주세요");
     else {
-      const addDay: any = [];
+      const addDay = [];
       for (let i = 0; i < inputItems.length; i++) {
         for (let j = 0; j < 7; j++) {
           if (inputItems[i].week[j].status === true) {

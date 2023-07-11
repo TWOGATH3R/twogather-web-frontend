@@ -18,7 +18,7 @@ const ApprovedList = () => {
     () => getPendingList("APPROVED", String(page)),
     {
       onSuccess: (res) => {
-        console.log(res)
+        console.log(res);
         setList(res);
       },
       onError: (err) => {
@@ -28,7 +28,7 @@ const ApprovedList = () => {
   );
 
   //onChange
-  const pageOnChange = (page: any) => {
+  const pageOnChange = (page: number) => {
     setPage(page);
   };
 
@@ -37,9 +37,9 @@ const ApprovedList = () => {
     getApproved();
   }, [getApproved, navigate, page]);
 
-  useEffect(()=>{
-    setPage(Number(searchParams.get("pagenum")))
-  },[])
+  useEffect(() => {
+    setPage(Number(searchParams.get("pagenum")));
+  }, []);
 
   return (
     <Container>

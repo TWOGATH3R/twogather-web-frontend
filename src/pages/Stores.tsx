@@ -15,15 +15,18 @@ const Stores = () => {
 
   const [list, setList] = useState<getStoresResponse>();
   const memberId = localStorage.getItem("memberId");
-  const { mutate: getList } = useMutation(() => getStores(memberId, page), {
-    onSuccess: (res) => {
-      setList(res);
-      console.log(res);
-    },
-  });
+  const { mutate: getList } = useMutation(
+    () => getStores(memberId, Number(page)),
+    {
+      onSuccess: (res) => {
+        setList(res);
+        console.log(res);
+      },
+    }
+  );
 
-  const pageOnChange = (page: any) => {
-    setPage(page);
+  const pageOnChange = (page: number) => {
+    setPage(String(page));
   };
 
   useEffect(() => {

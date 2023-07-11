@@ -8,9 +8,9 @@ interface childProps {
 }
 
 const StarClick = ({ count, setCount }: childProps) => {
-  const starOnChange = (e: any) => {
+  const starOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const num = e.target.defaultValue;
-    setCount(num / 2);
+    setCount(Number(num) / 2);
   };
 
   const rating = [

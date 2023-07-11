@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 
 interface infoType {
   storeId: number;
-  getPending: any;
+  getPending: () => void;
 }
 const DeniedPopup = ({ storeId, getPending }: infoType) => {
   const [text, setText] = useState<string>("");

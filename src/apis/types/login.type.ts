@@ -11,3 +11,11 @@ export type loginResponse = {
     name: string;
   };
 };
+
+//로그인 후 jwt type 정의
+export type jwtType = {
+  exp: number;
+  id: number;
+  role: string;
+  sub: string;
+};

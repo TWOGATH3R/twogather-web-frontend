@@ -46,7 +46,7 @@ const Search = () => {
   };
 
   //onSubmit
-  const searchOnSubmit = (e: any) => {
+  const searchOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setPageNum("0");
     navigate(

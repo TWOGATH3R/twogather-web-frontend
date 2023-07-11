@@ -12,6 +12,7 @@ import { Email, Id, Name, Role } from "../../store/userInfoAtom";
 import { role } from "../../apis/types/common.type";
 import { userUpdateProps } from "../../apis/types/mypage.type";
 import PopUp from "./PopUp";
+import { AxiosError } from "axios";
 
 const Info = () => {
   const nameDate = useRecoilValue(Name);
@@ -46,8 +47,8 @@ const Info = () => {
           confirmButtonColor: "#0075FF",
         });
       },
-      onError: (err: any) => {
-        alert(err.response.data.message);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || '알 수 없는 에러가 발생했습니다.');
       },
     }
   );
@@ -62,8 +63,8 @@ const Info = () => {
           confirmButtonColor: "#0075FF",
         });
       },
-      onError: (err: any) => {
-        alert(err.response.data.message);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || '알 수 없는 에러가 발생했습니다.');
       },
     }
   );
@@ -78,8 +79,8 @@ const Info = () => {
           confirmButtonColor: "#0075FF",
         });
       },
-      onError: (err: any) => {
-        alert(err.response.data.message);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );

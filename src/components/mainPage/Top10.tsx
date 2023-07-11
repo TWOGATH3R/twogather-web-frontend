@@ -5,13 +5,18 @@ import { getTop10List } from "../../apis/queries/mainQuery";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { Top10Type } from "./type";
-import { getTop10ListProps } from "../../apis/types/main.type";
+import {
+  getTop10ListProps,
+  getTop10ListResponse,
+  getTop10ListResponseType,
+} from "../../apis/types/main.type";
 import { AiFillHeart } from "react-icons/ai";
 
 const Top10 = ({ title, type }: Top10Type) => {
-  const [storeList, setStoreList] = useState<Array<Object> | undefined>();
+  const [storeList, setStoreList] = useState<getTop10ListResponse>();
 
-  const listLength: boolean | undefined = storeList && storeList?.length <= 3;
+  const listLength: boolean | undefined =
+    storeList && storeList?.data.length <= 3;
   const { mutate: Top10List } = useMutation(
     () => {
       const count: string = listLength ? "10" : "3";
@@ -23,7 +28,7 @@ const Top10 = ({ title, type }: Top10Type) => {
     },
     {
       onSuccess: (res) => {
-        setStoreList(res.data);
+        setStoreList(res);
       },
     }
   );
@@ -44,8 +49,9 @@ const Top10 = ({ title, type }: Top10Type) => {
       </Title>
       <SeeMoreInput id="gradetop" type="checkbox" />
       <GradeTop10List>
-        {Array.isArray(storeList)
-          ? storeList.map((value: any, index: any) => (
+        {storeList &&
+          storeList.data.map(
+            (value: getTop10ListResponseType, index: number) => (
               <GradeTop10Item key={index}>
                 <Link to={`/detailShop/?storeId=${value.storeId}`}>
                   <StoreImgBox>
@@ -62,8 +68,8 @@ const Top10 = ({ title, type }: Top10Type) => {
                   </LikeCount>
                 </Link>
               </GradeTop10Item>
-            ))
-          : null}
+            )
+          )}
       </GradeTop10List>
       <SeeMoreBtn htmlFor="reviewtop" onClick={() => seeMoreBtnOnClick()}>
         {listLength ? (

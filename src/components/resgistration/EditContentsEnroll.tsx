@@ -22,6 +22,8 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Day from "./Day";
 import ShopTimePicker from "./ShopTimePicker";
 import {
+  getImgDataResponse,
+  getMenuListDataResponse,
   getOpenHourResponse,
   postMenuListProps,
   postOpenHourProps,
@@ -35,8 +37,8 @@ const EditContentsEnroll = () => {
 
   const storeId = searchParams.get("storeId");
 
-  const [newMenuList, setNewMenuList] = useState<any>();
-  const [newImgList, setNewImgList] = useState<any>();
+  const [newMenuList, setNewMenuList] = useState<getMenuListDataResponse[]>([]);
+  const [newImgList, setNewImgList] = useState<getImgDataResponse[]>([]);
 
   //가게 메뉴 리스트 가져오기 query
   const { data: menuList } = useQuery(
@@ -60,7 +62,7 @@ const EditContentsEnroll = () => {
       },
     }
   );
-  const [imageIdList, setImageIdList] = useState<any>([]);
+  const [imageIdList, setImageIdList] = useState<any[]>([]);
   //가게 사진 리스트 가져오기 query
   const { mutate: getImageList } = useMutation(() => getImg(storeId), {
     onSuccess: (res) => {
@@ -292,9 +294,9 @@ const EditContentsEnroll = () => {
   type checkWeekListType = {
     day: string[];
   };
-  const [checkWeekList, setCheckWeekList] = useState<Array<checkWeekListType>>([
-    { day: [] },
-  ]);
+  const [checkWeekList, setCheckWeekList] = useState<Array<checkWeekListType>>(
+    []
+  );
 
   //onClick
   const onClickPhotoFile = () => {
@@ -331,8 +333,7 @@ const EditContentsEnroll = () => {
     setBreakTimeInputCheckBox((prev) => !prev);
   };
   const onClickDay = (day: any, idx: number, index: number) => {
-    console.log(day, index, idx);
-    console.log(checkWeekList[index]);
+    console.log(day);
     let sameDay = true;
     for (let i = 0; i < checkWeekList.length; i++) {
       if (checkWeekList[i].day.includes(day.day)) {
@@ -410,9 +411,9 @@ const EditContentsEnroll = () => {
     setInputItems([...inputItems, input]);
     nextID.current += 1;
   }
-  function deleteInputItem(index: number) {
+  function deleteInputItem(itemId: number, index: number) {
     setCheckWeekList(checkWeekList.filter((v, i) => i !== index));
-    setInputItems(inputItems.filter((item) => item.id !== index));
+    setInputItems(inputItems.filter((item) => item.id !== itemId));
   }
   function onChangeStoreStartTimeInput(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -704,7 +705,7 @@ const EditContentsEnroll = () => {
                     location.pathname === "/editenrollshop/contents/" && (
                       <DeleteIcon
                         style={{ cursor: "pointer" }}
-                        onClick={() => deleteInputItem(item.id)}
+                        onClick={() => deleteInputItem(item.id, index)}
                       />
                     )}
                 </ShopInfoDeleteWrapper>

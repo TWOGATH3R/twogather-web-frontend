@@ -25,6 +25,7 @@ import InputCategory from "./InputCategory";
 import InputKeyword from "./InputKeyword";
 import { IShopAddressVisible } from "../../apis/api";
 import InputDate from "./InputDate";
+import { AxiosError } from "axios";
 
 export default function EnrollShop() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -97,8 +98,8 @@ export default function EnrollShop() {
           }`
         );
       },
-      onError: (err: any) => {
-        alert(err.response.data.message);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );

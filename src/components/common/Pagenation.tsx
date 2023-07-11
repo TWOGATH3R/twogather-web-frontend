@@ -3,9 +3,9 @@ import Pagination from "react-js-pagination";
 import styled from "styled-components";
 
 interface infoType {
-  page: any;
-  pageOnChange: any;
-  totalCount: any;
+  page: number | string | null;
+  pageOnChange: (value: number) => void;
+  totalCount: number;
 }
 const Pagenation = ({ page, pageOnChange, totalCount }: infoType) => {
   return (

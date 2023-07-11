@@ -18,7 +18,7 @@ const Like = () => {
     },
   });
 
-  const pageOnChange = (page: any) => {
+  const pageOnChange = (page: number) => {
     setPage(page);
   };
 
@@ -42,7 +42,7 @@ const Like = () => {
                   </StoreName>
                   <StoreAddress>{value.address}</StoreAddress>
                   <KeyWordList>
-                    {value.keywordList.map((value: any) => (
+                    {value.keywordList.map((value) => (
                       <KeyWordItem key={value}># {value}</KeyWordItem>
                     ))}
                   </KeyWordList>

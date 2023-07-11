@@ -1,12 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import { IShopInputItem } from "../../apis/api";
+import { dayType } from "./type";
 
 type Props = {
   adminBoolean?: boolean;
   dayItem: IShopInputItem;
   index: number;
-  onClickDay: (day: any, idx: number, index: number) => void;
+  onClickDay: (day: dayType, idx: number, index: number) => void;
 };
 
 export default function Day({

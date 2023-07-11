@@ -41,7 +41,7 @@ const WaitingList = () => {
   });
 
   //onChange
-  const pageOnChange = (page: any) => {
+  const pageOnChange = (page: number) => {
     setPage(page);
   };
 
@@ -70,9 +70,9 @@ const WaitingList = () => {
     getPending();
   }, [getPending, navigate, page]);
 
-  useEffect(()=>{
-    setPage(Number(searchParams.get("pagenum")))
-  },[])
+  useEffect(() => {
+    setPage(Number(searchParams.get("pagenum")));
+  }, []);
 
   return (
     <Container>
@@ -81,7 +81,7 @@ const WaitingList = () => {
       ) : (
         <>
           <DeniedInput id="denied" type="checkbox" />
-          <DeniedPopup storeId={storeId} getPending={getPending}/>
+          <DeniedPopup storeId={storeId} getPending={getPending} />
           <StoreList>
             {list?.data.map((value, index) => (
               <StoreItem key={index}>

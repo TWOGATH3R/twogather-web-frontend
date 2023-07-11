@@ -6,6 +6,7 @@ import { loginProps } from "../apis/types/login.type";
 import { loginMutaionPostInfo } from "../apis/queries/LoginQuery";
 import { useSetRecoilState } from "recoil";
 import { Role } from "../store/userInfoAtom";
+import { AxiosError } from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -27,8 +28,8 @@ const Login = () => {
       role && setRole(role);
       navigate("/");
     },
-    onError: (err: any) => {
-      alert(err.response.data.message);
+    onError: (err: AxiosError<any>) => {
+      alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
     },
   });
 

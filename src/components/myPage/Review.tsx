@@ -27,7 +27,7 @@ const Review = () => {
     }
   );
 
-  const pageOnChange = (page: any) => {
+  const pageOnChange = (page: number) => {
     setPage(page);
   };
 

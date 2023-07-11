@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
+type filterListType = {
+  sort: string;
+  text: string;
+};
 interface infoType {
-  filterList: any;
+  filterList: filterListType[];
   setSort: any;
 }
 const Filter = ({ filterList, setSort }: infoType) => {
-  const [targetFilter, setTargetFilter] = React.useState("");
+  const [targetFilter, setTargetFilter] = useState("");
 
   const filterOnChange = (event: SelectChangeEvent) => {
     setTargetFilter(event.target.value);
@@ -26,7 +30,7 @@ const Filter = ({ filterList, setSort }: infoType) => {
         onChange={filterOnChange}
         label="Age"
       >
-        {filterList.map((value: any, index: number) => (
+        {filterList.map((value: filterListType, index: number) => (
           <MenuItem value={value.sort} key={index}>
             {value.text}
           </MenuItem>

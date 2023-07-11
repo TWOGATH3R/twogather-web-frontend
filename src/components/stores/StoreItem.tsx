@@ -19,10 +19,10 @@ type Props = {
 export default function StoreItem({ value }: Props) {
   const navigate = useNavigate();
 
-  const BtnOnClick = (storeId: any) => {
+  const BtnOnClick = (storeId: number) => {
     navigate(`/editenrollshop/?storeId=${storeId}`);
   };
-  const reapplyBtnOnClick = (storeId: any) => {
+  const reapplyBtnOnClick = (storeId: number) => {
     navigate(`/editenrollshop/?storeId=${storeId}&role=reapply`);
   };
   return (

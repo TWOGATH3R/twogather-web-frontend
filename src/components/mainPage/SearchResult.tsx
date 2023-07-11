@@ -59,8 +59,8 @@ const SearchResult = () => {
   );
 
   //onChange
-  const pageOnChange = (page: any) => {
-    setPageNum(page);
+  const pageOnChange = (page: number) => {
+    setPageNum(String(page));
   };
 
   useEffect(() => {

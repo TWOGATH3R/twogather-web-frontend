@@ -93,41 +93,38 @@ export type getOpenHourProps = {
 };
 
 //영업시간 가져오기 api response type 정의
+export type getOpenHourDataResponse = {
+  businessHourId: number;
+  storeId: number;
+  startTime: string;
+  endTime: string;
+  dayOfWeek: string;
+  isOpen: boolean;
+  hasBreakTime: boolean;
+  breakStartTime: string | null;
+  breakEndTime: string | null;
+};
 export type getOpenHourResponse = {
-  data: [
-    {
-      businessHourId: number;
-      storeId: number;
-      startTime: string;
-      endTime: string;
-      dayOfWeek: string;
-      isOpen: boolean;
-      hasBreakTime: boolean;
-      breakStartTime: string | null;
-      breakEndTime: string | null;
-    }
-  ];
+  data: getOpenHourDataResponse[];
 };
 
 //메뉴리스트 가져오기 api response type정의
+export type getMenuListDataResponse = {
+  menuId: number;
+  name: string;
+  price: number;
+};
 export type getMenuListResponse = {
-  data: [
-    {
-      menuId: number;
-      name: string;
-      price: number;
-    }
-  ];
+  data: getMenuListDataResponse[];
 };
 
 //가게 사진 가져오기 api response type정의
+export type getImgDataResponse = {
+  imageId: number;
+  url: string;
+};
 export type getImgResponse = {
-  data: [
-    {
-      imageId: number;
-      url: string;
-    }
-  ];
+  data: getImgDataResponse[];
 };
 
 //카테고리 리스트 가져오기 api response type정의

@@ -24,6 +24,7 @@ import { getMyLikeList } from "../../apis/queries/myPageQuery";
 import { getCookie } from "../cookie/cookie";
 import ImgSlider from "./ImgSlider";
 import { role } from "../../apis/types/common.type";
+import { getOpenHourDataResponse } from "../../apis/types/store.type";
 
 const ShopInfo = () => {
   const storeId = useRecoilValue(StoreId);
@@ -113,7 +114,9 @@ const ShopInfo = () => {
 
   //onClick
   const dayOnClick = (ko: string, en: string) => {
-    const index = openHour.map((value: any) => value.dayOfWeek).indexOf(en);
+    const index = openHour
+      .map((value: getOpenHourDataResponse) => value.dayOfWeek)
+      .indexOf(en);
     const data: openHourType = openHour[index];
     if (data !== undefined) {
       setCheckDay({ ko: ko, en: en });

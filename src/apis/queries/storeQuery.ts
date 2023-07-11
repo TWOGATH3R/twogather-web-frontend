@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { api } from "../untils";
 import { getCookie } from "../../components/cookie/cookie";
 import {
@@ -53,7 +54,7 @@ export const postEnrollShopInfo = async (
 
 //가게등록시 사진 등록 api
 export const postStoreImg = async (
-  shopImages: any[],
+  shopImages: File[],
   storeId: string | null
 ): Promise<postStoreImgResponse> => {
   const form = new FormData();
@@ -246,8 +247,8 @@ export const getKeyWordList = async (): Promise<getKeyWordListResponse> => {
 
 //사업자가 등록한 가게 리스트 가져오기 api
 export const getStores = async (
-  memberId: any,
-  pageNum: any
+  memberId: string | null,
+  pageNum: number
 ): Promise<getStoresResponse> => {
   const URL = `/api/my/stores/?ownerId=${memberId}&page=${
     pageNum - 1
@@ -281,7 +282,7 @@ export const getMyStoresInfo = async (
 //가게 정보 수정 api
 export const putStoreInfo = async (
   storeId: string | null,
-  info: any
+  info: postEnrollShopInfoProps
 ): Promise<postEnrollShopInfoResponse> => {
   const URL = `/api/stores/${storeId}`;
 

@@ -19,6 +19,7 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { StoreId } from "../store/userInfoAtom";
 import { postEnrollShopInfoProps } from "../apis/types/store.type";
+import { AxiosError } from "axios";
 
 export default function EnrollShop() {
   const navigate = useNavigate();
@@ -63,8 +64,8 @@ export default function EnrollShop() {
         setStoreId(res.data.storeId);
         navigate("/enrollshop/contents");
       },
-      onError: (err: any) => {
-        alert(err.response.data.message);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );
