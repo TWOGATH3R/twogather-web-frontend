@@ -3,6 +3,10 @@ import { getCookie, removeCookie } from "../../components/cookie/cookie";
 
 export const api = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
+  headers: {
+    "Content-type": "application/json; charset=UTF-8",
+    accept: "application/json,",
+  },
 });
 
 // 응답 인터셉터 추가하기
@@ -19,10 +23,8 @@ api.interceptors.response.use(
         const refreshToken = await localStorage.getItem("refreshToken");
 
         api
-          .get(`/api/consumers/10`, {
+          .get(`/api/consumers/8`, {
             headers: {
-              "Content-Type": "application/json",
-              accept: "application/json,",
               Authorization: `Bearer ${getCookie("accessToken")}`,
               refreshToken: `Bearer ${refreshToken}`,
             },

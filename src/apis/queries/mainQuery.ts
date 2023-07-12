@@ -26,15 +26,20 @@ export const getKeyWordList = async (): Promise<getKeyWordListResponse> => {
 export const getStoreList = async (
   info: searchProps
 ): Promise<getStoreListResponse> => {
-  const URL = `/api/stores/search?${
-    info.category && `category=${info.category}&`
-  }${info.search && `search=${info.search}&`}${
-    info.storeName && `storeName=${info.storeName}&`
-  }${info.location && `location=${info.location}&`}page=${
-    Number(info.pagenum) - 1
-  }&size=6&sort=${info.sort}`.replaceAll("null", "");
+  const { category, search, storeName, location, pagenum, sort } = info;
+  const page = Number(pagenum) - 1;
+  const size = 6;
+  const query = [
+    category && `category=${category}`,
+    search && `search=${search}`,
+    storeName && `storeName=${storeName}`,
+    location && `location=${location}`,
+    `page=${page}`,
+    `size=${size}`,
+    `sort=${sort}`,
+  ].join("&");
 
-  const { data } = await api.get(URL);
+  const { data } = await api.get(`/api/stores/search?${query}`);
 
   return data;
 };

@@ -43,8 +43,6 @@ export const postEnrollShopInfo = async (
     },
     {
       headers: {
-        "Content-Type": "application/json",
-        accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
     }
@@ -92,8 +90,6 @@ export const postMenuList = async (
     },
     {
       headers: {
-        "Content-Type": "application/json",
-        accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
     }
@@ -115,8 +111,6 @@ export const postOpenHour = async (
     },
     {
       headers: {
-        "Content-Type": "application/json",
-        accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
     }
@@ -162,8 +156,6 @@ export const getMyStoreList = async ({
   }`;
   const { data } = await api.get(URL, {
     headers: {
-      "Content-Type": "application/json",
-      accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
@@ -182,8 +174,6 @@ export const putBusinessHourtList = async ({
 
   const { data } = await api.put(URL, {
     headers: {
-      "Content-Type": "application/json",
-      accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
@@ -199,8 +189,6 @@ export const postLike = async (storeId: number, memberId: string | null) => {
     {},
     {
       headers: {
-        "Content-type": "application/json; charset=UTF-8",
-        accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
     }
@@ -214,8 +202,6 @@ export const deleteLike = async (storeId: number, memberId: string | null) => {
     `/api/stores/${storeId}/members/${memberId}/likes`,
     {
       headers: {
-        "Content-type": "application/json; charset=UTF-8",
-        accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
     }
@@ -255,8 +241,6 @@ export const getStores = async (
   }&size=5&sort=MOST_REVIEWED,desc`;
   const { data } = await api.get(URL, {
     headers: {
-      "Content-type": "application/json; charset=UTF-8",
-      accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
@@ -271,8 +255,6 @@ export const getMyStoresInfo = async (
   const URL = `/api/my/stores/${storeId}/detail`;
   const { data } = await api.get(URL, {
     headers: {
-      "Content-type": "application/json; charset=UTF-8",
-      accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
@@ -300,8 +282,6 @@ export const putStoreInfo = async (
     },
     {
       headers: {
-        "Content-Type": "application/json",
-        accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
     }
@@ -332,8 +312,6 @@ export const putMenuList = async (
     },
     {
       headers: {
-        "Content-Type": "application/json",
-        accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
     }
@@ -350,8 +328,6 @@ export const deleteImgList = async (
 
   const { data } = await api.delete(URL, {
     headers: {
-      "Content-Type": "application/json",
-      accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
     data: {
@@ -370,8 +346,6 @@ export const deleteMenuListAPI = async (
 
   const { data } = await api.delete(URL, {
     headers: {
-      "Content-Type": "application/json",
-      accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
     data: {
@@ -390,8 +364,6 @@ export const patchReapplyStore = async (storeId: string | null) => {
     {},
     {
       headers: {
-        "Content-Type": "application/json",
-        accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
     }

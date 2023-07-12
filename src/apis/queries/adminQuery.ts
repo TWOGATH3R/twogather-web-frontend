@@ -7,16 +7,15 @@ export const getPendingList = async (
   type: string,
   page: string | null
 ): Promise<getPendingListResponse> => {
-  const { data } = await api.get(
-    `/api/admin/stores/${type}?page=${Number(page)-1}&size=5`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        accept: "application/json,",
-        Authorization: `Bearer ${getCookie("accessToken")}`,
-      },
-    }
-  );
+  const { data } = await api.get(`/api/admin/stores/${type}`, {
+    headers: {
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+    params: {
+      page: Number(page) - 1,
+      size: 5,
+    },
+  });
   return data;
 };
 
@@ -27,8 +26,6 @@ export const patchDeniedReason = async (storeId: number, text: string) => {
     { reason: text },
     {
       headers: {
-        "Content-Type": "application/json",
-        accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
     }
@@ -43,8 +40,6 @@ export const patchApproveStore = async (storeId: number) => {
     {},
     {
       headers: {
-        "Content-Type": "application/json",
-        accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
     }

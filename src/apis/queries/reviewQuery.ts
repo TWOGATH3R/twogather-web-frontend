@@ -14,8 +14,6 @@ export const postReview = async (info: postReviewProps, storeId: number) => {
 
   const { data } = await api.post(URL, info, {
     headers: {
-      "Content-Type": "application/json",
-      accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
@@ -37,8 +35,6 @@ export const postStoreReviewReply = async (
     },
     {
       headers: {
-        "Content-Type": "application/json",
-        accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
     }
@@ -68,8 +64,6 @@ export const deleteReview = async (
 
   const { data } = await api.delete(URL, {
     headers: {
-      "Content-Type": "application/json",
-      accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
@@ -88,8 +82,6 @@ export const putReply = async (info: putReplyProps) => {
     },
     {
       headers: {
-        "Content-Type": "application/json",
-        accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
     }
@@ -108,8 +100,6 @@ export const getUserReview = async (
   }&size=5`;
   const { data } = await api.get(URL, {
     headers: {
-      "Content-Type": "application/json",
-      accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });

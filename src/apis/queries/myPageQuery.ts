@@ -12,7 +12,7 @@ import { api } from "../untils";
 export const putConsumerInfoChange = async (
   info: userUpdateProps
 ): Promise<userUpdateResponse> => {
-  console.log(info)
+  console.log(info);
   const { data } = await api.put(
     `/api/consumers/${info.memberId}`,
     {
@@ -22,8 +22,6 @@ export const putConsumerInfoChange = async (
     },
     {
       headers: {
-        "Content-type": "application/json; charset=UTF-8",
-        accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
     }
@@ -44,8 +42,6 @@ export const putOwnerInfoChange = async (
     },
     {
       headers: {
-        "Content-type": "application/json; charset=UTF-8",
-        accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
     }
@@ -66,8 +62,6 @@ export const putAdminInfoChange = async (
     },
     {
       headers: {
-        "Content-type": "application/json; charset=UTF-8",
-        accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
     }
@@ -81,8 +75,6 @@ export const getConsumerInfo = async (
 ): Promise<userGetInfoResponse> => {
   const { data } = await api.get(`/api/consumers/${memberId}`, {
     headers: {
-      "Content-type": "application/json; charset=UTF-8",
-      accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
@@ -95,8 +87,6 @@ export const getOwnerInfo = async (
 ): Promise<userGetInfoResponse> => {
   const { data } = await api.get(`/api/owners/${memberId}`, {
     headers: {
-      "Content-type": "application/json; charset=UTF-8",
-      accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
@@ -109,8 +99,6 @@ export const getAdminInfo = async (
 ): Promise<userGetInfoResponse> => {
   const { data } = await api.get(`/api/admin/${memberId}`, {
     headers: {
-      "Content-type": "application/json; charset=UTF-8",
-      accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
@@ -121,8 +109,6 @@ export const getAdminInfo = async (
 export const deleteConsumer = async (memberId: string | null) => {
   const { data } = await api.delete(`/api/consumers/${memberId}`, {
     headers: {
-      "Content-type": "application/json; charset=UTF-8",
-      accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
@@ -133,8 +119,6 @@ export const deleteConsumer = async (memberId: string | null) => {
 export const deleteOwner = async (memberId: string | null) => {
   const { data } = await api.delete(`/api/Owner/${memberId}`, {
     headers: {
-      "Content-type": "application/json; charset=UTF-8",
-      accept: "application/json,",
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
@@ -150,8 +134,6 @@ export const userPwCheck = async ({ pw, memberId }: userPwCheckProps) => {
     },
     {
       headers: {
-        "Content-type": "application/json; charset=UTF-8",
-        accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
     }
@@ -163,16 +145,15 @@ export const userPwCheck = async ({ pw, memberId }: userPwCheckProps) => {
 export const getMyLikeList = async (
   memberId: string | null
 ): Promise<getMyLikeListResponse> => {
-  const { data } = await api.get(
-    `/api/members/${memberId}/likes/?page=0&size=10`,
-    {
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-        accept: "application/json,",
-        Authorization: `Bearer ${getCookie("accessToken")}`,
-      },
-    }
-  );
+  const { data } = await api.get(`/api/members/${memberId}/likes`, {
+    headers: {
+      Authorization: `Bearer ${getCookie("accessToken")}`,
+    },
+    params: {
+      page: 0,
+      size: 5,
+    },
+  });
   return data;
 };
 
@@ -185,8 +166,6 @@ export const putUserPw = async ({ pw, memberId }: userPwCheckProps) => {
     },
     {
       headers: {
-        "Content-type": "application/json; charset=UTF-8",
-        accept: "application/json,",
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },
     }

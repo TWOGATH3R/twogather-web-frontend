@@ -1,4 +1,3 @@
-import { getMyIdProps, getMyIdResponse } from "../types/findId.type";
 import { api } from "../untils";
 
 //임시 비밀번호 발급
