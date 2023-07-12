@@ -40,8 +40,8 @@ const SearchResult = () => {
   const info: searchProps = {
     category: categories === "모든 카테고리" ? "" : categories,
     search: keyWord,
-    location: city === "전체 지역" ? "" : city + " " + si,
-    pagenum: searchParams.get("storeName") === searchText ? pageNum : "0",
+    location: city === "전체 지역" ? "" : `${city} ${si}`,
+    pagenum: searchParams.get("storeName") === searchText ? pageNum : "1",
     sort: sort,
     storeName: searchText,
   };
@@ -133,6 +133,7 @@ const SearchResult = () => {
             page={pageNum}
             pageOnChange={pageOnChange}
             totalCount={list.totalElements}
+            itemsCountPerPage={6}
           />
         </>
       ) : (

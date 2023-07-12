@@ -6,13 +6,19 @@ interface infoType {
   page: number | string | null;
   pageOnChange: (value: number) => void;
   totalCount: number;
+  itemsCountPerPage?: number;
 }
-const Pagenation = ({ page, pageOnChange, totalCount }: infoType) => {
+const Pagenation = ({
+  page,
+  pageOnChange,
+  totalCount,
+  itemsCountPerPage,
+}: infoType) => {
   return (
     <PaginationBox>
       <Pagination
         activePage={Number(page)}
-        itemsCountPerPage={5}
+        itemsCountPerPage={itemsCountPerPage || 5}
         totalItemsCount={totalCount}
         pageRangeDisplayed={5}
         prevPageText="‹"

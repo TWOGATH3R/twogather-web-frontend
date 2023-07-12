@@ -143,17 +143,19 @@ export const userPwCheck = async ({ pw, memberId }: userPwCheckProps) => {
 
 //내가 좋아요 누른 list 정보 가져오기
 export const getMyLikeList = async (
-  memberId: string | null
+  memberId: string | null,
+  page?: string | null
 ): Promise<getMyLikeListResponse> => {
   const { data } = await api.get(`/api/members/${memberId}/likes`, {
     headers: {
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
     params: {
-      page: 0,
+      page: Number(page) - 1,
       size: 5,
     },
   });
+  console.log(data);
   return data;
 };
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { AiOutlineHeart } from "react-icons/ai";
 import { useMutation } from "@tanstack/react-query";
@@ -8,22 +8,26 @@ import Pagenation from "../common/Pagenation";
 import { getMyLikeListResponse } from "../../apis/types/mypage.type";
 
 const Like = () => {
-  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const [page, setPage] = useState(searchParams.get("pagenum"));
 
   const [likeList, setLikeList] = useState<getMyLikeListResponse>();
   const memberId = localStorage.getItem("memberId");
-  const { mutate: getLikeList } = useMutation(() => getMyLikeList(memberId), {
+  const { mutate: getLikeList } = useMutation(() => getMyLikeList(memberId,page), {
     onSuccess: (res) => {
       setLikeList(res);
     },
   });
 
   const pageOnChange = (page: number) => {
-    setPage(page);
+    setPage(String(page));
   };
 
   useEffect(() => {
     getLikeList();
+    navigate(`/mypage/like/?pagenum=${page}`);
   }, [page]);
 
   return (

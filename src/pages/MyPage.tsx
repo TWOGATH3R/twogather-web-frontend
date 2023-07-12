@@ -84,15 +84,15 @@ const MyPage = () => {
             role.ROLE_CONSUMER ? (
             <>
               <MenuItem>
-                <NavLink to={`/mypage/review`}>리뷰</NavLink>
+                <NavLink to={`/mypage/review/?pagenum=1`}>리뷰</NavLink>
               </MenuItem>
               <MenuItem>
-                <NavLink to={`/mypage/like`}>좋아요</NavLink>
+                <NavLink to={`/mypage/like/?pagenum=1`}>좋아요</NavLink>
               </MenuItem>
             </>
           ) : (
             <MenuItem>
-              <NavLink to={`/stores/?pagenum=0`}>내가게</NavLink>
+              <NavLink to={`/stores/?pagenum=1`}>내가게</NavLink>
             </MenuItem>
           )}
           {roleText === role.ROLE_ADMIN ? null : (

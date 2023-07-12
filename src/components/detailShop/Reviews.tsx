@@ -31,7 +31,7 @@ const Reviews = () => {
 
   const setTotalCount = useSetRecoilState(TotalReviewCount);
 
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
 
   const [targetReviewNum, setTargetReviewNum] = useState<number>();
 

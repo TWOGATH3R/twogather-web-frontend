@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import Pagination from "react-js-pagination";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getUserReview } from "../../apis/queries/reviewQuery";
 import LodingSpinner from "../common/LodingSpinner";
@@ -11,6 +11,7 @@ import Pagenation from "../common/Pagenation";
 import Star from "../detailShop/Star";
 
 const Review = () => {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState("createdDate,desc");
 
@@ -40,6 +41,7 @@ const Review = () => {
 
   useEffect(() => {
     getReviewList();
+    navigate(`/mypage/review/?pagenum=${page}`);
   }, [page, sort]);
 
   return (

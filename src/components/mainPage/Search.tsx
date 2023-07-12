@@ -48,13 +48,13 @@ const Search = () => {
   //onSubmit
   const searchOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setPageNum("0");
+    setPageNum("1");
     navigate(
       `/search?category=${
         categories === "모든 카테고리" ? "" : categories
       }&search=${keyWord}&storeName=${searchText}&location=${
         city === "전체 지역" ? "" : city + " " + si
-      }&pagenum=0&sort=TOP_RATED,desc`
+      }&pagenum=1&sort=TOP_RATED,desc`
     );
   };
 

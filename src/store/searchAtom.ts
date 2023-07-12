@@ -23,5 +23,5 @@ export const Si = atom({
 });
 export const PageNum = atom({
   key: `pageNum/${v1()}`,
-  default: "0",
+  default: "1",
 });
