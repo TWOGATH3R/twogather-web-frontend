@@ -71,7 +71,7 @@ const SearchResult = () => {
       info.location === "전체 지역" ? "" : info.location
     }&pagenum=${info.pagenum}&sort=${info.sort}`.replaceAll("null", "");
     navigate(URL);
-  }, [pageNum, sort]);
+  }, [pageNum, sort, searchParams]);
 
   const filter = [
     { text: "평점 높은순", sort: "TOP_RATED,desc" },
