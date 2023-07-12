@@ -8,6 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { getStoreReview, postReview } from "../../apis/queries/reviewQuery";
 import { postReviewProps } from "../../apis/types/review.type";
+import { AxiosError } from "axios";
 
 const ReviewEnroll = () => {
   const date = new Date();
@@ -53,8 +54,8 @@ const ReviewEnroll = () => {
         if (result.isConfirmed) getReviewList();
       });
     },
-    onError: (err) => {
-      console.log(err);
+    onError: (err: AxiosError<any>) => {
+      alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
     },
   });
 

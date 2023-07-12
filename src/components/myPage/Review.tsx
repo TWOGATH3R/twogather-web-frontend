@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
-import Pagination from "react-js-pagination";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getUserReview } from "../../apis/queries/reviewQuery";
@@ -21,10 +20,8 @@ const Review = () => {
     () => getUserReview(memberId, page, sort),
     {
       onSuccess: (res) => {
-        console.log(res);
         setList(res);
       },
-      onError: (err) => {},
     }
   );
 

@@ -8,7 +8,6 @@ export default function AddressModal() {
   const setStoreAddress = useSetRecoilState(address);
   const setStoreVisibleAddress = useSetRecoilState(visibleAddress);
   const handleComplete = (data: any) => {
-    console.log(data);
     let fullAddress = data.address;
     let extraAddress = "";
 

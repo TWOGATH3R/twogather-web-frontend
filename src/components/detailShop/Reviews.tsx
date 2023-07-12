@@ -22,6 +22,7 @@ import {
 } from "../../apis/types/review.type";
 import Swal from "sweetalert2";
 import ReviewReply from "./ReviewReply";
+import { AxiosError } from "axios";
 
 const Reviews = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -55,8 +56,8 @@ const Reviews = () => {
       onSuccess: (res) => {
         window.location.reload();
       },
-      onError: (err) => {
-        console.log(err);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );

@@ -20,7 +20,6 @@ const EmailConfirm = () => {
     () => emailCheckMutaionPostEmail(email),
     {
       onSuccess: (res) => {
-        console.log(res);
         setCodeAnswer(res.data.verificationCode);
       },
     }

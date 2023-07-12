@@ -9,6 +9,7 @@ import DeniedPopup from "../components/waitingList/DeniedPopup";
 import Swal from "sweetalert2";
 import Exception from "../components/common/Exception";
 import { Link } from "react-router-dom";
+import { AxiosError } from "axios";
 
 const WaitingList = () => {
   const navigate = useNavigate();
@@ -25,8 +26,8 @@ const WaitingList = () => {
       onSuccess: (res) => {
         setList(res);
       },
-      onError: (err) => {
-        console.log(err);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );
@@ -35,8 +36,8 @@ const WaitingList = () => {
     onSuccess: (res) => {
       getPending();
     },
-    onError: (err) => {
-      console.log(err);
+    onError: (err: AxiosError<any>) => {
+      alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
     },
   });
 

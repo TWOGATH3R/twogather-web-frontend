@@ -12,7 +12,6 @@ import { api } from "../untils";
 export const putConsumerInfoChange = async (
   info: userUpdateProps
 ): Promise<userUpdateResponse> => {
-  console.log(info);
   const { data } = await api.put(
     `/api/consumers/${info.memberId}`,
     {
@@ -155,7 +154,7 @@ export const getMyLikeList = async (
       size: 5,
     },
   });
-  console.log(data);
+  
   return data;
 };
 

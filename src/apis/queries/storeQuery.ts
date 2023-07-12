@@ -160,7 +160,6 @@ export const getMyStoreList = async ({
     },
   });
 
-  console.log(data);
   return data;
 };
 
@@ -178,7 +177,6 @@ export const putBusinessHourtList = async ({
     },
   });
 
-  console.log(data);
   return data;
 };
 
@@ -251,13 +249,14 @@ export const getStores = async (
 export const getMyStoresInfo = async (
   storeId: string | null
 ): Promise<getMyStoresInfoResponse> => {
-  console.log("정보시작", storeId, getCookie("accessToken"));
   const URL = `/api/my/stores/${storeId}/detail`;
+
   const { data } = await api.get(URL, {
     headers: {
       Authorization: `Bearer ${getCookie("accessToken")}`,
     },
   });
+
   return data;
 };
 
@@ -302,7 +301,7 @@ export const putMenuList = async (
       price: Number(value.shopMenuPrice),
     };
   });
-  console.log(list);
+
   const URL = `/api/stores/${storeId}/menus`;
 
   const { data } = await api.patch(

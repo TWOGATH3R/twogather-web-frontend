@@ -28,6 +28,7 @@ import {
   postMenuListProps,
   postOpenHourProps,
 } from "../../apis/types/store.type";
+import { AxiosError } from "axios";
 
 const EditContentsEnroll = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -57,8 +58,8 @@ const EditContentsEnroll = () => {
           })
         );
       },
-      onError: (err) => {
-        console.log(err);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );
@@ -70,8 +71,8 @@ const EditContentsEnroll = () => {
       setNewImgList(res.data);
       setImgList(res.data.map((value) => value.url));
     },
-    onError: (err) => {
-      console.log(err);
+    onError: (err: AxiosError<any>) => {
+      alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
     },
   });
   //가게의 영업시간 정보 가져오기
@@ -80,7 +81,7 @@ const EditContentsEnroll = () => {
     {
       onSuccess: (res: getOpenHourResponse) => {
         const data = res.data;
-        console.log(data);
+  
         const groupByHours = (): IShopInputItem[] => {
           const groupedHours: { [key: string]: IShopInputItem } = {};
 
@@ -159,8 +160,8 @@ const EditContentsEnroll = () => {
           });
         });
       },
-      onError: (err: any) => {
-        console.log(err.response.data.message);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );
@@ -175,8 +176,8 @@ const EditContentsEnroll = () => {
   const { mutate: saveImg, isLoading: updateImgLoding } = useMutation(
     () => postStoreImg(imgList, storeId),
     {
-      onError: (err) => {
-        console.log(err);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );
@@ -191,8 +192,8 @@ const EditContentsEnroll = () => {
         );
         if (hasMissing) saveImg();
       },
-      onError: (err) => {
-        console.log(err);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );
@@ -202,11 +203,10 @@ const EditContentsEnroll = () => {
       (differentObjects: postMenuListProps[]) =>
         putMenuList(differentObjects, storeId),
       {
-        onSuccess: (res) => {
-          console.log(res);
-        },
-        onError: (err) => {
-          console.log(err);
+        onError: (err: AxiosError<any>) => {
+          alert(
+            err.response?.data.message || "알 수 없는 에러가 발생했습니다."
+          );
         },
       }
     );
@@ -224,11 +224,8 @@ const EditContentsEnroll = () => {
     ["deleteMenu"],
     (list: number[]) => deleteMenuListAPI(list, storeId),
     {
-      onSuccess: (res) => {
-        console.log(res);
-      },
-      onError: (err) => {
-        console.log(err);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );
@@ -323,7 +320,6 @@ const EditContentsEnroll = () => {
         ]);
         if (newImgList.map((v: any) => v.url).includes(url)) {
           imageIdList.push(newImgList[num].imageId);
-          console.log(imageIdList);
         }
         Swal.fire("삭제되었습니다!", "", "success");
       }
@@ -333,8 +329,8 @@ const EditContentsEnroll = () => {
     setBreakTimeInputCheckBox((prev) => !prev);
   };
   const onClickDay = (day: any, idx: number, index: number) => {
-    console.log(day);
     let sameDay = true;
+    
     for (let i = 0; i < checkWeekList.length; i++) {
       if (checkWeekList[i].day.includes(day.day)) {
         if (i !== index) {

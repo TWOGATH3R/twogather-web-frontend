@@ -5,6 +5,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { getPendingListResponse } from "../apis/types/admin.type";
 import { getPendingList } from "../apis/queries/adminQuery";
 import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 
 const ApprovedList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,11 +19,10 @@ const ApprovedList = () => {
     () => getPendingList("APPROVED", String(page)),
     {
       onSuccess: (res) => {
-        console.log(res);
         setList(res);
       },
-      onError: (err) => {
-        console.log(err);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );

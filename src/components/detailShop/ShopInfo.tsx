@@ -25,6 +25,7 @@ import { getCookie } from "../cookie/cookie";
 import ImgSlider from "./ImgSlider";
 import { role } from "../../apis/types/common.type";
 import { getOpenHourDataResponse } from "../../apis/types/store.type";
+import { AxiosError } from "axios";
 
 const ShopInfo = () => {
   const storeId = useRecoilValue(StoreId);
@@ -61,8 +62,8 @@ const ShopInfo = () => {
       setBreakStartTime(data.breakStartTime);
       setBreakEndTime(data.breakEndTime);
     },
-    onError: (err: any) => {
-      console.log(err.response.data.message);
+    onError: (err: AxiosError<any>) => {
+      alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
     },
   });
   //가게의 메뉴 정보 가져오기
@@ -70,8 +71,8 @@ const ShopInfo = () => {
     onSuccess: (res) => {
       setMenuList(res.data);
     },
-    onError: (err: any) => {
-      console.log(err.response.data.message);
+    onError: (err: AxiosError<any>) => {
+      alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
     },
   });
   //고객이 좋아요 누른 가게 리스트 가져오기
@@ -82,16 +83,16 @@ const ShopInfo = () => {
   });
   //좋아요 누르기
   const { mutate: saveLike } = useMutation(() => postLike(storeId, memberId), {
-    onError: (err: any) => {
-      console.log(err.response.data.message);
+    onError: (err: AxiosError<any>) => {
+      alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
     },
   });
   //좋아요 해제
   const { mutate: likeDelete } = useMutation(
     () => deleteLike(storeId, memberId),
     {
-      onError: (err: any) => {
-        console.log(err.response.data.message);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );

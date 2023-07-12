@@ -33,7 +33,6 @@ const PopUp = ({ setEmailDate, verson, pw, setPw }: info) => {
     () => emailCheckMutaionPostEmail(email),
     {
       onSuccess: (res) => {
-        console.log(res);
         setCodeAnswer(res.data.verificationCode);
       },
       onError: (err: AxiosError<any>) => {

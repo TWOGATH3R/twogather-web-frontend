@@ -9,6 +9,7 @@ import {
 } from "../../apis/queries/reviewQuery";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Page, ReviewList, Sort } from "../../store/storeDetailAtom";
+import { AxiosError } from "axios";
 
 interface infoType {
   reviewId: number;
@@ -41,8 +42,8 @@ const ReveiwReplyEnroll = ({ reviewId }: infoType) => {
       onSuccess: (res) => {
         getReviewList();
       },
-      onError: (err) => {
-        console.log(err);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );

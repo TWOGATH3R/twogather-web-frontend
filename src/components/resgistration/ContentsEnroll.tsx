@@ -135,8 +135,8 @@ const ContentsEnroll = () => {
     setBreakTimeInputCheckBox((prev) => !prev);
   };
   const onClickDay = (day: dayType, idx: number, index: number) => {
-    console.log(day);
     let sameDay = true;
+    
     for (let i = 0; i < checkWeekList.length; i++) {
       if (checkWeekList[i].day.includes(day.day)) {
         if (i !== index) {

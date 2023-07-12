@@ -11,7 +11,6 @@ const Check = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { verificationCode, email, name }: locationType = location.state;
-  console.log(verificationCode);
 
   const [code, setCode] = useState<string>("");
   const [codeAnswer, setCodeAnswer] = useState<string>("");
@@ -24,7 +23,6 @@ const Check = () => {
   //query
   const { mutate: getId } = useMutation(() => getMyId(info), {
     onSuccess: (res) => {
-      console.log(res.data);
       setId(res.data);
     },
   });

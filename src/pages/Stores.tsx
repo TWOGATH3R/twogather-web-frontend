@@ -20,7 +20,6 @@ const Stores = () => {
     {
       onSuccess: (res) => {
         setList(res);
-        console.log(res);
       },
     }
   );

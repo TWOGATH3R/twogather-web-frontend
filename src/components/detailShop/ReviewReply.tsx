@@ -13,6 +13,7 @@ import {
 } from "../../store/storeDetailAtom";
 import { BsPencilSquare } from "react-icons/bs";
 import Swal from "sweetalert2";
+import { AxiosError } from "axios";
 
 interface infoType {
   commentContent: string;
@@ -67,8 +68,8 @@ const ReviewReply = ({
         }
       });
     },
-    onError: (err) => {
-      console.log(err);
+    onError: (err: AxiosError<any>) => {
+      alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
     },
   });
 

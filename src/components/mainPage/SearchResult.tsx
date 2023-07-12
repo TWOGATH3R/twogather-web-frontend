@@ -18,6 +18,7 @@ import {
   KeyWord,
 } from "../../store/searchAtom";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { AxiosError } from "axios";
 
 const SearchResult = () => {
   const navigate = useNavigate();
@@ -52,8 +53,8 @@ const SearchResult = () => {
       onSuccess: (res) => {
         setList(res);
       },
-      onError: (err) => {
-        console.log(err);
+      onError: (err: AxiosError<any>) => {
+        alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
       },
     }
   );

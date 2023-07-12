@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { useMutation } from "@tanstack/react-query";
 import { postInfo } from "../../apis/queries/findPwQuery";
+import { AxiosError } from "axios";
 
 const Verification = () => {
   const navigate = useNavigate();
@@ -15,8 +16,8 @@ const Verification = () => {
       alert("임시 비밀번호가 이메일로 전송됬습니다");
       navigate("/login");
     },
-    onError: (err) => {
-      console.log(err);
+    onError: (err: AxiosError<any>) => {
+      alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
     },
   });
 

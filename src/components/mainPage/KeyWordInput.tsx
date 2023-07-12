@@ -10,11 +10,7 @@ interface infoType {
 }
 const KeyWordInput = ({ keyWord, setKeyWord }: infoType) => {
   //DB에 저장된 검색가능한 키워드 리스트 가져오기
-  const { data: keyWordList } = useQuery(["keyWordList"], getKeyWordList, {
-    onSuccess: (res) => {
-      console.log(res);
-    },
-  });
+  const { data: keyWordList } = useQuery(["keyWordList"], getKeyWordList);
 
   const keyWordOnClick = (value: string) => {
     if (value === keyWord) setKeyWord("");

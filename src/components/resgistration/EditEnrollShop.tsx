@@ -82,8 +82,8 @@ export default function EnrollShop() {
       );
       setStartBusiness(data.businessStartDate);
     },
-    onError: (err) => {
-      console.log(err);
+    onError: (err: AxiosError<any>) => {
+      alert(err.response?.data.message || "알 수 없는 에러가 발생했습니다.");
     },
   });
   //가게 정보 수정 api

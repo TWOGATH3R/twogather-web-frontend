@@ -73,7 +73,6 @@ export const deleteReview = async (
 //가게 리뷰 댓글 수정 api
 export const putReply = async (info: putReplyProps) => {
   const URL = `/api/stores/${info.storeId}/reviews/${info.reviewId}/comments/${info.commentId}`;
-  console.log(URL);
 
   const { data } = await api.put(
     URL,
