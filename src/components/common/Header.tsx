@@ -14,7 +14,7 @@ export default function Header() {
     const memberId = localStorage.getItem("memberId");
     memberId && setMemberId(Number(memberId));
     if (getCookie("accessToken") === undefined && localStorage.getItem("role"))
-      console.log();
+      removeCookie();
   }, []);
 
   return (

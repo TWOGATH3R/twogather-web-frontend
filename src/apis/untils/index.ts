@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getCookie, removeCookie } from "../../components/cookie/cookie";
+import { removeCookie, setCookie } from "../../components/cookie/cookie";
 
 export const api = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
@@ -16,22 +16,26 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
+    console.log(error);
+    const { config } = error;
     // 응답 오류가 있는 작업 수행
     if (error.response.status === 401) {
-      if (error.response.data.message === "잘못된 형식의 요청입니다") {
-        // removeCookie();
+      if (error.response.data.message === "인증에 실패하였습니다")
+        removeCookie();
+      else {
         const refreshToken = await localStorage.getItem("refreshToken");
 
-        api
-          .get(`/api/consumers/8`, {
-            headers: {
-              Authorization: `Bearer ${getCookie("accessToken")}`,
-              refreshToken: `Bearer ${refreshToken}`,
-            },
-          })
-          .then((res) => {
-            console.log(res);
-          });
+        const { headers } = await api.get(`/api/access-token`, {
+          headers: {
+            RefreshToken: `Bearer ${refreshToken}`,
+          },
+        });
+
+        const newAccessToken = headers.authorization.split(" ")[1];
+        setCookie("accessToken", newAccessToken);
+        config.headers.Authorization = `Bearer ${newAccessToken}`;
+
+        return axios(config);
       }
     }
     return Promise.reject(error);
