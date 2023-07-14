@@ -59,12 +59,29 @@
 site: https://twogather.netlify.app
 
 # 팀원 :two_men_holding_hands:
-| Frontend | Frontend |
-| :-----: | :-----: |
-| <img src="https://github.com/TWOGATH3R/.github/assets/66842566/f85e58c9-126d-4710-9253-269bc77e0bf8" width=400px height=190px alt="태욱"/> | <img src="https://github.com/TWOGATH3R/.github/assets/66842566/5c881f2e-c0a8-43dd-a301-51865d24deac" width=400px height=190px  alt="예정"> |
-|                    [태욱](https://github.com/taewok)                            |                          [예정](https://github.com/bananana0118)                 |                         
+| Frontend | Frontend | Frontend |
+| :-----: | :-----: | :-----: |
+| <img src="https://github.com/TWOGATH3R/.github/assets/66842566/f85e58c9-126d-4710-9253-269bc77e0bf8" width=400px height=190px alt="태욱"/> | <img src="https://github.com/TWOGATH3R/.github/assets/66842566/5c881f2e-c0a8-43dd-a301-51865d24deac" width=400px height=190px  alt="예정"> | <img src="https://avatars.githubusercontent.com/u/67773009?v=4" width=400px height=190px  alt="예찬"> |
+|                    [태욱](https://github.com/taewok)                            |                          [예정](https://github.com/bananana0118)                 |    [예찬](https://github.com/eunyechan)                 |                      
 
 # 주요 기능 :bulb: 
+- <b>회원가입</b>
+  - 고객,사업자로 회원가입 tab을 분리
+- <b>검색</b>
+  - 가게이름,카테고리,지역,키워드 등을 이용한 가게 검색 기능
+  - 평점,리뷰,좋아요 등의 오름차순 내림차순 정렬
+- <b>ID,PW 분실 대처</b>
+  - 사용자의 NICKNAME과 EMAIL을 입력받아 인증코드 인증 확인 후 부분적인 ID를 보여줌
+  - 사용자의 ID와 EMAIL을 입력받아 인증 로직후 해당 EMAIL로 임시 비밀번호 발급
+- <b>댓글,사장님 댓글 작성</b>
+  - 고객만이 작성 가능
+  - 사장님만이 댓글에 대댓글을 남길 수 있다
+  - 최신,오래된,별점 순으로 정렬 가능
+- <b>좋아요</b>
+  - 고객만이 가게에 좋아요를 추가/해제 할 수 있다
+  - 자신이 좋아요한 가게는 mypage에 좋아요 tab에서 볼 수 있다
+- <b>사용자 인터페이스</b>
+  - 사용자의 권한에 따라 인터페이스 변화한다   
 
 # 문제점 해결 ❗
 
